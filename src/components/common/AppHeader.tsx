@@ -15,7 +15,7 @@ interface Props extends RouteComponentProps {
 
 class AppHeader extends React.Component<Props, {}> {
   public render(): React.ReactNode {
-    const { currentUser } = this.props.auth!;
+    const { currentUser } = this.props.auth;
 
     let menuItems;
     if (currentUser) {

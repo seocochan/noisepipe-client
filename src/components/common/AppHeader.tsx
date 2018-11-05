@@ -1,19 +1,21 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { Icon, Layout, Menu } from 'antd';
-import { ICurrentUserResponse } from 'payloads';
+import { RootState } from 'store';
+import { AuthState } from 'store/modules/auth';
 
 import './AppHeader.less';
 
-export interface IAppHeaderProps extends RouteComponentProps {
-  currentUser?: ICurrentUserResponse | null;
+interface Props extends RouteComponentProps {
+  auth: AuthState;
   onLogout(): void;
 }
 
-class AppHeader extends React.Component<IAppHeaderProps, {}> {
+class AppHeader extends React.Component<Props, {}> {
   public render(): React.ReactNode {
-    const { currentUser } = this.props;
+    const { currentUser } = this.props.auth!;
 
     let menuItems;
     if (currentUser) {
@@ -56,4 +58,8 @@ class AppHeader extends React.Component<IAppHeaderProps, {}> {
   }
 }
 
-export default withRouter(AppHeader);
+const mapStateToProps = (state: RootState) => ({
+  auth: state.auth
+});
+
+export default withRouter(connect(mapStateToProps)(AppHeader));

@@ -1,29 +1,24 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import { Layout, notification } from 'antd';
 import { AppHeader, LoadingIndicator } from 'components/common';
 import { Login, Signup } from 'components/user';
 import { NotFound } from 'pages';
-import { ICurrentUserResponse } from 'payloads';
-import { getCurrentUser } from 'utils/API';
+import { bindActionCreators, Dispatch } from 'redux';
+import { RootAction, RootState } from 'store';
+import { actions as authActions, AuthState } from 'store/modules/auth';
 import { ACCESS_TOKEN } from 'values';
 
 import './App.less';
 
-export interface IAppState {
-  currentUser?: ICurrentUserResponse | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+interface Props extends RouteComponentProps {
+  auth: AuthState;
+  AuthActions: typeof authActions;
 }
 
-class App extends React.Component<{} & RouteComponentProps, IAppState> {
-  public readonly state: IAppState = {
-    currentUser: null,
-    isAuthenticated: false,
-    isLoading: false
-  };
-
+class App extends React.Component<Props, {}> {
   public componentDidMount(): void {
     notification.config({
       placement: 'topRight',
@@ -31,41 +26,29 @@ class App extends React.Component<{} & RouteComponentProps, IAppState> {
       duration: 3
     });
 
-    this.loadCurrentUser();
+    const { AuthActions } = this.props;
+    AuthActions.getCurrnetUser();
   }
 
   private handleLogin = () => {
+    const { AuthActions, history } = this.props;
+
     notification.success({
       message: 'Noisepipe',
       description: '로그인에 성공했습니다'
     });
-    this.loadCurrentUser();
-    this.props.history.push('/');
-  };
 
-  private loadCurrentUser = async () => {
-    this.setState({ isLoading: true });
-
-    try {
-      const res = await getCurrentUser();
-      this.setState({
-        currentUser: res.data,
-        isAuthenticated: true,
-        isLoading: false
-      });
-    } catch (error) {
-      this.setState({ isLoading: false });
-    }
+    AuthActions.getCurrnetUser();
+    history.push('/');
   };
 
   private handleLogout = () => {
-    localStorage.removeItem(ACCESS_TOKEN);
-    this.setState({
-      currentUser: null,
-      isAuthenticated: false
-    });
+    const { AuthActions, history } = this.props;
 
-    this.props.history.push('/');
+    localStorage.removeItem(ACCESS_TOKEN);
+    AuthActions.logout();
+
+    history.push('/');
     notification.success({
       message: 'Noisepipe',
       description: '로그아웃 되었습니다'
@@ -73,16 +56,17 @@ class App extends React.Component<{} & RouteComponentProps, IAppState> {
   };
 
   public render(): React.ReactNode {
-    const { isLoading, currentUser } = this.state;
+    const { isLoading } = this.props.auth;
 
     if (isLoading) {
       return <LoadingIndicator />;
     }
     return (
       <Layout className="app-container">
-        <AppHeader currentUser={currentUser} onLogout={this.handleLogout} />
+        <AppHeader onLogout={this.handleLogout} />
         <Layout.Content className="app-content">
           <div className="container">
+            <button onClick={this.handleLogout}>로그아웃</button>
             <Switch>
               <Route exact={true} path="/" />
               <Route
@@ -101,4 +85,17 @@ class App extends React.Component<{} & RouteComponentProps, IAppState> {
   }
 }
 
-export default withRouter(App);
+const mapStateToProps = (state: RootState) => ({
+  auth: state.auth
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
+  AuthActions: bindActionCreators(authActions, dispatch)
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+);

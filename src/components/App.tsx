@@ -67,6 +67,7 @@ class App extends React.Component<Props, {}> {
         <Layout.Content className="app-content">
           <div className="container">
             <button onClick={this.handleLogout}>로그아웃</button>
+            {process.env.REACT_APP_FOO}
             <Switch>
               <Route exact={true} path="/" />
               <Route

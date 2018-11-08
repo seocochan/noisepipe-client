@@ -1,6 +1,7 @@
 version: 0.2
 
 # === parameter store ===
+# CLIENT_REPOSITORY_URI
 # API_BASE_URL
 # FOO
 

@@ -1,0 +1,44 @@
+version: 0.2
+
+# === parameter store ===
+# API_BASE_URL
+# FOO
+
+phases:
+  install:
+    commands:
+    - echo Logging in to Amazon ECR...
+    - aws --version
+    - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+    - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+    - echo Installing modules...
+    - npm install
+  pre_build:
+    commands:
+    - echo NPM Build started on `date`
+    - echo Building files...
+    - REACT_APP_API_BASE_URL=$API_BASE_URL REACT_APP_FOO=$FOO npm run build
+  build:
+    commands:
+    - echo Docker Build started on `date`
+    - echo Building the Docker image...
+    - docker version
+    - docker build -t $CLIENT_REPOSITORY_URI:latest .
+    - docker tag $CLIENT_REPOSITORY_URI:latest $CLIENT_REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+    - echo Build completed on `date`
+    - echo Pushing the Docker images...
+    - docker push $CLIENT_REPOSITORY_URI:latest
+    - docker push $CLIENT_REPOSITORY_URI:$IMAGE_TAG
+    - echo Writing image definitions file...
+    - printf '[{"name":"noisepipe-client","imageUri":"%s"}]' $CLIENT_REPOSITORY_URI:$IMAGE_TAG > MyFilename.json
+
+artifacts:
+  files:
+  - MyFilename.json
+  discard-paths: yes
+
+cache:
+  paths:
+  - 'node_modules/**/*'

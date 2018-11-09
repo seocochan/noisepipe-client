@@ -33,7 +33,7 @@ phases:
     - docker push $CLIENT_REPOSITORY_URI:latest
     - docker push $CLIENT_REPOSITORY_URI:$IMAGE_TAG
     - echo Writing image definitions file...
-    - printf '[{"name":"noisepipe-client","imageUri":"%s"}]' $CLIENT_REPOSITORY_URI:$IMAGE_TAG > MyFilename.json
+    - printf '[{"name":"noisepipe-client-container","imageUri":"%s"}]' $CLIENT_REPOSITORY_URI:$IMAGE_TAG > MyFilename.json
 
 artifacts:
   files:

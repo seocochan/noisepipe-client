@@ -41,7 +41,7 @@ export const getCurrentUser = () => {
   if (!localStorage.getItem(ACCESS_TOKEN)) {
     return Promise.reject('액세스 토큰이 없습니다');
   }
-  return request({ url: '/user/me', method: 'get' });
+  return request({ url: '/users/me', method: 'get' });
 };
 
 export const signup = (signupRequest: ISignupReqeust) => {
@@ -50,14 +50,14 @@ export const signup = (signupRequest: ISignupReqeust) => {
 
 export const checkUsernameAvailability = (username: string) => {
   return request({
-    url: `/user/checkUsernameAvailability?username=${username}`,
+    url: `/users/checkUsernameAvailability?username=${username}`,
     method: 'get'
   });
 };
 
 export const checkEmailAvailability = (email: string) => {
   return request({
-    url: `/user/checkEmailAvailability?email=${email}`,
+    url: `/users/checkEmailAvailability?email=${email}`,
     method: 'get'
   });
 };

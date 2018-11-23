@@ -6,7 +6,7 @@ import { Icon, Layout, Menu } from 'antd';
 import { RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 
-import './AppHeader.less';
+import styles from './AppHeader.module.less';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
@@ -22,7 +22,7 @@ class AppHeader extends React.Component<Props, {}> {
       menuItems = [
         <Menu.Item key="/">
           <Link to="/">
-            <Icon type="home" className="nav-icon" />
+            <Icon type="home" className={styles.navIcon} />
           </Link>
         </Menu.Item>
       ];
@@ -38,17 +38,16 @@ class AppHeader extends React.Component<Props, {}> {
     }
 
     return (
-      <Layout.Header className="app-header">
-        <div className="container">
-          <div className="app-title">
+      <Layout.Header className={styles.header}>
+        <div className={styles.container}>
+          <div className={styles.title}>
             <Link to="/">Noisepipe</Link>
           </div>
           <Menu
-            className="app-menu"
             mode="horizontal"
             selectedKeys={[this.props.location.pathname]}
-            theme={'dark'}
-            style={{ lineHeight: '64px' }}
+            theme="dark"
+            style={{ lineHeight: '56px' }}
           >
             {menuItems}
           </Menu>

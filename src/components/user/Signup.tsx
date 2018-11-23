@@ -15,7 +15,7 @@ import {
   USERNAME_MIN_LENGTH
 } from 'values';
 
-import './Signup.less';
+import styles from './Signup.module.less';
 
 interface IFormData {
   value: string;
@@ -90,10 +90,10 @@ class Signup extends React.Component<{} & RouteComponentProps, ISignupState> {
   public render(): React.ReactNode {
     const { name, email, username, password } = this.state;
     return (
-      <div className="signup-container">
-        <h1 className="page-title">회원가입</h1>
-        <div className="signup-content">
-          <Form onSubmit={this.handleSubmit} className="signup-form">
+      <div className={styles.container}>
+        <h1>회원가입</h1>
+        <div>
+          <Form onSubmit={this.handleSubmit} className={styles.signupForm}>
             <Form.Item
               label="이름"
               validateStatus={name.validateStatus}
@@ -169,7 +169,7 @@ class Signup extends React.Component<{} & RouteComponentProps, ISignupState> {
                 type="primary"
                 htmlType="submit"
                 size="large"
-                className="signup-form-button"
+                className={styles.signupButton}
                 disabled={this.isFormInvalid()}
               >
                 회원가입

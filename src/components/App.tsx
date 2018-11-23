@@ -11,7 +11,7 @@ import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
 import { ACCESS_TOKEN } from 'values';
 
-import './App.less';
+import styles from './App.module.less';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
@@ -62,10 +62,10 @@ class App extends React.Component<Props, {}> {
       return <LoadingIndicator />;
     }
     return (
-      <Layout className="app-container">
+      <Layout>
         <AppHeader onLogout={this.handleLogout} />
-        <Layout.Content className="app-content">
-          <div className="container">
+        <Layout.Content className={styles.content}>
+          <div className={styles.container}>
             <button onClick={this.handleLogout}>로그아웃</button>
             {process.env.REACT_APP_FOO}
             <Switch>

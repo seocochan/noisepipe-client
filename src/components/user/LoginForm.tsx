@@ -6,6 +6,8 @@ import { FormComponentProps } from 'antd/lib/form/Form';
 import { login } from 'utils/API';
 import { ACCESS_TOKEN } from 'values';
 
+import styles from './LoginForm.module.less';
+
 export interface ILoginFormProps {
   onLogin(): void;
 }
@@ -38,7 +40,7 @@ const LoginForm: React.SFC<ILoginFormProps & FormComponentProps> = props => {
 
   const { getFieldDecorator } = props.form;
   return (
-    <Form onSubmit={handleSubmit} className="login-form">
+    <Form onSubmit={handleSubmit}>
       <Form.Item>
         {getFieldDecorator('usernameOrEmail', {
           rules: [
@@ -71,7 +73,7 @@ const LoginForm: React.SFC<ILoginFormProps & FormComponentProps> = props => {
           type="primary"
           htmlType="submit"
           size="large"
-          className="login-form-button"
+          className={styles.loginButton}
         >
           로그인
         </Button>

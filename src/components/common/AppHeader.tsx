@@ -8,8 +8,6 @@ import { AuthState } from 'store/modules/auth';
 
 import styles from './AppHeader.module.less';
 
-import './AppHeader.less';
-
 interface Props extends RouteComponentProps {
   auth: AuthState;
   onLogout(): void;
@@ -24,7 +22,7 @@ class AppHeader extends React.Component<Props, {}> {
       menuItems = [
         <Menu.Item key="/">
           <Link to="/">
-            <Icon type="home" className="nav-icon" />
+            <Icon type="home" className={styles.navIcon} />
           </Link>
         </Menu.Item>
       ];
@@ -40,17 +38,16 @@ class AppHeader extends React.Component<Props, {}> {
     }
 
     return (
-      <Layout.Header className="app-header">
+      <Layout.Header className={styles.header}>
         <div className={styles.container}>
-          <div className="app-title">
+          <div className={styles.title}>
             <Link to="/">Noisepipe</Link>
           </div>
           <Menu
-            className="app-menu"
             mode="horizontal"
             selectedKeys={[this.props.location.pathname]}
-            theme={'dark'}
-            style={{ lineHeight: '64px' }}
+            theme="dark"
+            style={{ lineHeight: '56px' }}
           >
             {menuItems}
           </Menu>

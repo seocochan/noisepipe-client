@@ -28,7 +28,9 @@ module.exports = function override(config, env) {
       '@primary-color': '#2f9bff',
       '@layout-body-background': '#ffffff',
       '@layout-header-background': '#131313',
-      '@layout-footer-background': '#ffffff'
+      '@layout-footer-background': '#ffffff',
+      '@layout-header-height': '56px',
+      '@layout-header-padding': '0 10px'
     }
   });
   return config;

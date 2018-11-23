@@ -1,6 +1,6 @@
 const tsImportPluginFactory = require('ts-import-plugin');
 const { getLoader } = require('react-app-rewired');
-const rewireLess = require('react-app-rewire-less');
+const rewireLessWithModule = require('react-app-rewire-less-with-modules')
 
 module.exports = function override(config, env) {
   const tsLoader = getLoader(
@@ -10,7 +10,6 @@ module.exports = function override(config, env) {
       typeof rule.loader === 'string' &&
       rule.loader.includes('ts-loader')
   );
-
   tsLoader.options = {
     getCustomTransformers: () => ({
       before: [
@@ -23,16 +22,14 @@ module.exports = function override(config, env) {
     })
   };
 
-  config = rewireLess.withLoaderOptions({
+  config = rewireLessWithModule(config, env, {
     javascriptEnabled: true,
     modifyVars: {
-      // https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less
       '@primary-color': '#2f9bff',
       '@layout-body-background': '#ffffff',
       '@layout-header-background': '#131313',
       '@layout-footer-background': '#ffffff'
     }
-  })(config, env);
-
+  });
   return config;
 };

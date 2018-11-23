@@ -6,6 +6,8 @@ import { Icon, Layout, Menu } from 'antd';
 import { RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 
+import styles from './AppHeader.module.less';
+
 import './AppHeader.less';
 
 interface Props extends RouteComponentProps {
@@ -39,7 +41,7 @@ class AppHeader extends React.Component<Props, {}> {
 
     return (
       <Layout.Header className="app-header">
-        <div className="container">
+        <div className={styles.container}>
           <div className="app-title">
             <Link to="/">Noisepipe</Link>
           </div>

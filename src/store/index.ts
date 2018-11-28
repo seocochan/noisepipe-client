@@ -3,14 +3,16 @@ import thunkMiddleware, { ThunkAction } from 'redux-thunk';
 import { StateType } from 'typesafe-actions';
 
 import authReducer, { AuthAction } from './modules/auth';
+import collectionReducer, { CollectionAction } from './modules/collection';
 
 const rootReducer = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  collection: collectionReducer
 });
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 export type RootState = StateType<typeof rootReducer>;
-export type RootAction = AuthAction;
+export type RootAction = AuthAction | CollectionAction;
 export type ThunkResult<R> = ThunkAction<R, any, undefined, any>;
 
 export default store;

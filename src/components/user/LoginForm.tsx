@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Form, Icon, Input, notification } from 'antd';
+import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form/Form';
-import { login } from 'utils/API';
+import { login } from 'utils/api/auth';
 import { ACCESS_TOKEN } from 'values';
 
 import styles from './LoginForm.module.less';
 
-export interface ILoginFormProps {
+interface Props extends FormComponentProps {
   onLogin(): void;
 }
 
-const LoginForm: React.SFC<ILoginFormProps & FormComponentProps> = props => {
+const LoginForm: React.SFC<Props> = props => {
   const handleSubmit = (event: React.FormEvent<any>) => {
     event.preventDefault();
     props.form.validateFields(async (error: any, values: any) => {
@@ -23,15 +23,9 @@ const LoginForm: React.SFC<ILoginFormProps & FormComponentProps> = props => {
           props.onLogin();
         } catch (error) {
           if (error.response.status === 401) {
-            notification.error({
-              message: 'Noisepipe',
-              description: '아이디와 비밀번호를 확인해주세요'
-            });
+            message.error('아이디와 비밀번호를 확인해주세요');
           } else {
-            notification.error({
-              message: 'Noisepipe',
-              description: '에러가 발생했습니다'
-            });
+            message.error('에러가 발생했습니다');
           }
         }
       }

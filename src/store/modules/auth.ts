@@ -1,8 +1,9 @@
+import { AxiosError } from 'axios';
 import produce from 'immer';
-import { ICurrentUserResponse } from 'payloads';
+import { IUserSummary } from 'payloads';
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
-import * as API from 'utils/API';
+import * as AuthAPI from 'utils/api/auth';
 
 // action types
 const GET_CURRENT_USER_PENDING = 'auth/GET_CURRENT_USER_PENDING';
@@ -13,16 +14,18 @@ const LOGOUT = 'auth/LOGOUT';
 // action creators
 export const actions = {
   getCurrentUserPending: () => createAction(GET_CURRENT_USER_PENDING),
-  getCurrentUserSuccess: (user: ICurrentUserResponse) =>
+  getCurrentUserSuccess: (user: IUserSummary) =>
     createAction(GET_CURRENT_USER_SUCCESS, user),
-  getCurrentUserFailure: () => createAction(GET_CURRENT_USER_FAILURE),
+  getCurrentUserFailure: (error: AxiosError) =>
+    createAction(GET_CURRENT_USER_FAILURE, error),
   getCurrnetUser: (): ThunkResult<Promise<void>> => async dispatch => {
     dispatch(actions.getCurrentUserPending());
     try {
-      const res = await API.getCurrentUser();
+      const res = await AuthAPI.getCurrentUser();
       dispatch(actions.getCurrentUserSuccess(res.data));
     } catch (error) {
-      dispatch(actions.getCurrentUserFailure());
+      dispatch(actions.getCurrentUserFailure(error));
+      throw error;
     }
   },
   logout: () => createAction(LOGOUT)
@@ -31,14 +34,14 @@ export type AuthAction = ActionType<typeof actions>;
 
 // state
 export interface AuthState {
-  currentUser?: ICurrentUserResponse | null;
+  currentUser?: IUserSummary | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 const initialState: AuthState = {
   currentUser: null,
   isAuthenticated: false,
-  isLoading: false
+  isLoading: true
 };
 
 // reducer

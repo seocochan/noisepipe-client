@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 
-import { Button, Form, Input, notification } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
 import { ISignupReqeust } from 'payloads';
-import { checkEmailAvailability, checkUsernameAvailability, signup } from 'utils/API';
+import { RootState } from 'store';
+import { AuthState } from 'store/modules/auth';
+import { checkEmailAvailability, checkUsernameAvailability, signup } from 'utils/api/auth';
 import {
   EMAIL_MAX_LENGTH,
   NAME_MAX_LENGTH,
@@ -23,20 +26,32 @@ interface IFormData {
   validateStatus?: FormItemProps['validateStatus'];
 }
 
-export interface ISignupState {
+interface Props extends RouteComponentProps {
+  auth: AuthState;
+}
+
+interface State {
   name: IFormData;
   username: IFormData;
   email: IFormData;
   password: IFormData;
 }
 
-class Signup extends React.Component<{} & RouteComponentProps, ISignupState> {
-  public readonly state: ISignupState = {
+class Signup extends React.Component<Props, State> {
+  public readonly state: State = {
     name: { value: '' },
     username: { value: '' },
     email: { value: '' },
     password: { value: '' }
   };
+
+  public componentDidMount() {
+    const { auth, history } = this.props;
+
+    if (auth.isAuthenticated) {
+      history.replace('/');
+    }
+  }
 
   private handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -48,7 +63,7 @@ class Signup extends React.Component<{} & RouteComponentProps, ISignupState> {
 
     this.setState({
       [inputName]: { value: inputValue, ...validateFun(inputValue) }
-    } as Pick<ISignupState, keyof ISignupState>);
+    } as Pick<State, keyof State>);
   };
 
   private handleSubmit = async (event: React.FormEvent<any>): Promise<void> => {
@@ -64,16 +79,10 @@ class Signup extends React.Component<{} & RouteComponentProps, ISignupState> {
 
     try {
       await signup(signupRequest);
-      notification.success({
-        message: 'Noisepipe',
-        description: '가입에 성공했습니다. 로그인 해주세요'
-      });
+      message.success('가입에 성공했습니다. 로그인 해주세요');
       this.props.history.push('/login');
     } catch (error) {
-      notification.error({
-        message: 'Noisepipe',
-        description: '오류가 발생했습니다'
-      });
+      message.error('오류가 발생했습니다');
     }
   };
 
@@ -376,4 +385,8 @@ class Signup extends React.Component<{} & RouteComponentProps, ISignupState> {
   };
 }
 
-export default Signup;
+const mapStateToProps = (state: RootState) => ({
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(Signup);

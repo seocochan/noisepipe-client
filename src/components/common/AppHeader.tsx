@@ -2,18 +2,44 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { Icon, Layout, Menu } from 'antd';
-import { RootState } from 'store';
-import { AuthState } from 'store/modules/auth';
+import { Icon, Input, Layout, Menu, message } from 'antd';
+import { ClickParam } from 'antd/lib/menu';
+import { bindActionCreators, Dispatch } from 'redux';
+import { RootAction, RootState } from 'store';
+import { actions as authActions, AuthState } from 'store/modules/auth';
+import { ACCESS_TOKEN } from 'values';
 
 import styles from './AppHeader.module.less';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
-  onLogout(): void;
+  AuthActions: typeof authActions;
 }
 
 class AppHeader extends React.Component<Props, {}> {
+  private handleLogout = () => {
+    const { AuthActions, history } = this.props;
+
+    localStorage.removeItem(ACCESS_TOKEN);
+    AuthActions.logout();
+
+    history.push('/');
+    message.success('로그아웃 되었습니다');
+  };
+
+  private handleClick = (e: ClickParam) => {
+    if (e.key === 'logout') {
+      this.handleLogout();
+    }
+  };
+
+  private mapPathnameToKey = (pathname: string) => {
+    if (pathname.startsWith('/me')) {
+      return '/me/*';
+    }
+    return pathname;
+  };
+
   public render(): React.ReactNode {
     const { currentUser } = this.props.auth;
 
@@ -22,9 +48,30 @@ class AppHeader extends React.Component<Props, {}> {
       menuItems = [
         <Menu.Item key="/">
           <Link to="/">
-            <Icon type="home" className={styles.navIcon} />
+            <Icon type="home" />홈
           </Link>
-        </Menu.Item>
+        </Menu.Item>,
+        <Menu.Item key="/me/*">
+          <Link to="/me/collections">
+            <Icon type="database" />
+            컬렉션
+          </Link>
+        </Menu.Item>,
+        <Menu.SubMenu
+          key="/me"
+          title={
+            <span>
+              <Icon type="user" />
+              seoco
+            </span>
+          }
+        >
+          <Menu.Item key="/settings">
+            <Link to="/settings">설정</Link>
+          </Menu.Item>
+          <Menu.Divider />
+          <Menu.Item key="logout">로그아웃</Menu.Item>
+        </Menu.SubMenu>
       ];
     } else {
       menuItems = [
@@ -43,11 +90,17 @@ class AppHeader extends React.Component<Props, {}> {
           <div className={styles.title}>
             <Link to="/">Noisepipe</Link>
           </div>
+          <Input.Search
+            className={styles.search}
+            placeholder="검색"
+            style={{ margin: '10px 12px' }}
+          />
           <Menu
             mode="horizontal"
-            selectedKeys={[this.props.location.pathname]}
+            selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}
             theme="dark"
-            style={{ lineHeight: '56px' }}
+            style={{ lineHeight: '56px', marginLeft: 'auto' }}
+            onClick={this.handleClick}
           >
             {menuItems}
           </Menu>
@@ -61,4 +114,13 @@ const mapStateToProps = (state: RootState) => ({
   auth: state.auth
 });
 
-export default withRouter(connect(mapStateToProps)(AppHeader));
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
+  AuthActions: bindActionCreators(authActions, dispatch)
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AppHeader)
+);

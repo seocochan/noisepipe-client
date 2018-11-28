@@ -5,7 +5,7 @@ import { Button } from 'antd';
 
 import styles from './NotFound.module.less';
 
-const NotFound = () => {
+const NotFound: React.SFC<{}> = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>404</h1>

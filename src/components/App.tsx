@@ -2,14 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
-import { Layout, notification } from 'antd';
-import { AppHeader, LoadingIndicator } from 'components/common';
+import { Layout, message } from 'antd';
+import { AppHeader, LoadingIndicator, PrivateRoute } from 'components/common';
 import { Login, Signup } from 'components/user';
-import { NotFound } from 'pages';
+import { Collection, CollectionIndex, Home, NotFound, ServerError } from 'pages';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
-import { ACCESS_TOKEN } from 'values';
 
 import styles from './App.module.less';
 
@@ -19,41 +18,16 @@ interface Props extends RouteComponentProps {
 }
 
 class App extends React.Component<Props, {}> {
-  public componentDidMount(): void {
-    notification.config({
-      placement: 'topRight',
-      top: 70,
-      duration: 3
-    });
+  public async componentDidMount() {
+    message.config({ top: 64 });
 
     const { AuthActions } = this.props;
-    AuthActions.getCurrnetUser();
+    try {
+      await AuthActions.getCurrnetUser();
+    } catch (error) {
+      console.log(error);
+    }
   }
-
-  private handleLogin = () => {
-    const { AuthActions, history } = this.props;
-
-    notification.success({
-      message: 'Noisepipe',
-      description: '로그인에 성공했습니다'
-    });
-
-    AuthActions.getCurrnetUser();
-    history.push('/');
-  };
-
-  private handleLogout = () => {
-    const { AuthActions, history } = this.props;
-
-    localStorage.removeItem(ACCESS_TOKEN);
-    AuthActions.logout();
-
-    history.push('/');
-    notification.success({
-      message: 'Noisepipe',
-      description: '로그아웃 되었습니다'
-    });
-  };
 
   public render(): React.ReactNode {
     const { isLoading } = this.props.auth;
@@ -63,20 +37,19 @@ class App extends React.Component<Props, {}> {
     }
     return (
       <Layout>
-        <AppHeader onLogout={this.handleLogout} />
+        <AppHeader />
         <Layout.Content className={styles.content}>
           <div className={styles.container}>
-            <button onClick={this.handleLogout}>로그아웃</button>
-            {process.env.REACT_APP_FOO}
             <Switch>
-              <Route exact={true} path="/" />
-              <Route
-                path="/login"
-                render={props => (
-                  <Login onLogin={this.handleLogin} {...props} />
-                )}
-              />
+              <Route exact={true} path="/" component={Home} />
+              <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
+              <Route path="/collections/:collectionId" component={Collection} />
+              <PrivateRoute
+                path="/me/(collections|bookmarks|comments)"
+                component={CollectionIndex}
+              />
+              <Route exact={true} path="/error" component={ServerError} />
               <Route component={NotFound} />
             </Switch>
           </div>

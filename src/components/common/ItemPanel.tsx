@@ -52,7 +52,7 @@ class ItemPanel extends React.Component<Props, {}> {
           <span>{item && item.title}</span>
           <div className={styles.playerWrapper}>
             <ReactPlayer
-              url="https://soundcloud.com/swardy/ballyhoo"
+              url="https://youtu.be/B3nfweteZck"
               width="100%"
               // height="100%"
             />

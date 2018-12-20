@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
 
 import { Icon, Layout } from 'antd';
@@ -47,7 +48,16 @@ class ItemPanel extends React.Component<Props, {}> {
             <Icon type="delete" />
           </a>
         </div>
-        <div className={styles.content}>{item && item.title}</div>
+        <div className={styles.content}>
+          <span>{item && item.title}</span>
+          <div className={styles.playerWrapper}>
+            <ReactPlayer
+              url="https://soundcloud.com/swardy/ballyhoo"
+              width="100%"
+              // height="100%"
+            />
+          </div>
+        </div>
       </Layout.Sider>
     );
   }

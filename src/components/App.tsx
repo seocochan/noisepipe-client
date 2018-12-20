@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import { Layout, message } from 'antd';
-import { AppHeader, LoadingIndicator, PrivateRoute } from 'components/common';
+import { AppHeader, ItemPanel, LoadingIndicator, PrivateRoute } from 'components/common';
 import { Login, Signup } from 'components/user';
 import { Collection, CollectionIndex, Home, NotFound, ServerError } from 'pages';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -38,22 +38,28 @@ class App extends React.Component<Props, {}> {
     return (
       <Layout>
         <AppHeader />
-        <Layout.Content className={styles.content}>
-          <div className={styles.container}>
-            <Switch>
-              <Route exact={true} path="/" component={Home} />
-              <Route path="/login" component={Login} />
-              <Route path="/signup" component={Signup} />
-              <Route path="/collections/:collectionId" component={Collection} />
-              <PrivateRoute
-                path="/me/(collections|bookmarks|comments)"
-                component={CollectionIndex}
-              />
-              <Route exact={true} path="/error" component={ServerError} />
-              <Route component={NotFound} />
-            </Switch>
-          </div>
-        </Layout.Content>
+        <Layout>
+          <Layout.Content className={styles.content}>
+            <div className={styles.container}>
+              <Switch>
+                <Route exact={true} path="/" component={Home} />
+                <Route path="/login" component={Login} />
+                <Route path="/signup" component={Signup} />
+                <Route
+                  path="/collections/:collectionId"
+                  component={Collection}
+                />
+                <PrivateRoute
+                  path="/me/(collections|bookmarks|comments)"
+                  component={CollectionIndex}
+                />
+                <Route exact={true} path="/error" component={ServerError} />
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+          </Layout.Content>
+          <ItemPanel />
+        </Layout>
       </Layout>
     );
   }

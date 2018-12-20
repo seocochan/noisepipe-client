@@ -61,5 +61,6 @@ export default produce<AuthState, AuthAction>((draft, action) => {
     case LOGOUT:
       draft.currentUser = null;
       draft.isAuthenticated = false;
+      return;
   }
 }, initialState);

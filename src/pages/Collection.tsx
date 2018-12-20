@@ -11,7 +11,7 @@ const Collection: React.SFC<Props> = ({ match }) => {
   return (
     <div className={styles.container}>
       <CollectionItemsContainer
-        collectionId={Number.parseInt(match.params.collectionId, 10)}
+        collectionId={parseInt(match.params.collectionId, 10)}
       />
     </div>
   );

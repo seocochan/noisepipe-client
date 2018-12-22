@@ -88,7 +88,7 @@ class AppHeader extends React.Component<Props, {}> {
       <Layout.Header className={styles.header}>
         <div className={styles.container}>
           <div className={styles.title}>
-            <Link to="/">Noisepipe</Link>
+            <Link to="/">NOISEPIPE</Link>
           </div>
           <Input.Search
             className={styles.search}

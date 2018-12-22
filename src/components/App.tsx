@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import { Layout, message } from 'antd';
-import { AppHeader, ItemPanel, LoadingIndicator, PrivateRoute } from 'components/common';
+import { AppHeader, LoadingIndicator, PrivateRoute } from 'components/common';
 import { Login, Signup } from 'components/user';
 import { Collection, CollectionIndex, Home, NotFound, ServerError } from 'pages';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -11,6 +11,7 @@ import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
 
 import styles from './App.module.less';
+import { ItemPanel } from './item';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;

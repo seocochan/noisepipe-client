@@ -14,15 +14,52 @@ interface Props {
   BaseActions: typeof baseActions;
 }
 
-class ItemPanel extends React.Component<Props, {}> {
+interface State {
+  playing: boolean;
+}
+
+class ItemPanel extends React.Component<Props, State> {
+  public readonly state: State = {
+    playing: false
+  };
+
+  private player: ReactPlayer;
+
   private handleClose = (e: React.MouseEvent) => {
     e.preventDefault();
     const { BaseActions } = this.props;
     BaseActions.hideItemPanel();
   };
+  private handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    this.player.seekTo(50);
+  };
+  private handleClickPlay = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const { playing } = this.state;
+    this.setState({ playing: !playing });
+  };
+  private handlePlay = () => {
+    this.setState({ playing: true });
+  };
+  private handlePause = () => {
+    this.setState({ playing: false });
+  };
+
+  private ref = (player: ReactPlayer | null) => {
+    if (player == null) {
+      return;
+    }
+    this.player = player;
+  };
 
   public render(): React.ReactNode {
     const { collapsed, item } = this.props.base.itemPanel;
+    const { playing } = this.state;
+
+    if (item == null) {
+      return <div/>;
+    }
 
     return (
       <Layout.Sider
@@ -49,14 +86,29 @@ class ItemPanel extends React.Component<Props, {}> {
           </a>
         </div>
         <div className={styles.content}>
-          <span>{item && item.title}</span>
+          <span>{item.description}</span>
           <div className={styles.playerWrapper}>
             <ReactPlayer
-              url="https://soundcloud.com/swardy/ballyhoo"
+              className={styles.player}
+              playing={playing}
+              onReady={() =>
+                item.startAt != null ? this.player.seekTo(item.startAt) : null
+              }
+              onPlay={this.handlePlay}
+              onPause={this.handlePause}
+              config={{
+                youtube: {
+                  playerVars: { controls: 1 }
+                }
+              }}
+              url={item.sourceUrl}
               width="100%"
-              // height="100%"
+              height="100%"
+              ref={this.ref}
             />
           </div>
+          <button onClick={this.handleClick}>test</button>
+          <button onClick={this.handleClickPlay}>{playing ? '||' : '>'}</button>
         </div>
       </Layout.Sider>
     );

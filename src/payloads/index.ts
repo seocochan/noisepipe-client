@@ -53,7 +53,7 @@ export interface IItemResponse {
   description: string;
   sourceUrl: string;
   sourceProvider: string;
-  startAt: string;
+  startAt: number | null;
   tags: string[];
   position: number;
   createdBy: number;

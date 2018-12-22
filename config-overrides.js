@@ -25,12 +25,13 @@ module.exports = function override(config, env) {
   config = rewireLessWithModule(config, env, {
     javascriptEnabled: true,
     modifyVars: {
-      '@primary-color': '#2f9bff',
       '@layout-body-background': '#ffffff',
-      '@layout-header-background': '#131313',
+      '@layout-header-background': '#ffffff',
       '@layout-footer-background': '#ffffff',
       '@layout-header-height': '56px',
-      '@layout-header-padding': '0 10px'
+      '@layout-header-padding': '0 10px',
+      '@font-family': `'Spoqa Han Sans', 'Nanum Gothic', sans-serif`
+      // '@primary-color': '#2f9bff',
     }
   });
   return config;

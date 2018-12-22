@@ -55,7 +55,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       collection.items &&
       e.currentTarget &&
       collection.items[parseInt(e.currentTarget.id, 10)];
-    console.log(collection.items);
 
     BaseActions.showItemPanel(item);
   };

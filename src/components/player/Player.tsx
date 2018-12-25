@@ -22,18 +22,16 @@ class Player extends React.Component<Props, {}> {
     this.player = player;
   };
 
+  public componentDidMount() {
+    const { PlayerActions } = this.props;
+    PlayerActions.setRef(this.player);
+  }
   public componentDidUpdate(prevProps: Props) {
-    if (prevProps.player.currentItem !== this.props.player.currentItem) {
-      this.props.PlayerActions.pause();
+    const { player, PlayerActions } = this.props;
+    if (prevProps.player.currentItem !== player.currentItem) {
+      PlayerActions.pause();
     }
   }
-
-  private seekTo = () => {
-    const { currentItem } = this.props.player;
-    if (currentItem && currentItem.startAt) {
-      this.player.seekTo(currentItem.startAt);
-    }
-  };
 
   public render(): React.ReactNode {
     const {
@@ -48,9 +46,12 @@ class Player extends React.Component<Props, {}> {
       <ReactPlayer
         className={styles.player}
         playing={status.playing}
-        onReady={this.seekTo}
+        onReady={() => PlayerActions.initialize(this.player.getDuration())}
         onPlay={() => PlayerActions.play()}
         onPause={() => PlayerActions.pause()}
+        onProgress={({ played, playedSeconds }) =>
+          status.playing && PlayerActions.updateProgress(played, playedSeconds)
+        }
         config={{
           youtube: {
             playerVars: { controls: 1 }
@@ -68,7 +69,6 @@ class Player extends React.Component<Props, {}> {
 const mapStateToProps = ({ player }: RootState) => ({
   player
 });
-
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   PlayerActions: bindActionCreators(playerActions, dispatch)
 });

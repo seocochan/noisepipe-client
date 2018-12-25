@@ -4,6 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { CollectionHead, CollectionItems } from 'components/collection';
+import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as baseActions } from 'store/modules/base';
@@ -60,7 +61,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       collection.items[parseInt(e.currentTarget.id, 10)];
 
     BaseActions.showItemPanel(item);
-    PlayerActions.setItem(item);
+    PlayerActions.setCurrentItem(item);
   };
 
   public render(): React.ReactNode {
@@ -78,6 +79,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
             onClickItem={this.handleClickItem}
           />
         )}
+        <PlayerControls />
       </>
     );
   }

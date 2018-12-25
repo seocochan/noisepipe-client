@@ -2,12 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { Icon, Layout } from 'antd';
+import { Player } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as baseActions, BaseState } from 'store/modules/base';
 
 import styles from './ItemPanel.module.less';
-import Player from './Player';
 
 interface Props {
   base: BaseState;

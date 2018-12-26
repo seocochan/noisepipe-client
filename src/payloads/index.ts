@@ -47,6 +47,15 @@ export interface ICollectionSummary {
   items: number;
   createdBy: IUserSummary;
 }
+export interface ICommentResponse {
+  id: number;
+  text: string;
+  depth: number;
+  collection: ICollectionSummary;
+  createdBy: IUserSummary;
+}
+
+// item
 export interface IItemResponse {
   id: number;
   title: string;
@@ -60,10 +69,9 @@ export interface IItemResponse {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface ICommentResponse {
+export interface ICueResponse {
   id: number;
-  text: string;
-  depth: number;
-  collection: ICollectionSummary;
-  createdBy: IUserSummary;
+  seconds: number;
+  name?: string;
+  createdAt: Date;
 }

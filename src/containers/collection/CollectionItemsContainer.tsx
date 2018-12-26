@@ -32,7 +32,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     }
     CollectionActions.loadItems(collectionId);
   }
-
   public componentWillUnmount() {
     const { BaseActions, PlayerActions } = this.props;
     BaseActions.hideItemPanel();
@@ -51,7 +50,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       console.log(error);
     }
   };
-
   private handleClickItem = (e: React.MouseEvent) => {
     e.preventDefault();
     const { BaseActions, PlayerActions, collection } = this.props;
@@ -88,7 +86,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
 const mapStateToProps = ({ collection }: RootState) => ({
   collection
 });
-
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   BaseActions: bindActionCreators(baseActions, dispatch),
   CollectionActions: bindActionCreators(collectionActions, dispatch),

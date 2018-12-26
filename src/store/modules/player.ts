@@ -6,6 +6,7 @@ import { action as createAction, ActionType } from 'typesafe-actions';
 
 // action types
 const INITIALIZE = 'player/INITIALIZE';
+const SET_DURATION = 'player/SET_DURATION';
 const SET_REF = 'player/SET_REF';
 const SET_CURRENT_ITEM = 'player/SET_CURRENT_ITEM';
 const PLAY = 'player/PLAY';
@@ -15,7 +16,8 @@ const UPDATE_PROGRESS = 'player/UPDATE_PROGRESS';
 
 // action creators
 export const actions = {
-  initialize: (duration: number) => createAction(INITIALIZE, { duration }),
+  initialize: () => createAction(INITIALIZE),
+  setDuration: (duration: number) => createAction(SET_DURATION, { duration }),
   setRef: (ref: any | null) => createAction(SET_REF, { ref }),
   setCurrentItem: (item: IItemResponse | null) =>
     createAction(SET_CURRENT_ITEM, { item }),
@@ -48,17 +50,19 @@ const initialState: PlayerState = {
 export default produce<PlayerState, PlayerAction>((draft, action) => {
   switch (action.type) {
     case INITIALIZE:
-      draft.status.duration = action.payload.duration;
       draft.status.played = 0;
       draft.status.playedSeconds = 0;
+      return;
+    case SET_DURATION:
+      draft.status.duration = action.payload.duration;
       return;
     case SET_REF:
       draft.ref = action.payload.ref;
       return;
     case SET_CURRENT_ITEM:
       draft.currentItem = action.payload.item;
-      draft.status.played = 0; // @
-      draft.status.playedSeconds = 0; // @
+      draft.status.played = 0;
+      draft.status.playedSeconds = 0;
       return;
     case PLAY:
       draft.status.playing = true;

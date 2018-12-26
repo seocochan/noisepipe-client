@@ -33,6 +33,19 @@ class Player extends React.Component<Props, {}> {
     }
   }
 
+  private handleReady = () => {
+    const { PlayerActions } = this.props;
+
+    const duration = this.player.getDuration();
+    if (duration !== 0) {
+      // The following action is needed for properly set duration value,
+      // when SC player is currently playing and user changes it to another SC player
+      // (YT works fine without this action)
+      PlayerActions.setDuration(duration);
+    }
+    PlayerActions.initialize();
+  };
+
   public render(): React.ReactNode {
     const {
       PlayerActions,
@@ -46,7 +59,8 @@ class Player extends React.Component<Props, {}> {
       <ReactPlayer
         className={styles.player}
         playing={status.playing}
-        onReady={() => PlayerActions.initialize(this.player.getDuration())}
+        onReady={this.handleReady}
+        onDuration={duration => PlayerActions.setDuration(duration)}
         onPlay={() => PlayerActions.play()}
         onPause={() => PlayerActions.pause()}
         onProgress={({ played, playedSeconds }) =>

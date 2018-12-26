@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @width: 360px;
+  position: fixed;
+  bottom: 24px;
+  left: ~'calc(50% - @{width} / 2)';
+  width: @width;
+  height: 64px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px #f0f1f2;
+  background-color: #fff;
+  z-index: 1;
+  padding: 4px 8px;
+}
+
+
+.title {
+  text-align: center;
+  flex-grow: 1;
+  a {
+    color: rgba(0, 0, 0, 0.65);
+    text-decoration: none !important;
+  }
+}
+
+.controls {
+  margin: auto;
+  margin-left: 8px;
+  i {
+    padding: 0px 4px;
+  }
+}

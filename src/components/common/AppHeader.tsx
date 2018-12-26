@@ -88,7 +88,7 @@ class AppHeader extends React.Component<Props, {}> {
       <Layout.Header className={styles.header}>
         <div className={styles.container}>
           <div className={styles.title}>
-            <Link to="/">Noisepipe</Link>
+            <Link to="/">NOISEPIPE</Link>
           </div>
           <Input.Search
             className={styles.search}
@@ -98,7 +98,6 @@ class AppHeader extends React.Component<Props, {}> {
           <Menu
             mode="horizontal"
             selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}
-            theme="dark"
             style={{ lineHeight: '56px', marginLeft: 'auto' }}
             onClick={this.handleClick}
           >

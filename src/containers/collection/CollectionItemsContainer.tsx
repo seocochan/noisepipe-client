@@ -4,16 +4,19 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { CollectionHead, CollectionItems } from 'components/collection';
+import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as baseActions } from 'store/modules/base';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
+import { actions as playerActions } from 'store/modules/player';
 
 interface Props extends RouteComponentProps {
   BaseActions: typeof baseActions;
   collection: CollectionState;
   CollectionActions: typeof collectionActions;
   collectionId: number;
+  PlayerActions: typeof playerActions;
 }
 
 class CollectionItemsContainer extends React.Component<Props, {}> {
@@ -29,10 +32,10 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     }
     CollectionActions.loadItems(collectionId);
   }
-
   public componentWillUnmount() {
-    const { BaseActions } = this.props;
+    const { BaseActions, PlayerActions } = this.props;
     BaseActions.hideItemPanel();
+    PlayerActions.stop();
   }
 
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
@@ -47,17 +50,16 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       console.log(error);
     }
   };
-
   private handleClickItem = (e: React.MouseEvent) => {
     e.preventDefault();
-    const { BaseActions, collection } = this.props;
+    const { BaseActions, PlayerActions, collection } = this.props;
     const item =
       collection.items &&
       e.currentTarget &&
       collection.items[parseInt(e.currentTarget.id, 10)];
-    console.log(collection.items);
 
     BaseActions.showItemPanel(item);
+    PlayerActions.setCurrentItem(item);
   };
 
   public render(): React.ReactNode {
@@ -75,6 +77,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
             onClickItem={this.handleClickItem}
           />
         )}
+        <PlayerControls />
       </>
     );
   }
@@ -83,10 +86,10 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
 const mapStateToProps = ({ collection }: RootState) => ({
   collection
 });
-
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   BaseActions: bindActionCreators(baseActions, dispatch),
-  CollectionActions: bindActionCreators(collectionActions, dispatch)
+  CollectionActions: bindActionCreators(collectionActions, dispatch),
+  PlayerActions: bindActionCreators(playerActions, dispatch)
 });
 
 export default withRouter(

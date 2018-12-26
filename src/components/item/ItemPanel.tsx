@@ -1,8 +1,8 @@
 import * as React from 'react';
-import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
 
 import { Icon, Layout } from 'antd';
+import { Player } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as baseActions, BaseState } from 'store/modules/base';
@@ -23,6 +23,10 @@ class ItemPanel extends React.Component<Props, {}> {
 
   public render(): React.ReactNode {
     const { collapsed, item } = this.props.base.itemPanel;
+
+    if (item == null) {
+      return <div />;
+    }
 
     return (
       <Layout.Sider
@@ -49,13 +53,9 @@ class ItemPanel extends React.Component<Props, {}> {
           </a>
         </div>
         <div className={styles.content}>
-          <span>{item && item.title}</span>
+          <span>{item.description}</span>
           <div className={styles.playerWrapper}>
-            <ReactPlayer
-              url="https://youtu.be/B3nfweteZck"
-              width="100%"
-              // height="100%"
-            />
+            <Player />
           </div>
         </div>
       </Layout.Sider>

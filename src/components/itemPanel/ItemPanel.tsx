@@ -15,7 +15,6 @@ interface Props {
   base: BaseState;
   BaseActions: typeof baseActions;
 }
-
 interface State {
   tab: 'viewer' | 'editor';
 }
@@ -41,7 +40,6 @@ class ItemPanel extends React.Component<Props, State> {
     if (item == null) {
       return <div />;
     }
-
     return (
       <Layout.Sider
         className={styles.sider}
@@ -92,7 +90,6 @@ class ItemPanel extends React.Component<Props, State> {
 const mapStateToProps = ({ base }: RootState) => ({
   base
 });
-
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   BaseActions: bindActionCreators(baseActions, dispatch)
 });

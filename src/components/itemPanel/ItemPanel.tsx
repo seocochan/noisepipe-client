@@ -79,7 +79,7 @@ class ItemPanel extends React.Component<Props, State> {
             <ItemViewer item={item} />
           </div>
           <div style={{ display: tab === 'editor' ? 'block' : 'none' }}>
-            <ItemEditor />
+            <ItemEditor item={item} />
           </div>
         </div>
       </Layout.Sider>

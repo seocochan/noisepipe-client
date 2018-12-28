@@ -11,7 +11,7 @@ import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
 
 import styles from './App.module.less';
-import { ItemPanel } from './itemPanel';
+import { ItemPanel } from './item';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;

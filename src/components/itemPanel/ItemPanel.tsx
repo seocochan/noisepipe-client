@@ -5,15 +5,15 @@ import { Icon, Layout, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
-import { actions as baseActions, BaseState } from 'store/modules/base';
+import { actions as itemActions, ItemState } from 'store/modules/item';
 
 import ItemEditor from './ItemEditor';
 import styles from './ItemPanel.module.less';
 import ItemViewer from './ItemViewer';
 
 interface Props {
-  base: BaseState;
-  BaseActions: typeof baseActions;
+  item: ItemState;
+  ItemActions: typeof itemActions;
 }
 interface State {
   tab: 'viewer' | 'editor';
@@ -26,15 +26,19 @@ class ItemPanel extends React.Component<Props, State> {
 
   private handleClose = (e: React.MouseEvent) => {
     e.preventDefault();
-    const { BaseActions } = this.props;
-    BaseActions.hideItemPanel();
+    const { ItemActions } = this.props;
+    ItemActions.hidePanel();
+    ItemActions.setItem(null);
   };
   private handleTabChange = (e: RadioChangeEvent) => {
     this.setState({ tab: e.target.value });
   };
 
   public render(): React.ReactNode {
-    const { collapsed, item } = this.props.base.itemPanel;
+    const {
+      item,
+      itemPanel: { collapsed }
+    } = this.props.item;
     const { tab } = this.state;
 
     if (item == null) {
@@ -87,11 +91,11 @@ class ItemPanel extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ base }: RootState) => ({
-  base
+const mapStateToProps = ({ item }: RootState) => ({
+  item
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  BaseActions: bindActionCreators(baseActions, dispatch)
+  ItemActions: bindActionCreators(itemActions, dispatch)
 });
 
 export default connect(

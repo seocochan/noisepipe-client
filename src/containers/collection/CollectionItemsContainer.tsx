@@ -7,12 +7,12 @@ import { CollectionHead, CollectionItems } from 'components/collection';
 import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
-import { actions as baseActions } from 'store/modules/base';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
+import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions } from 'store/modules/player';
 
 interface Props extends RouteComponentProps {
-  BaseActions: typeof baseActions;
+  ItemActions: typeof itemActions;
   collection: CollectionState;
   CollectionActions: typeof collectionActions;
   collectionId: number;
@@ -33,8 +33,9 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     CollectionActions.loadItems(collectionId);
   }
   public componentWillUnmount() {
-    const { BaseActions, PlayerActions } = this.props;
-    BaseActions.hideItemPanel();
+    const { ItemActions, PlayerActions } = this.props;
+    ItemActions.hidePanel();
+    ItemActions.setItem(null);
     PlayerActions.stop();
   }
 
@@ -52,13 +53,14 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   };
   private handleClickItem = (e: React.MouseEvent) => {
     e.preventDefault();
-    const { BaseActions, PlayerActions, collection } = this.props;
+    const { ItemActions, PlayerActions, collection } = this.props;
     const item =
       collection.items &&
       e.currentTarget &&
       collection.items[parseInt(e.currentTarget.id, 10)];
 
-    BaseActions.showItemPanel(item);
+    ItemActions.showPanel();
+    ItemActions.setItem(item);
     PlayerActions.setCurrentItem(item);
   };
 
@@ -87,7 +89,7 @@ const mapStateToProps = ({ collection }: RootState) => ({
   collection
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  BaseActions: bindActionCreators(baseActions, dispatch),
+  ItemActions: bindActionCreators(itemActions, dispatch),
   CollectionActions: bindActionCreators(collectionActions, dispatch),
   PlayerActions: bindActionCreators(playerActions, dispatch)
 });

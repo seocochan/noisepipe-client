@@ -4,21 +4,15 @@ import { IItemResponse } from 'payloads';
 
 import ItemEditorForm from './ItemEditorForm';
 
-/**
- * TODO:
- * 액션 호출, 데이터 주입,
- * submit 핸들러 정의 등
- * 이 컨테이너에 구현
- */
-
 interface Props {
   item: IItemResponse;
+  handleSubmit: (values: any) => void;
 }
 
-const ItemEditor: React.SFC<Props> = ({ item }) => {
+const ItemEditor: React.SFC<Props> = ({ item, handleSubmit }) => {
   return (
     <div>
-      <ItemEditorForm item={item} />
+      <ItemEditorForm item={item} handleSubmit={handleSubmit} />
     </div>
   );
 };

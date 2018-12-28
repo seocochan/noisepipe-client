@@ -6,17 +6,19 @@ import { IItemResponse } from 'payloads';
 
 interface Props extends FormComponentProps {
   item: IItemResponse;
+  handleSubmit: (values: any) => void;
 }
 
 const ItemEditorForm: React.SFC<Props> = ({
   item,
+  handleSubmit: submit,
   form: { getFieldDecorator, validateFields }
 }) => {
   const handleSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault();
     validateFields((err, values) => {
       if (!err) {
-        console.log('ok', values);
+        submit(values);
       } else {
         console.log('error', values);
       }

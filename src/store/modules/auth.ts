@@ -47,20 +47,24 @@ const initialState: AuthState = {
 // reducer
 export default produce<AuthState, AuthAction>((draft, action) => {
   switch (action.type) {
-    case GET_CURRENT_USER_PENDING:
+    case GET_CURRENT_USER_PENDING: {
       draft.isLoading = true;
       return;
-    case GET_CURRENT_USER_SUCCESS:
+    }
+    case GET_CURRENT_USER_SUCCESS: {
       draft.currentUser = action.payload;
       draft.isAuthenticated = true;
       draft.isLoading = false;
       return;
-    case GET_CURRENT_USER_FAILURE:
+    }
+    case GET_CURRENT_USER_FAILURE: {
       draft.isLoading = false;
       return;
-    case LOGOUT:
+    }
+    case LOGOUT: {
       draft.currentUser = null;
       draft.isAuthenticated = false;
       return;
+    }
   }
 }, initialState);

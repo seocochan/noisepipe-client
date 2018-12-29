@@ -48,17 +48,21 @@ const initialState: ItemState = {
 // reducer
 export default produce<ItemState, ItemAction>((draft, action) => {
   switch (action.type) {
-    case SHOW_PANEL:
+    case SHOW_PANEL: {
       draft.itemPanel.collapsed = false;
       return;
-    case HIDE_PANEL:
+    }
+    case HIDE_PANEL: {
       draft.itemPanel.collapsed = true;
       return;
-    case SET_ITEM:
+    }
+    case SET_ITEM: {
       draft.item = action.payload.item;
       return;
-    case UPDATE_ITEM_SUCCESS:
+    }
+    case UPDATE_ITEM_SUCCESS: {
       draft.item = action.payload.item;
       return;
+    }
   }
 }, initialState);

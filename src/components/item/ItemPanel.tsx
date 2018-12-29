@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 import { Layout } from 'antd';
+import { Tab } from 'types';
 
 import styles from './ItemPanel.module.less';
 
 interface Props {
   collapsed: boolean;
-  tab: 'viewer' | 'editor';
+  tab: Tab;
   itemPanelHeader: React.ReactChild;
   itemViewer: React.ReactChild;
   itemEditor: React.ReactChild;
@@ -34,10 +35,10 @@ const ItemPanel: React.SFC<Props> = ({
     >
       {itemPanelHeader}
       <div className={styles.container}>
-        <div style={{ display: tab === 'viewer' ? 'block' : 'none' }}>
+        <div style={{ display: tab === Tab.Viewer ? 'block' : 'none' }}>
           {itemViewer}
         </div>
-        <div style={{ display: tab === 'editor' ? 'block' : 'none' }}>
+        <div style={{ display: tab === Tab.Editor ? 'block' : 'none' }}>
           {itemEditor}
         </div>
       </div>

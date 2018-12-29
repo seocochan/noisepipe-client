@@ -2,11 +2,12 @@ import * as React from 'react';
 
 import { Icon, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
+import { Tab } from 'types';
 
 import styles from './ItemPanelHeader.module.less';
 
 interface Props {
-  tab: 'viewer' | 'editor';
+  tab: Tab;
   handleClose: (e: React.MouseEvent) => void;
   handleTabChange: (e: RadioChangeEvent) => void;
 }
@@ -23,8 +24,8 @@ const ItemPanelHeader: React.SFC<Props> = ({
       </a>
       <div className={styles.innerMenu}>
         <Radio.Group size="small" value={tab} onChange={handleTabChange}>
-          <Radio.Button value="viewer">보기</Radio.Button>
-          <Radio.Button value="editor">수정</Radio.Button>
+          <Radio.Button value={Tab.Viewer}>보기</Radio.Button>
+          <Radio.Button value={Tab.Editor}>수정</Radio.Button>
         </Radio.Group>
       </div>
       <div className={styles.innerMenu}>

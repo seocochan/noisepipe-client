@@ -8,20 +8,14 @@ import { IItemPutRequest } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as itemActions, ItemState } from 'store/modules/item';
+import { Tab } from 'types';
 
 interface Props {
   item: ItemState;
   ItemActions: typeof itemActions;
 }
-interface State {
-  tab: 'viewer' | 'editor';
-}
 
-class ItemPanelContainer extends React.Component<Props, State> {
-  public readonly state: State = {
-    tab: 'viewer'
-  };
-
+class ItemPanelContainer extends React.Component<Props, {}> {
   private handleClose = (e: React.MouseEvent) => {
     e.preventDefault();
     const { ItemActions } = this.props;
@@ -29,20 +23,20 @@ class ItemPanelContainer extends React.Component<Props, State> {
     ItemActions.setItem(null);
   };
   private handleTabChange = (e: RadioChangeEvent) => {
-    this.setState({ tab: e.target.value });
+    const { ItemActions } = this.props;
+    ItemActions.changeTab(e.target.value);
   };
   private handleSubmit = (itemId: number, data: IItemPutRequest) => {
     const { ItemActions } = this.props;
     ItemActions.updateItem(itemId, data);
-    this.setState({ tab: 'viewer' });
+    ItemActions.changeTab(Tab.Viewer);
   };
 
   public render(): React.ReactNode {
     const {
       item,
-      itemPanel: { collapsed }
+      itemPanel: { collapsed, tab }
     } = this.props.item;
-    const { tab } = this.state;
 
     if (item == null) {
       return <div />;

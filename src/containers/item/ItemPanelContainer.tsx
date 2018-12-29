@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { message } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { ItemEditor, ItemPanel, ItemViewer } from 'components/item';
 import ItemPanelHeader from 'components/item/ItemPanelHeader';
@@ -26,9 +27,13 @@ class ItemPanelContainer extends React.Component<Props, {}> {
     const { ItemActions } = this.props;
     ItemActions.changeTab(e.target.value);
   };
-  private handleSubmit = (itemId: number, data: IItemPutRequest) => {
+  private handleSubmit = async (itemId: number, data: IItemPutRequest) => {
     const { ItemActions } = this.props;
-    ItemActions.updateItem(itemId, data);
+    try {
+      await ItemActions.updateItem(itemId, data);
+    } catch (error) {
+      message.error('에러가 발생했습니다');
+    }
     ItemActions.changeTab(Tab.Viewer);
   };
 

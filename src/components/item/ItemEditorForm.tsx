@@ -30,8 +30,6 @@ const ItemEditorForm: React.SFC<Props> = ({
     validateFields((err, values) => {
       if (!err) {
         submit(item.id, values);
-      } else {
-        console.log('error', values);
       }
     });
   };

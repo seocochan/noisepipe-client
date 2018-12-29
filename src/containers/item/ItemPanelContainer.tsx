@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { ItemEditor, ItemPanel, ItemViewer } from 'components/item';
 import ItemPanelHeader from 'components/item/ItemPanelHeader';
+import { IItemPutRequest } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as itemActions, ItemState } from 'store/modules/item';
@@ -30,8 +31,10 @@ class ItemPanelContainer extends React.Component<Props, State> {
   private handleTabChange = (e: RadioChangeEvent) => {
     this.setState({ tab: e.target.value });
   };
-  private handleSubmit = (values: any) => {
-    console.log(values);
+  private handleSubmit = (itemId: number, data: IItemPutRequest) => {
+    const { ItemActions } = this.props;
+    ItemActions.updateItem(itemId, data);
+    this.setState({ tab: 'viewer' });
   };
 
   public render(): React.ReactNode {

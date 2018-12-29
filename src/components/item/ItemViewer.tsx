@@ -16,7 +16,7 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
     <div>
       <div className={styles.contentHeader}>
         <div className={styles.tag}>
-          {['태그1', '태그2'].map(tag => (
+          {item.tags.map(tag => (
             <Tag key={tag}>{tag}</Tag>
           ))}
         </div>

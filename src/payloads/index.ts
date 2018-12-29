@@ -56,10 +56,20 @@ export interface ICommentResponse {
 }
 
 // item
+export interface IItemPostRequest {
+  title: string;
+  sourceUrl: string;
+  sourceProvider: string;
+}
+export interface IItemPutRequest {
+  title: string;
+  description: string; // | null
+  tags: string[];
+}
 export interface IItemResponse {
   id: number;
   title: string;
-  description: string;
+  description: string; // | null
   sourceUrl: string;
   sourceProvider: string;
   tags: string[];

@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import produce from 'immer';
-import { ICollectionResponse, ICommentResponse, IItemResponse } from 'payloads';
+import { ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as CollectionAPI from 'utils/api/collection';
@@ -16,6 +16,7 @@ const LOAD_ITEMS_FAILURE = 'collection/LOAD_ITEMS_FAILURE';
 const UPDATE_ITEM_POSITION_PENDING = 'collection/UPDATE_ITEM_POSITION_PENDING';
 const UPDATE_ITEM_POSITION_SUCCESS = 'collection/UPDATE_ITEM_POSITION_SUCCESS';
 const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
+const UPDATE_ITEM = 'collection/UPDATE_ITEM';
 
 // action creators
 export const actions = {
@@ -36,7 +37,6 @@ export const actions = {
     createAction(LOAD_COLLECTION_SUCCESS, collection),
   loadColelctionFailure: (error: AxiosError) =>
     createAction(LOAD_COLLECTION_FAILURE, error),
-
   loadItems: (
     collectionId: number
   ): ThunkResult<Promise<void>> => async dispatch => {
@@ -54,7 +54,6 @@ export const actions = {
     createAction(LOAD_ITEMS_SUCCESS, items),
   loadItemsFailure: (error: AxiosError) =>
     createAction(LOAD_ITEMS_FAILURE, error),
-
   updateItemPostion: (
     oldIndex: number,
     newIndex: number
@@ -78,8 +77,9 @@ export const actions = {
   updateItemPostionSuccess: (items: IItemResponse[]) =>
     createAction(UPDATE_ITEM_POSITION_SUCCESS, items),
   updateItemPostionFailure: (error: AxiosError) =>
-    createAction(UPDATE_ITEM_POSITION_FAILURE, error)
-
+    createAction(UPDATE_ITEM_POSITION_FAILURE, error),
+  updateItem: (itemId: number, data: IItemPutRequest) =>
+    createAction(UPDATE_ITEM, { itemId, data })
   // TODO: loadComments: ICommentResponse[]
 };
 export type CollectionAction = ActionType<typeof actions>;
@@ -99,32 +99,57 @@ const initialState: CollectionState = {
 // reducer
 export default produce<CollectionState, CollectionAction>((draft, action) => {
   switch (action.type) {
-    case LOAD_COLLECTION_PENDING:
+    case LOAD_COLLECTION_PENDING: {
       draft.collection = null;
       return;
-    case LOAD_COLLECTION_SUCCESS:
+    }
+    case LOAD_COLLECTION_SUCCESS: {
       draft.collection = action.payload;
       return;
-    case LOAD_COLLECTION_FAILURE:
+    }
+    case LOAD_COLLECTION_FAILURE: {
       console.log(action.payload);
       return;
-    case LOAD_ITEMS_PENDING:
+    }
+    case LOAD_ITEMS_PENDING: {
       draft.items = null;
       return;
-    case LOAD_ITEMS_SUCCESS:
+    }
+    case LOAD_ITEMS_SUCCESS: {
       draft.items = action.payload;
       return;
-    case LOAD_ITEMS_FAILURE:
+    }
+    case LOAD_ITEMS_FAILURE: {
       console.log(action.payload);
       return;
-    case UPDATE_ITEM_POSITION_PENDING:
+    }
+    case UPDATE_ITEM_POSITION_PENDING: {
       // do nothing
       return;
-    case UPDATE_ITEM_POSITION_SUCCESS:
+    }
+    case UPDATE_ITEM_POSITION_SUCCESS: {
       draft.items = action.payload;
       return;
-    case UPDATE_ITEM_POSITION_FAILURE:
+    }
+    case UPDATE_ITEM_POSITION_FAILURE: {
       console.log(action.payload);
       return;
+    }
+    case UPDATE_ITEM: {
+      if (!draft.items) {
+        return;
+      }
+      const index = draft.items.findIndex(
+        item => item.id === action.payload.itemId
+      );
+      if (index === -1) {
+        return;
+      }
+      const { title, description, tags } = action.payload.data;
+      draft.items[index].title = title;
+      draft.items[index].description = description;
+      draft.items[index].tags = tags;
+      return;
+    }
   }
 }, initialState);

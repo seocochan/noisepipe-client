@@ -1,18 +1,21 @@
 import * as React from 'react';
 
-import { IItemResponse } from 'payloads';
+import { Form } from 'antd';
+import { IItemPutRequest, IItemResponse } from 'payloads';
 
 import ItemEditorForm from './ItemEditorForm';
 
 interface Props {
   item: IItemResponse;
-  handleSubmit: (values: any) => void;
+  handleSubmit: (itemId: number, data: IItemPutRequest) => void;
 }
 
 const ItemEditor: React.SFC<Props> = ({ item, handleSubmit }) => {
+  const WrappedItemEditorForm = Form.create()(ItemEditorForm);
+
   return (
     <div>
-      <ItemEditorForm item={item} handleSubmit={handleSubmit} />
+      <WrappedItemEditorForm item={item} handleSubmit={handleSubmit} />
     </div>
   );
 };

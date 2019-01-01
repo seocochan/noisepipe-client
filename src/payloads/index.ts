@@ -60,6 +60,7 @@ export interface IItemPostRequest {
   title: string;
   sourceUrl: string;
   sourceProvider: string;
+  position: number;
 }
 export interface IItemPutRequest {
   title: string;
@@ -84,4 +85,8 @@ export interface ICueResponse {
   seconds: number;
   name?: string;
   createdAt: Date;
+}
+export interface IMediaDatResponse {
+  url: string;
+  title: string;
 }

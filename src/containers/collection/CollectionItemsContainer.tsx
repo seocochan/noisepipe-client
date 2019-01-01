@@ -4,6 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { CollectionHead, CollectionItems } from 'components/collection';
+import { ItemAddForm } from 'components/item';
 import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -63,6 +64,20 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     ItemActions.setItem(item);
     PlayerActions.setCurrentItem(item);
   };
+  private handleAddItem = (
+    title: string,
+    sourceUrl: string,
+    sourceProvider: string
+  ) => {
+    const {
+      CollectionActions,
+      collection: { collection }
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    CollectionActions.addItem(collection.id, title, sourceUrl, sourceProvider);
+  };
 
   public render(): React.ReactNode {
     const { collection, items } = this.props.collection;
@@ -70,6 +85,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     return (
       <>
         <CollectionHead collection={collection} />
+        <ItemAddForm handleAddItem={this.handleAddItem} />
         {items && (
           <CollectionItems
             items={items}

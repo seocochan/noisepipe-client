@@ -1,6 +1,18 @@
 import { AxiosResponse } from 'axios';
-import { IItemPutRequest, IItemResponse } from 'payloads';
+import { IItemPostRequest, IItemPutRequest, IItemResponse, IMediaDatResponse } from 'payloads';
 import request from 'utils/api';
+
+export const getMediaData = (
+  sourceUrl: string,
+  sourceProvider: string
+): Promise<AxiosResponse<IMediaDatResponse>> => {
+  return request({
+    url: `/media?url=${encodeURIComponent(
+      sourceUrl
+    )}&provider=${sourceProvider}`,
+    method: 'get'
+  });
+};
 
 export const updateItem = (
   itemId: number,
@@ -9,6 +21,17 @@ export const updateItem = (
   return request({
     url: `/items/${itemId}`,
     method: 'put',
+    data
+  });
+};
+
+export const createItem = (
+  collectionId: number,
+  data: IItemPostRequest
+): Promise<AxiosResponse<IItemResponse>> => {
+  return request({
+    url: `/collections/${collectionId}/items`,
+    method: 'post',
     data
   });
 };

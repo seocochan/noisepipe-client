@@ -4,6 +4,7 @@ import { ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse }
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as CollectionAPI from 'utils/api/collection';
+import * as ItemAPI from 'utils/api/item';
 import * as Utils from 'utils/common';
 
 // action types
@@ -17,6 +18,7 @@ const UPDATE_ITEM_POSITION_PENDING = 'collection/UPDATE_ITEM_POSITION_PENDING';
 const UPDATE_ITEM_POSITION_SUCCESS = 'collection/UPDATE_ITEM_POSITION_SUCCESS';
 const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
 const UPDATE_ITEM = 'collection/UPDATE_ITEM';
+const ADD_ITEM_SUCESS = 'collection/ADD_ITEM_SUESS';
 
 // action creators
 export const actions = {
@@ -79,7 +81,29 @@ export const actions = {
   updateItemPostionFailure: (error: AxiosError) =>
     createAction(UPDATE_ITEM_POSITION_FAILURE, error),
   updateItem: (itemId: number, data: IItemPutRequest) =>
-    createAction(UPDATE_ITEM, { itemId, data })
+    createAction(UPDATE_ITEM, { itemId, data }),
+  addItem: (
+    collectionId: number,
+    title: string,
+    sourceUrl: string,
+    sourceProvider: string
+  ): ThunkResult<Promise<void>> => async (dispatch, getState) => {
+    const items = getState().collection.items as IItemResponse[];
+    const position = Utils.getNewPosition(items);
+    try {
+      const res = await ItemAPI.createItem(collectionId, {
+        title,
+        sourceUrl,
+        sourceProvider,
+        position
+      });
+      dispatch(actions.addItemSuccess(res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  addItemSuccess: (item: IItemResponse) =>
+    createAction(ADD_ITEM_SUCESS, { item })
   // TODO: loadComments: ICommentResponse[]
 };
 export type CollectionAction = ActionType<typeof actions>;
@@ -149,6 +173,13 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       draft.items[index].title = title;
       draft.items[index].description = description;
       draft.items[index].tags = tags;
+      return;
+    }
+    case ADD_ITEM_SUCESS: {
+      if (!draft.items) {
+        return;
+      }
+      draft.items.push(action.payload.item);
       return;
     }
   }

@@ -45,7 +45,7 @@ const ItemEditorForm: React.SFC<Props> = ({
               required: true,
               whitespace: true
             },
-            { max: 40, message: '40자 이하로 작성해주세요' }
+            { max: 100, message: '40자 이하로 작성해주세요' }
           ]
         })(
           <Input

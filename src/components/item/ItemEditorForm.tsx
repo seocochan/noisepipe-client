@@ -65,7 +65,7 @@ const ItemEditorForm: React.SFC<Props> = ({
             },
             { max: 255, message: '255자 이하로 작성해주세요' }
           ]
-        })(<Input.TextArea placeholder="내용" autosize={{ minRows: 4 }} />)}
+        })(<Input.TextArea placeholder="설명" autosize={{ minRows: 4 }} />)}
       </Form.Item>
       <Form.Item>
         {getFieldDecorator('tags', {

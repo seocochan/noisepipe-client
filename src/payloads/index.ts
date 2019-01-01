@@ -64,13 +64,13 @@ export interface IItemPostRequest {
 }
 export interface IItemPutRequest {
   title: string;
-  description: string; // | null
+  description: string | null;
   tags: string[];
 }
 export interface IItemResponse {
   id: number;
   title: string;
-  description: string; // | null
+  description: string | null;
   sourceUrl: string;
   sourceProvider: string;
   tags: string[];
@@ -86,7 +86,7 @@ export interface ICueResponse {
   name?: string;
   createdAt: Date;
 }
-export interface IMediaDatResponse {
+export interface IMediaDataResponse {
   url: string;
   title: string;
 }

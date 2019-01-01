@@ -28,7 +28,9 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
       <div className={styles.playerWrapper}>
         <Player />
       </div>
-      <article>{item.description}</article>
+      <article>
+        {item.description ? item.description : <i>{'설명이 없습니다'}</i>}
+      </article>
     </div>
   );
 };

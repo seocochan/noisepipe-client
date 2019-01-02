@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Button, Form, Icon, Input, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form';
 import { IItemPutRequest, IItemResponse } from 'payloads';
+import { MAX_ITEM_DESCRIPTION_LENGTH, MAX_ITEM_TAGS_SIZE, MAX_ITEM_TITLE_LENGTH } from 'values';
 
 interface Props extends FormComponentProps {
   item: IItemResponse;
@@ -45,7 +46,10 @@ const ItemEditorForm: React.SFC<Props> = ({
               required: true,
               whitespace: true
             },
-            { max: 100, message: '40자 이하로 작성해주세요' }
+            {
+              max: MAX_ITEM_TITLE_LENGTH,
+              message: `${MAX_ITEM_TITLE_LENGTH}자 이하로 작성해주세요`
+            }
           ]
         })(
           <Input
@@ -63,7 +67,10 @@ const ItemEditorForm: React.SFC<Props> = ({
               message: '설명을 입력하세요',
               whitespace: true
             },
-            { max: 255, message: '255자 이하로 작성해주세요' }
+            {
+              max: MAX_ITEM_DESCRIPTION_LENGTH,
+              message: `${MAX_ITEM_DESCRIPTION_LENGTH}자 이하로 작성해주세요`
+            }
           ]
         })(<Input.TextArea placeholder="설명" autosize={{ minRows: 4 }} />)}
       </Form.Item>
@@ -72,16 +79,16 @@ const ItemEditorForm: React.SFC<Props> = ({
           initialValue: item.tags,
           rules: [
             {
-              message: '5개 이하의 태그를 추가해주세요',
+              message: `${MAX_ITEM_TAGS_SIZE}개 이하의 태그를 추가해주세요`,
               type: 'array',
-              max: 5
+              max: MAX_ITEM_TAGS_SIZE
             }
           ]
         })(
           <Select
             mode="tags"
             placeholder="태그를 추가하세요"
-            maxTagCount={5}
+            maxTagCount={MAX_ITEM_TAGS_SIZE}
             tokenSeparators={[',']}
           />
         )}

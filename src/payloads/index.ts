@@ -74,7 +74,7 @@ export interface IItemResponse {
   title: string;
   description: string | null;
   sourceUrl: string;
-  sourceProvider: string;
+  sourceProvider: Provider;
   tags: string[];
   position: number;
   createdBy: number;

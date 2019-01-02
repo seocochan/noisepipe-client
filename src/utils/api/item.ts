@@ -1,10 +1,11 @@
 import { AxiosResponse } from 'axios';
 import { IItemPostRequest, IItemPutRequest, IItemResponse, IMediaDataResponse } from 'payloads';
+import { Provider } from 'types';
 import request from 'utils/api';
 
 export const getMediaData = (
   sourceUrl: string,
-  sourceProvider: string
+  sourceProvider: Provider
 ): Promise<AxiosResponse<IMediaDataResponse>> => {
   return request({
     url: `/media?url=${encodeURIComponent(

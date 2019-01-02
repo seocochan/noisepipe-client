@@ -1,3 +1,5 @@
+import { Provider } from 'types';
+
 // common
 export interface IPagedResponse<T> {
   content: T[];
@@ -59,7 +61,7 @@ export interface ICommentResponse {
 export interface IItemPostRequest {
   title: string;
   sourceUrl: string;
-  sourceProvider: string;
+  sourceProvider: Provider;
   position: number;
 }
 export interface IItemPutRequest {

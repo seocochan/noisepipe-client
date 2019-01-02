@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import produce from 'immer';
 import { ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
 import { ThunkResult } from 'store';
+import { Provider } from 'types';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as CollectionAPI from 'utils/api/collection';
 import * as ItemAPI from 'utils/api/item';
@@ -86,7 +87,7 @@ export const actions = {
     collectionId: number,
     title: string,
     sourceUrl: string,
-    sourceProvider: string
+    sourceProvider: Provider
   ): ThunkResult<Promise<void>> => async (dispatch, getState) => {
     const items = getState().collection.items as IItemResponse[];
     const position = Utils.getNewPosition(items);

@@ -2,13 +2,14 @@ import * as React from 'react';
 
 import { Button, Form, Icon, Input } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
+import { Provider } from 'types';
 import * as ItemAPI from 'utils/api/item';
 
 interface Props {
   handleAddItem: (
     title: string,
     sourceUrl: string,
-    sourceProvider: string
+    sourceProvider: Provider
   ) => void;
 }
 interface State {
@@ -29,9 +30,9 @@ class ItemAddForm extends React.Component<Props, State> {
     const MATCH_URL_SC = /(soundcloud\.com|snd\.sc)\/.+$/;
 
     if (MATCH_URL_YT.test(value)) {
-      return 'YOUTUBE';
+      return Provider.Youtube;
     } else if (MATCH_URL_SC.test(value)) {
-      return 'SOUNDCLOUD';
+      return Provider.Soundcloud;
     } else {
       return;
     }

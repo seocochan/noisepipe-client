@@ -11,6 +11,7 @@ import { RootAction, RootState } from 'store';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
 import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions } from 'store/modules/player';
+import { Provider } from 'types';
 
 interface Props extends RouteComponentProps {
   ItemActions: typeof itemActions;
@@ -67,7 +68,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   private handleAddItem = (
     title: string,
     sourceUrl: string,
-    sourceProvider: string
+    sourceProvider: Provider
   ) => {
     const {
       CollectionActions,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Icon, Radio } from 'antd';
+import { Icon, Popconfirm, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { Tab } from 'types';
 
@@ -10,12 +10,14 @@ interface Props {
   tab: Tab;
   handleClose: (e: React.MouseEvent) => void;
   handleTabChange: (e: RadioChangeEvent) => void;
+  handleRemove: (e: React.MouseEvent) => void;
 }
 
 const ItemPanelHeader: React.SFC<Props> = ({
   tab,
   handleClose,
-  handleTabChange
+  handleTabChange,
+  handleRemove
 }) => {
   return (
     <div className={styles.header}>
@@ -29,9 +31,11 @@ const ItemPanelHeader: React.SFC<Props> = ({
         </Radio.Group>
       </div>
       <div className={styles.innerMenu}>
-        <a className={styles.iconButton}>
-          <Icon type="delete" />
-        </a>
+        <Popconfirm title={'삭제할까요?'} onConfirm={handleRemove}>
+          <a className={styles.iconButton}>
+            <Icon type="delete" />
+          </a>
+        </Popconfirm>
       </div>
     </div>
   );

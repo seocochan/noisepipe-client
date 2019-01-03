@@ -19,7 +19,8 @@ const UPDATE_ITEM_POSITION_PENDING = 'collection/UPDATE_ITEM_POSITION_PENDING';
 const UPDATE_ITEM_POSITION_SUCCESS = 'collection/UPDATE_ITEM_POSITION_SUCCESS';
 const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
 const UPDATE_ITEM = 'collection/UPDATE_ITEM';
-const ADD_ITEM_SUCESS = 'collection/ADD_ITEM_SUESS';
+const ADD_ITEM_SUCCESS = 'collection/ADD_ITEM_SUCCESS';
+const REMOVE_ITEM = 'collection/REMOVE_ITEM';
 
 // action creators
 export const actions = {
@@ -104,7 +105,8 @@ export const actions = {
     }
   },
   addItemSuccess: (item: IItemResponse) =>
-    createAction(ADD_ITEM_SUCESS, { item })
+    createAction(ADD_ITEM_SUCCESS, { item }),
+  removeItem: (itemId: number) => createAction(REMOVE_ITEM, { itemId })
   // TODO: loadComments: ICommentResponse[]
 };
 export type CollectionAction = ActionType<typeof actions>;
@@ -176,11 +178,24 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       draft.items[index].tags = tags;
       return;
     }
-    case ADD_ITEM_SUCESS: {
+    case ADD_ITEM_SUCCESS: {
       if (!draft.items) {
         return;
       }
       draft.items.push(action.payload.item);
+      return;
+    }
+    case REMOVE_ITEM: {
+      if (!draft.items) {
+        return;
+      }
+      const index = draft.items.findIndex(
+        item => item.id === action.payload.itemId
+      );
+      if (index === -1) {
+        return;
+      }
+      draft.items.splice(index, 1);
       return;
     }
   }

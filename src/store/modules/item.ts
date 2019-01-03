@@ -8,6 +8,7 @@ import * as ItemAPI from 'utils/api/item';
 import { actions as CollectionActions } from './collection';
 
 // action types
+const INITIALIZE = 'item/INITIALIZE';
 const SHOW_PANEL = 'item/SHOW_PANEL';
 const HIDE_PANEL = 'item/HIDE_PANEL';
 const CHANGE_TAB = 'item/CHANGE_TAB';
@@ -16,6 +17,7 @@ const UPDATE_ITEM_SUCCESS = 'item/UPDATE_ITEM_SUCCESS';
 
 // action creators
 export const actions = {
+  initialize: () => createAction(INITIALIZE),
   showPanel: () => createAction(SHOW_PANEL),
   hidePanel: () => createAction(HIDE_PANEL),
   changeTab: (tab: Tab) => createAction(CHANGE_TAB, { tab }),
@@ -33,7 +35,18 @@ export const actions = {
     }
   },
   updateItemSuccess: (item: IItemResponse) =>
-    createAction(UPDATE_ITEM_SUCCESS, { item })
+    createAction(UPDATE_ITEM_SUCCESS, { item }),
+  removeItem: (
+    itemId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await ItemAPI.removeItem(itemId);
+      dispatch(actions.initialize());
+      dispatch(CollectionActions.removeItem(itemId));
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 export type ItemAction = ActionType<typeof actions>;
 
@@ -51,6 +64,10 @@ const initialState: ItemState = {
 // reducer
 export default produce<ItemState, ItemAction>((draft, action) => {
   switch (action.type) {
+    case INITIALIZE: {
+      draft.itemPanel = { collapsed: true, tab: Tab.Viewer };
+      draft.item = null;
+    }
     case SHOW_PANEL: {
       draft.itemPanel.collapsed = false;
       return;

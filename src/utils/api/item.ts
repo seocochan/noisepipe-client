@@ -36,3 +36,10 @@ export const createItem = (
     data
   });
 };
+
+export const removeItem = (itemId: number) => {
+  return request({
+    url: `/items/${itemId}`,
+    method: 'delete'
+  });
+};

@@ -27,6 +27,21 @@ class ItemPanelContainer extends React.Component<Props, {}> {
     const { ItemActions } = this.props;
     ItemActions.changeTab(e.target.value);
   };
+  private handleRemove = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const {
+      ItemActions,
+      item: { item }
+    } = this.props;
+    if (!item) {
+      return;
+    }
+    try {
+      await ItemActions.removeItem(item.id);
+    } catch (error) {
+      message.error('에러가 발생했습니다');
+    }
+  };
   private handleSubmit = async (itemId: number, data: IItemPutRequest) => {
     const { ItemActions } = this.props;
     try {
@@ -55,6 +70,7 @@ class ItemPanelContainer extends React.Component<Props, {}> {
             tab={tab}
             handleClose={this.handleClose}
             handleTabChange={this.handleTabChange}
+            handleRemove={this.handleRemove}
           />
         }
         itemViewer={<ItemViewer item={item} />}

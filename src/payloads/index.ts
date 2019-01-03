@@ -36,18 +36,20 @@ export interface IUserProfileResponse extends IUserSummary {
 export interface ICollectionResponse {
   id: number;
   title: string;
-  description: string;
-  createdBy: IUserSummary;
+  description: string | null;
   tags: string[];
   bookmarks: number;
   isBookmarked: boolean;
+  createdBy: IUserSummary;
+  createdAt: Date;
 }
 export interface ICollectionSummary {
   id: number;
   title: string;
-  description: string;
+  description: string | null;
   items: number;
   createdBy: IUserSummary;
+  createdAt: Date;
 }
 export interface ICommentResponse {
   id: number;

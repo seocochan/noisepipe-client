@@ -28,8 +28,7 @@ class CollectionItem extends React.Component<Props, {}> {
       <div>
         <DragHandle />
         <a id={itemIndex.toString()} onClick={onClickItem}>
-          {title} {position} | {description} |{' '}
-          {moment(createdAt).from(moment.now())}
+          {title} {position} | {description} | {moment(createdAt).fromNow()}
         </a>
       </div>
     );

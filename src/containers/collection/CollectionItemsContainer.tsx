@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
-import { CollectionHead, CollectionItems } from 'components/collection';
+import { Divider } from 'antd';
+import { CollectionHeader, CollectionItems } from 'components/collection';
 import { ItemAddForm } from 'components/item';
 import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -85,7 +86,11 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
 
     return (
       <>
-        <CollectionHead collection={collection} />
+        <CollectionHeader
+          collection={collection}
+          itemCount={items ? items.length : 0}
+        />
+        <Divider />
         <ItemAddForm handleAddItem={this.handleAddItem} />
         {items && (
           <CollectionItems

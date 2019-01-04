@@ -9,13 +9,13 @@ import { RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 import { checkEmailAvailability, checkUsernameAvailability, signup } from 'utils/api/auth';
 import {
-  EMAIL_MAX_LENGTH,
-  NAME_MAX_LENGTH,
-  NAME_MIN_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
-  USERNAME_MAX_LENGTH,
-  USERNAME_MIN_LENGTH
+  MAX_EMAIL_LENGTH,
+  MAX_NAME_LENGTH,
+  MAX_PASSWORD_LENGTH,
+  MAX_USERNAME_LENGTH,
+  MIN_NAME_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  MIN_USERNAME_LENGTH
 } from 'values';
 
 import styles from './Signup.module.less';
@@ -166,7 +166,7 @@ class Signup extends React.Component<Props, State> {
                 name="password"
                 type="password"
                 autoComplete="off"
-                placeholder="6자 이상, 20자 이하"
+                placeholder={`${MIN_PASSWORD_LENGTH}자 이상`}
                 value={password.value}
                 onChange={event =>
                   this.handleInputChange(event, this.validatePassword)
@@ -192,15 +192,15 @@ class Signup extends React.Component<Props, State> {
   }
 
   private validateName = (name: string): Partial<IFormData> => {
-    if (name.length < NAME_MIN_LENGTH) {
+    if (name.length < MIN_NAME_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `이름이 너무 짧습니다. (${NAME_MIN_LENGTH}자 이상)`
+        errorMsg: `이름이 너무 짧습니다. (${MIN_NAME_LENGTH}자 이상)`
       };
-    } else if (name.length > NAME_MAX_LENGTH) {
+    } else if (name.length > MAX_NAME_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `이름이 너무 깁니다. (${NAME_MAX_LENGTH}자 이하)`
+        errorMsg: `이름이 너무 깁니다. (${MAX_NAME_LENGTH}자 이하)`
       };
     } else {
       return {
@@ -226,10 +226,10 @@ class Signup extends React.Component<Props, State> {
       };
     }
 
-    if (email.length > EMAIL_MAX_LENGTH) {
+    if (email.length > MAX_EMAIL_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `이메일 주소가 너무 깁니다. (${EMAIL_MAX_LENGTH}자 이하)`
+        errorMsg: `이메일 주소가 너무 깁니다. (${MAX_EMAIL_LENGTH}자 이하)`
       };
     }
 
@@ -240,15 +240,15 @@ class Signup extends React.Component<Props, State> {
   };
 
   private validateUsername = (username: string): Partial<IFormData> => {
-    if (username.length < USERNAME_MIN_LENGTH) {
+    if (username.length < MIN_USERNAME_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `아이디가 너무 짧습니다. (${USERNAME_MIN_LENGTH}자 이상)`
+        errorMsg: `아이디가 너무 짧습니다. (${MIN_USERNAME_LENGTH}자 이상)`
       };
-    } else if (username.length > USERNAME_MAX_LENGTH) {
+    } else if (username.length > MAX_USERNAME_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `아이디가 너무 깁니다. (${USERNAME_MAX_LENGTH}자 이하)`
+        errorMsg: `아이디가 너무 깁니다. (${MAX_USERNAME_LENGTH}자 이하)`
       };
     } else {
       return {
@@ -259,15 +259,15 @@ class Signup extends React.Component<Props, State> {
   };
 
   private validatePassword = (password: string): Partial<IFormData> => {
-    if (password.length < PASSWORD_MIN_LENGTH) {
+    if (password.length < MIN_PASSWORD_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `비밀번호가 너무 짧습니다. (${PASSWORD_MIN_LENGTH}자 이상)`
+        errorMsg: `비밀번호가 너무 짧습니다. (${MIN_PASSWORD_LENGTH}자 이상)`
       };
-    } else if (password.length > PASSWORD_MAX_LENGTH) {
+    } else if (password.length > MAX_PASSWORD_LENGTH) {
       return {
         validateStatus: 'error',
-        errorMsg: `비밀번호가 너무 깁니다. (${PASSWORD_MAX_LENGTH}자 이하)`
+        errorMsg: `비밀번호가 너무 깁니다. (${MAX_PASSWORD_LENGTH}자 이하)`
       };
     } else {
       return {

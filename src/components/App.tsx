@@ -5,13 +5,13 @@ import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom
 import { Layout, message } from 'antd';
 import { AppHeader, LoadingIndicator, PrivateRoute } from 'components/common';
 import { Login, Signup } from 'components/user';
+import { ItemPanelContainer } from 'containers/item';
 import { Collection, CollectionIndex, Home, NotFound, ServerError } from 'pages';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
 
 import styles from './App.module.less';
-import { ItemPanel } from './item';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
@@ -59,7 +59,7 @@ class App extends React.Component<Props, {}> {
               </Switch>
             </div>
           </Layout.Content>
-          <ItemPanel />
+          <ItemPanelContainer />
         </Layout>
       </Layout>
     );

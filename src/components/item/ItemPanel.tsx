@@ -1,77 +1,49 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 
-import { Icon, Layout } from 'antd';
-import { Player } from 'components/player';
-import { bindActionCreators, Dispatch } from 'redux';
-import { RootAction, RootState } from 'store';
-import { actions as baseActions, BaseState } from 'store/modules/base';
+import { Layout } from 'antd';
+import { Tab } from 'types';
 
 import styles from './ItemPanel.module.less';
 
 interface Props {
-  base: BaseState;
-  BaseActions: typeof baseActions;
+  collapsed: boolean;
+  tab: Tab;
+  itemPanelHeader: React.ReactChild;
+  itemViewer: React.ReactChild;
+  itemEditor: React.ReactChild;
 }
 
-class ItemPanel extends React.Component<Props, {}> {
-  private handleClose = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const { BaseActions } = this.props;
-    BaseActions.hideItemPanel();
-  };
-
-  public render(): React.ReactNode {
-    const { collapsed, item } = this.props.base.itemPanel;
-
-    if (item == null) {
-      return <div />;
-    }
-
-    return (
-      <Layout.Sider
-        className={styles.sider}
-        collapsible={true}
-        collapsed={collapsed}
-        collapsedWidth={0}
-        reverseArrow={true}
-        trigger={null}
-        theme={'light'}
-        width={480}
-        style={{ background: '#f9f9fa' }}
-        // style={{ transition: 'width 0.2s, height 0.3s' }}
-      >
-        <div className={styles.menu}>
-          <a className={styles.closeButton} onClick={this.handleClose}>
-            <Icon type="arrow-left" />
-          </a>
-          <a>
-            <Icon type="edit" />
-          </a>
-          <a>
-            <Icon type="delete" />
-          </a>
+const ItemPanel: React.SFC<Props> = ({
+  collapsed,
+  tab,
+  itemPanelHeader,
+  itemViewer,
+  itemEditor
+}) => {
+  return (
+    <Layout.Sider
+      className={styles.sider}
+      collapsible={true}
+      collapsed={collapsed}
+      collapsedWidth={0}
+      reverseArrow={true}
+      trigger={null}
+      theme={'light'}
+      width={'640'}
+      style={{ background: '#f9f9fa', transition: 'none' }}
+      // style={{ transition: 'width 0.2s, height 0.3s' }}
+    >
+      {itemPanelHeader}
+      <div className={styles.container}>
+        <div style={{ display: tab === Tab.Viewer ? 'block' : 'none' }}>
+          {itemViewer}
         </div>
-        <div className={styles.content}>
-          <span>{item.description}</span>
-          <div className={styles.playerWrapper}>
-            <Player />
-          </div>
+        <div style={{ display: tab === Tab.Editor ? 'block' : 'none' }}>
+          {itemEditor}
         </div>
-      </Layout.Sider>
-    );
-  }
-}
+      </div>
+    </Layout.Sider>
+  );
+};
 
-const mapStateToProps = ({ base }: RootState) => ({
-  base
-});
-
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  BaseActions: bindActionCreators(baseActions, dispatch)
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ItemPanel);
+export default ItemPanel;

@@ -2,27 +2,15 @@
   margin-top: 56px;
   height: calc(~'100vh - 56px');
   border-left: 1px solid #ebedf0;
-}
-
-.menu {
-  display: flex;
-  a {
-    text-decoration: none !important;
-    color: rgba(0, 0, 0, 0.5);
-    font-size: 18px;
-    padding: 12px;
+  @media screen and (max-width: 768px) {
+    @width: 100%;
+    flex: 0 0 @width !important;
+    max-width: @width !important;
+    min-width: @width !important;
+    width: @width !important;
   }
 }
 
-.closeButton {
-  flex-grow: 1;
-}
-
-.content {
-  padding: 0px 12px;
-}
-
-.playerWrapper {
-  position: relative;
-  padding-top: 70%
+.container {
+  margin: 0px 40px;
 }

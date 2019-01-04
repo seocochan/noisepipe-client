@@ -5,14 +5,14 @@ import { Button } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
-import { actions as baseActions } from 'store/modules/base';
+import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 
 import styles from './PlayerControls.module.less';
 import SeekBar from './SeekBar';
 
 interface Props {
-  BaseActions: typeof baseActions;
+  ItemActions: typeof itemActions;
   player: PlayerState;
   PlayerActions: typeof playerActions;
 }
@@ -27,7 +27,7 @@ class PlayerControls extends React.Component<Props, {}> {
   };
 
   public render(): React.ReactNode {
-    const { player, PlayerActions, BaseActions } = this.props;
+    const { player, PlayerActions, ItemActions } = this.props;
 
     if (!player.currentItem) {
       return <div />;
@@ -37,7 +37,8 @@ class PlayerControls extends React.Component<Props, {}> {
         <div className={styles.title}>
           <a
             onClick={() => {
-              BaseActions.showItemPanel(player.currentItem);
+              ItemActions.showPanel();
+              ItemActions.setItem(player.currentItem);
             }}
           >
             {player.currentItem.title}
@@ -79,7 +80,7 @@ const mapStateToProps = ({ player }: RootState) => ({
   player
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  BaseActions: bindActionCreators(baseActions, dispatch),
+  ItemActions: bindActionCreators(itemActions, dispatch),
   PlayerActions: bindActionCreators(playerActions, dispatch)
 });
 

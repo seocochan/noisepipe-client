@@ -1,3 +1,5 @@
+import { Provider } from 'types';
+
 // common
 export interface IPagedResponse<T> {
   content: T[];
@@ -34,18 +36,40 @@ export interface IUserProfileResponse extends IUserSummary {
 export interface ICollectionResponse {
   id: number;
   title: string;
-  description: string;
-  createdBy: IUserSummary;
+  description: string | null;
   tags: string[];
   bookmarks: number;
   isBookmarked: boolean;
+  createdBy: IUserSummary;
+  createdAt: Date;
 }
 export interface ICollectionSummary {
   id: number;
   title: string;
-  description: string;
+  description: string | null;
   items: number;
   createdBy: IUserSummary;
+  createdAt: Date;
+}
+export interface ICommentResponse {
+  id: number;
+  text: string;
+  depth: number;
+  collection: ICollectionSummary;
+  createdBy: IUserSummary;
+}
+
+// item
+export interface IItemPostRequest {
+  title: string;
+  sourceUrl: string;
+  sourceProvider: Provider;
+  position: number;
+}
+export interface IItemPutRequest {
+  title: string;
+  description: string | null;
+  tags: string[];
 }
 export interface ICommentResponse {
   id: number;
@@ -59,9 +83,9 @@ export interface ICommentResponse {
 export interface IItemResponse {
   id: number;
   title: string;
-  description: string;
+  description: string | null;
   sourceUrl: string;
-  sourceProvider: string;
+  sourceProvider: Provider;
   tags: string[];
   position: number;
   createdBy: number;
@@ -74,4 +98,8 @@ export interface ICueResponse {
   seconds: number;
   name?: string;
   createdAt: Date;
+}
+export interface IMediaDataResponse {
+  url: string;
+  title: string;
 }

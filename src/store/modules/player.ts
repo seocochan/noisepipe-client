@@ -49,28 +49,34 @@ const initialState: PlayerState = {
 // reducer
 export default produce<PlayerState, PlayerAction>((draft, action) => {
   switch (action.type) {
-    case INITIALIZE:
+    case INITIALIZE: {
       draft.status.played = 0;
       draft.status.playedSeconds = 0;
       return;
-    case SET_DURATION:
+    }
+    case SET_DURATION: {
       draft.status.duration = action.payload.duration;
       return;
-    case SET_REF:
+    }
+    case SET_REF: {
       draft.ref = action.payload.ref;
       return;
-    case SET_CURRENT_ITEM:
+    }
+    case SET_CURRENT_ITEM: {
       draft.currentItem = action.payload.item;
       draft.status.played = 0;
       draft.status.playedSeconds = 0;
       return;
-    case PLAY:
+    }
+    case PLAY: {
       draft.status.playing = true;
       return;
-    case PAUSE:
+    }
+    case PAUSE: {
       draft.status.playing = false;
       return;
-    case STOP:
+    }
+    case STOP: {
       draft.currentItem = null;
       draft.status = {
         playing: false,
@@ -79,9 +85,12 @@ export default produce<PlayerState, PlayerAction>((draft, action) => {
         playedSeconds: 0
       };
       return;
-    case UPDATE_PROGRESS:
-      draft.status.played = action.payload.played;
-      draft.status.playedSeconds = action.payload.playedSeconds;
+    }
+    case UPDATE_PROGRESS: {
+      const { played, playedSeconds } = action.payload;
+      draft.status.played = played;
+      draft.status.playedSeconds = playedSeconds;
       return;
+    }
   }
 }, initialState);

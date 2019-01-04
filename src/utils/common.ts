@@ -1,6 +1,7 @@
 import { arrayMove } from 'react-sortable-hoc';
 
 import { IItemResponse } from 'payloads';
+import { ITEM_POSITION_UNIT } from 'values';
 
 // TODO:
 // - 아래의 경우에 현재 collection의 모든 item.position 값을 새로 업데이트하기
@@ -19,7 +20,7 @@ export const updatePosition = (
   if (newIndex === 0) {
     newPosition = items[newIndex].position / 2;
   } else if (newIndex === items.length - 1) {
-    newPosition = items[newIndex].position + 256 ** 2;
+    newPosition = items[newIndex].position + ITEM_POSITION_UNIT;
   } else if (oldIndex < newIndex) {
     newPosition = (items[newIndex].position + items[newIndex + 1].position) / 2;
   } else {
@@ -32,4 +33,11 @@ export const updatePosition = (
   newItems[newIndex] = newItem;
 
   return { newItems, newPosition };
+};
+
+export const getNewPosition = (items: IItemResponse[]) => {
+  const { length } = items;
+  return length === 0
+    ? ITEM_POSITION_UNIT - 1
+    : items[length - 1].position + ITEM_POSITION_UNIT;
 };

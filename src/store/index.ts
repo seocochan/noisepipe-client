@@ -3,14 +3,14 @@ import thunkMiddleware, { ThunkAction } from 'redux-thunk';
 import { StateType } from 'typesafe-actions';
 
 import authReducer, { AuthAction } from './modules/auth';
-import baseReducer, { BaseAction } from './modules/base';
 import collectionReducer, { CollectionAction } from './modules/collection';
+import itemReducer, { ItemAction } from './modules/item';
 import playerReducer, { PlayerAction } from './modules/player';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  base: baseReducer,
   collection: collectionReducer,
+  item: itemReducer,
   player: playerReducer
 });
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
@@ -18,8 +18,8 @@ const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 export type RootState = StateType<typeof rootReducer>;
 export type RootAction =
   | AuthAction
-  | BaseAction
   | CollectionAction
+  | ItemAction
   | PlayerAction;
 export type ThunkResult<R> = ThunkAction<R, any, undefined, any>;
 

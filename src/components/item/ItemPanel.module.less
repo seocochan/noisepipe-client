@@ -2,6 +2,13 @@
   margin-top: 56px;
   height: calc(~'100vh - 56px');
   border-left: 1px solid #ebedf0;
+  @media screen and (max-width: 768px) {
+    @width: 100%;
+    flex: 0 0 @width !important;
+    max-width: @width !important;
+    min-width: @width !important;
+    width: @width !important;
+  }
 }
 
 .container {

@@ -11,6 +11,7 @@ import styles from './CollectionHeader.module.less';
 interface Props {
   collection: ICollectionResponse | null;
   itemCount: number;
+  itemAddForm: React.ReactChild;
 }
 
 const menu = (
@@ -24,7 +25,11 @@ const menu = (
   </Menu>
 );
 
-const CollectionHead: React.SFC<Props> = ({ collection, itemCount }) => {
+const CollectionHead: React.SFC<Props> = ({
+  collection,
+  itemCount,
+  itemAddForm
+}) => {
   if (!collection) {
     return <LoadingIndicator />;
   }
@@ -32,31 +37,30 @@ const CollectionHead: React.SFC<Props> = ({ collection, itemCount }) => {
   const { title, description, tags, createdBy, createdAt } = collection;
   return (
     <div className={styles.header}>
-      <div className={styles.tag}>
-        {tags.map(tag => (
-          <Tag key={tag}>{tag}</Tag>
-        ))}
-      </div>
-      <div className={styles.titleSection}>
-        <h1 className={styles.title}>{title}</h1>
+      <div className={styles.topContainer}>
+        <div className={styles.tag}>
+          {tags.map(tag => (
+            <Tag key={tag}>{tag}</Tag>
+          ))}
+        </div>
         <Button className={styles.bookmarkButton} icon="book" shape="circle" />
         <Dropdown overlay={menu} trigger={['click']}>
           <Button icon="ellipsis" shape="circle" />
         </Dropdown>
       </div>
-      <article className={styles.description}>{description}</article>
+      <div className={styles.titleSection}>
+        <Button icon="caret-right" shape="circle" />
+        <h1>{title}</h1>
+      </div>
       <div className={styles.metadata}>
         <span>
-          제작자 <Link to={`/${createdBy.username}`}>{createdBy.username}</Link>
+          <Link to={`/${createdBy.username}`}>{createdBy.username}</Link> 제작
         </span>
-        <span>·</span>
-        <span>아이템 {itemCount}개</span>
         <span>·</span>
         <span>{moment(createdAt).fromNow()}</span>
       </div>
-      <div>
-        <Button icon="caret-right">재생</Button>
-      </div>
+      <article className={styles.description}>{description}</article>
+      <div>{itemAddForm}</div>
     </div>
   );
 };

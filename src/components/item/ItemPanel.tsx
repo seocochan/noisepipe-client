@@ -29,8 +29,8 @@ const ItemPanel: React.SFC<Props> = ({
       reverseArrow={true}
       trigger={null}
       theme={'light'}
-      width={640}
-      style={{ background: '#f9f9fa' }}
+      width={'640'}
+      style={{ background: '#f9f9fa', transition: 'none' }}
       // style={{ transition: 'width 0.2s, height 0.3s' }}
     >
       {itemPanelHeader}

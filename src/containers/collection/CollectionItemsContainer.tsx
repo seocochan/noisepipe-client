@@ -5,7 +5,7 @@ import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Divider } from 'antd';
 import { CollectionHeader, CollectionItems } from 'components/collection';
-import { ItemAddForm } from 'components/item';
+import { ItemAddForm, ItemFilterInput } from 'components/item';
 import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -89,9 +89,10 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
         <CollectionHeader
           collection={collection}
           itemCount={items ? items.length : 0}
+          itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
         />
         <Divider />
-        <ItemAddForm handleAddItem={this.handleAddItem} />
+        <ItemFilterInput />
         {items && (
           <CollectionItems
             items={items}

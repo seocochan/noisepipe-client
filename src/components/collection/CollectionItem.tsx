@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 
-import { Icon } from 'antd';
-import * as moment from 'moment';
+import { Button } from 'antd';
 import { IItemResponse } from 'payloads';
+
+import styles from './CollectionItem.module.less';
 
 interface Props {
   item: IItemResponse;
@@ -11,8 +12,21 @@ interface Props {
   onClickItem: (e: React.MouseEvent) => void;
 }
 
+const DragIcon = ({ size = 16, color = '#fff' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox={`0 0 ${size} ${size}`}
+  >
+    <path d="M20 9H4v2h16V9zM4 15h16v-2H4v2z" fill={color} />
+  </svg>
+);
+
 const DragHandle = SortableHandle(() => (
-  <Icon type="drag" style={{ fontSize: 20 }} />
+  <div className={styles.dragHandle}>
+    <DragIcon size={16} color={'#555'} />
+  </div>
 ));
 
 class CollectionItem extends React.Component<Props, {}> {
@@ -21,15 +35,20 @@ class CollectionItem extends React.Component<Props, {}> {
     const {
       itemIndex,
       onClickItem,
-      item: { title, position, description, createdAt }
+      item: { title }
     } = this.props;
 
     return (
-      <div>
+      <div className={styles.itemContainer}>
+        <Button icon="caret-right" shape="circle" size="small" />
+        <div
+          className={styles.itemContent}
+          id={itemIndex.toString()}
+          onClick={onClickItem}
+        >
+          <div className={styles.title}>{title}</div>
+        </div>
         <DragHandle />
-        <a id={itemIndex.toString()} onClick={onClickItem}>
-          {title} {position} | {description} | {moment(createdAt).fromNow()}
-        </a>
       </div>
     );
   }

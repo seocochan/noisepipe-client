@@ -20,20 +20,18 @@ class CollectionItems extends React.Component<Props, {}> {
       return <LoadingIndicator />;
     }
     return (
-      <>
-        <ul>
-          {items.length === 0 && <div>아이템이 없습니다.</div>}
-          {items.map((item, index) => (
-            <CollectionItem
-              key={item.id}
-              itemIndex={index}
-              index={index}
-              item={item}
-              onClickItem={onClickItem}
-            />
-          ))}
-        </ul>
-      </>
+      <div>
+        {items.length === 0 && <div>아이템이 없습니다.</div>}
+        {items.map((item, index) => (
+          <CollectionItem
+            key={item.id}
+            itemIndex={index}
+            index={index}
+            item={item}
+            onClickItem={onClickItem}
+          />
+        ))}
+      </div>
     );
   }
 }

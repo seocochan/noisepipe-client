@@ -80,6 +80,7 @@ class ItemAddForm extends React.Component<Props, State> {
             placeholder="미디어 URL"
             value={value}
             onChange={this.handleChange}
+            style={{width: 200}}
           />
         </Form.Item>
         <Form.Item>

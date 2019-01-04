@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Dropdown, Menu, Tag } from 'antd';
+import { Button, Dropdown, Menu } from 'antd';
 import { LoadingIndicator } from 'components/common';
 import * as moment from 'moment';
 import { ICollectionResponse } from 'payloads';
@@ -38,9 +38,9 @@ const CollectionHead: React.SFC<Props> = ({
   return (
     <div className={styles.header}>
       <div className={styles.topContainer}>
-        <div className={styles.tag}>
-          {tags.map(tag => (
-            <Tag key={tag}>{tag}</Tag>
+        <div className={styles.tags}>
+          {tags.map((tag, index) => (
+            <span key={index}>{`#${tag}`}</span>
           ))}
         </div>
         <Button className={styles.bookmarkButton} icon="book" shape="circle" />

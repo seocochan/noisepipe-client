@@ -35,7 +35,7 @@ class CollectionItem extends React.Component<Props, {}> {
     const {
       itemIndex,
       onClickItem,
-      item: { title }
+      item: { title, tags }
     } = this.props;
 
     return (
@@ -47,6 +47,11 @@ class CollectionItem extends React.Component<Props, {}> {
           onClick={onClickItem}
         >
           <div className={styles.title}>{title}</div>
+          <div className={styles.tags}>
+            {tags.map((tag, index) => (
+              <span key={index}>{`#${tag}`}</span>
+            ))}
+          </div>
         </div>
         <DragHandle />
       </div>

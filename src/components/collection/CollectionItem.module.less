@@ -1,7 +1,7 @@
 .itemContainer {
   display: flex;
   align-items: center;
-  height: 48px;
+  height: 56px;
   background-color: #fff;
 }
 .itemContent {
@@ -17,6 +17,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #0a0a0a;
 }
 .dragHandle {
   display: flex;
@@ -26,5 +27,14 @@
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
+  }
+}
+.tags {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  span {
+    margin-right: 4px;
+    padding: 0px 2px;
   }
 }

@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Tag } from 'antd';
 import { Player } from 'components/player';
 import * as moment from 'moment';
 import { IItemResponse } from 'payloads';
@@ -15,9 +14,9 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
   return (
     <div>
       <div className={styles.contentHeader}>
-        <div className={styles.tag}>
-          {item.tags.map(tag => (
-            <Tag key={tag}>{tag}</Tag>
+        <div className={styles.tags}>
+          {item.tags.map((tag, index) => (
+            <span key={index}>{`#${tag}`}</span>
           ))}
         </div>
         <div>

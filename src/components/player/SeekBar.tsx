@@ -15,6 +15,7 @@ interface State {
 }
 
 class SeekBar extends React.Component<Props, State> {
+  private slider: Slider;
   public readonly state: State = {
     dragging: false,
     value: 0
@@ -38,6 +39,7 @@ class SeekBar extends React.Component<Props, State> {
     const { seekTo } = this.props;
     seekTo(value);
     this.setState({ dragging: false });
+    this.slider.blur();
   };
   private formatTipValue = (value: number) => {
     const minutes = Math.trunc(value / 60);
@@ -57,6 +59,9 @@ class SeekBar extends React.Component<Props, State> {
         onChange={this.handleChange}
         onAfterChange={this.handleAfterChange}
         tipFormatter={this.formatTipValue}
+        ref={(slider: Slider) => {
+          this.slider = slider;
+        }}
       />
     );
   }

@@ -12,6 +12,7 @@ import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
 
 import styles from './App.module.less';
+import { PlayerControls } from './player';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
@@ -61,6 +62,7 @@ class App extends React.Component<Props, {}> {
           </Layout.Content>
           <ItemPanelContainer />
         </Layout>
+        <PlayerControls />
       </Layout>
     );
   }

@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { Slider } from 'antd';
 
+import styles from './SeekBar.module.less';
+
 interface Props {
   duration: number;
   playedSeconds: number;
@@ -49,6 +51,7 @@ class SeekBar extends React.Component<Props, State> {
 
     return (
       <Slider
+        className={styles.seekBar}
         max={duration}
         value={value}
         onChange={this.handleChange}

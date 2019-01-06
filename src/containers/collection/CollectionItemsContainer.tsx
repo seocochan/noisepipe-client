@@ -6,7 +6,6 @@ import { SortEndHandler } from 'react-sortable-hoc';
 import { Divider } from 'antd';
 import { CollectionHeader, CollectionItems } from 'components/collection';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
-import { PlayerControls } from 'components/player';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
@@ -102,7 +101,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
             onClickItem={this.handleClickItem}
           />
         )}
-        <PlayerControls />
       </>
     );
   }

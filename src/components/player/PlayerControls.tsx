@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import MediaQuery from 'react-responsive';
 
-import { Button } from 'antd';
+import { Button, Layout } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -33,45 +34,60 @@ class PlayerControls extends React.Component<Props, {}> {
       return <div />;
     }
     return (
-      <div className={styles.container}>
-        <div className={styles.title}>
-          <a
-            onClick={() => {
-              ItemActions.showPanel();
-              ItemActions.setItem(player.currentItem);
-            }}
-          >
-            {player.currentItem.title}
-          </a>
-          <SeekBar
-            duration={Math.floor(player.status.duration)}
-            playedSeconds={player.status.playedSeconds}
-            seekTo={this.seekTo}
-          />
-        </div>
-        <div className={styles.controls}>
-          <ButtonGroup>
-            {player.status.playing ? (
+      <Layout.Footer>
+        <SeekBar
+          duration={Math.floor(player.status.duration)}
+          playedSeconds={player.status.playedSeconds}
+          seekTo={this.seekTo}
+        />
+        <div className={styles.container}>
+          <div className={styles.controls}>
+            <ButtonGroup>
+              <MediaQuery minWidth={769}>
+                <Button icon="step-backward" size="large" />
+              </MediaQuery>
+              {player.status.playing ? (
+                <Button
+                  icon="pause"
+                  size="large"
+                  onClick={() => PlayerActions.pause()}
+                />
+              ) : (
+                <Button
+                  icon="caret-right"
+                  size="large"
+                  onClick={() => PlayerActions.play()}
+                />
+              )}
+              <MediaQuery minWidth={769}>
+                <Button icon="step-forward" size="large" />
+              </MediaQuery>
+            </ButtonGroup>
+          </div>
+          <div className={styles.title}>
+            <a
+              onClick={() => {
+                ItemActions.showPanel();
+                ItemActions.setItem(player.currentItem);
+              }}
+            >
+              {player.currentItem.title}
+            </a>
+          </div>
+          <div className={styles.controls}>
+            <ButtonGroup>
+              <MediaQuery minWidth={769}>
+                <Button icon="fullscreen" size="large" />
+              </MediaQuery>
               <Button
-                icon="pause"
+                icon="close"
                 size="large"
-                onClick={() => PlayerActions.pause()}
+                onClick={() => PlayerActions.stop()}
               />
-            ) : (
-              <Button
-                icon="caret-right"
-                size="large"
-                onClick={() => PlayerActions.play()}
-              />
-            )}
-            <Button
-              icon="close"
-              size="large"
-              onClick={() => PlayerActions.stop()}
-            />
-          </ButtonGroup>
+            </ButtonGroup>
+          </div>
         </div>
-      </div>
+      </Layout.Footer>
     );
   }
 }

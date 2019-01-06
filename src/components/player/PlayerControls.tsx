@@ -10,6 +10,7 @@ import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 
 import styles from './PlayerControls.module.less';
+import PlayerDrawer from './PlayerDrawer';
 import SeekBar from './SeekBar';
 
 interface Props {
@@ -26,6 +27,10 @@ class PlayerControls extends React.Component<Props, {}> {
     }
     player.ref.seekTo(seconds);
   };
+
+  public componentWillUnmount() {
+    this.props.PlayerActions.setDrawerVisible(false);
+  }
 
   public render(): React.ReactNode {
     const { player, PlayerActions, ItemActions } = this.props;
@@ -77,7 +82,19 @@ class PlayerControls extends React.Component<Props, {}> {
           <div className={styles.controls}>
             <ButtonGroup>
               <MediaQuery minWidth={769}>
-                <Button icon="fullscreen" size="large" />
+                {player.drawer.visible ? (
+                  <Button
+                    icon="down"
+                    size="large"
+                    onClick={() => PlayerActions.setDrawerVisible(false)}
+                  />
+                ) : (
+                  <Button
+                    icon="up"
+                    size="large"
+                    onClick={() => PlayerActions.setDrawerVisible(true)}
+                  />
+                )}
               </MediaQuery>
               <Button
                 icon="close"
@@ -87,6 +104,10 @@ class PlayerControls extends React.Component<Props, {}> {
             </ButtonGroup>
           </div>
         </div>
+        <PlayerDrawer
+          visible={player.drawer.visible}
+          handleDrawerClose={() => PlayerActions.setDrawerVisible(false)}
+        />
       </Layout.Footer>
     );
   }

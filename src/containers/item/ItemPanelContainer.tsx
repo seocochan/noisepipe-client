@@ -21,7 +21,8 @@ class ItemPanelContainer extends React.Component<Props, {}> {
     e.preventDefault();
     const { ItemActions } = this.props;
     ItemActions.hidePanel();
-    ItemActions.setItem(null);
+    // FIXME:
+    // ItemActions.setItem(null);
   };
   private handleTabChange = (e: RadioChangeEvent) => {
     const { ItemActions } = this.props;

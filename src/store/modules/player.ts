@@ -13,6 +13,7 @@ const PLAY = 'player/PLAY';
 const PAUSE = 'player/PAUSE';
 const STOP = 'player/STOP';
 const UPDATE_PROGRESS = 'player/UPDATE_PROGRESS';
+const SET_DRAWER_VISIBLE = 'player/SET_DRAWER_VISIBLE';
 
 // action creators
 export const actions = {
@@ -25,7 +26,9 @@ export const actions = {
   pause: () => createAction(PAUSE),
   stop: () => createAction(STOP),
   updateProgress: (played: number, playedSeconds: number) =>
-    createAction(UPDATE_PROGRESS, { played, playedSeconds })
+    createAction(UPDATE_PROGRESS, { played, playedSeconds }),
+  setDrawerVisible: (visible: boolean) =>
+    createAction(SET_DRAWER_VISIBLE, { visible })
 };
 export type PlayerAction = ActionType<typeof actions>;
 
@@ -39,11 +42,15 @@ export interface PlayerState {
     played: number;
     playedSeconds: number;
   };
+  drawer: {
+    visible: boolean;
+  };
 }
 const initialState: PlayerState = {
   ref: null,
   currentItem: null,
-  status: { playing: false, duration: 0, played: 0, playedSeconds: 0 }
+  status: { playing: false, duration: 0, played: 0, playedSeconds: 0 },
+  drawer: { visible: false }
 };
 
 // reducer
@@ -90,6 +97,10 @@ export default produce<PlayerState, PlayerAction>((draft, action) => {
       const { played, playedSeconds } = action.payload;
       draft.status.played = played;
       draft.status.playedSeconds = playedSeconds;
+      return;
+    }
+    case SET_DRAWER_VISIBLE: {
+      draft.drawer.visible = action.payload.visible;
       return;
     }
   }

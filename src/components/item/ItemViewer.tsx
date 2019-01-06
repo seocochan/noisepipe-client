@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { Player } from 'components/player';
 import * as moment from 'moment';
 import { IItemResponse } from 'payloads';
 
@@ -25,7 +24,7 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
       </div>
       <h1>{item.title}</h1>
       <div className={styles.playerWrapper}>
-        <Player />
+        <p>player</p>
       </div>
       <article className={styles.description}>
         {item.description ? item.description : <i>{'설명이 없습니다'}</i>}

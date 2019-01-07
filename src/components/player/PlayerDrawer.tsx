@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { Drawer } from 'antd';
-
-import Player from './Player';
+import { PlayerContainer } from 'containers/player';
 
 interface Props {
   visible: boolean;
@@ -25,7 +24,7 @@ class PlayerDrawer extends React.Component<Props, {}> {
         zIndex={2}
         onClose={() => handleDrawerClose()}
       >
-        <Player />
+        <PlayerContainer />
       </Drawer>
     );
   }

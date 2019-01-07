@@ -6,8 +6,6 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 
-import styles from './Player.module.less';
-
 interface Props {
   PlayerActions: typeof playerActions;
   player: PlayerState;
@@ -57,7 +55,8 @@ class Player extends React.Component<Props, {}> {
     }
     return (
       <ReactPlayer
-        className={styles.player}
+        url={currentItem.sourceUrl}
+        ref={this.ref}
         playing={status.playing}
         onReady={this.handleReady}
         onDuration={duration => PlayerActions.setDuration(duration)}
@@ -71,10 +70,9 @@ class Player extends React.Component<Props, {}> {
             playerVars: { controls: 1 }
           }
         }}
-        url={currentItem.sourceUrl}
         width="100%"
         height="100%"
-        ref={this.ref}
+        style={{ position: 'absolute', top: 0, left: 0 }}
       />
     );
   }

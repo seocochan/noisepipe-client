@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ReactPlayer from 'react-player';
 
 import * as moment from 'moment';
 import { IItemResponse } from 'payloads';
@@ -24,7 +25,17 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
       </div>
       <h1>{item.title}</h1>
       <div className={styles.playerWrapper}>
-        <p>player</p>
+        <ReactPlayer
+          url={item.sourceUrl}
+          config={{
+            youtube: {
+              playerVars: { controls: 1 }
+            }
+          }}
+          width="100%"
+          height="100%"
+          style={{ position: 'absolute', top: 0, left: 0 }}
+        />
       </div>
       <article className={styles.description}>
         {item.description ? item.description : <i>{'설명이 없습니다'}</i>}

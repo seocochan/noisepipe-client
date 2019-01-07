@@ -6,6 +6,7 @@ import { SortEndHandler } from 'react-sortable-hoc';
 import { Divider } from 'antd';
 import { CollectionHeader, CollectionItems } from 'components/collection';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
+import { IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
@@ -35,10 +36,9 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     CollectionActions.loadItems(collectionId);
   }
   public componentWillUnmount() {
-    const { ItemActions, PlayerActions } = this.props;
+    const { ItemActions } = this.props;
     ItemActions.hidePanel();
     ItemActions.setItem(null);
-    PlayerActions.stop();
   }
 
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
@@ -55,7 +55,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   };
   private handleClickItem = (e: React.MouseEvent) => {
     e.preventDefault();
-    const { ItemActions, PlayerActions, collection } = this.props;
+    const { ItemActions, collection } = this.props;
     const item =
       collection.items &&
       e.currentTarget &&
@@ -63,7 +63,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
 
     ItemActions.showPanel();
     ItemActions.setItem(item);
-    PlayerActions.setCurrentItem(item);
   };
   private handleAddItem = (
     title: string,
@@ -78,6 +77,11 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       return;
     }
     CollectionActions.addItem(collection.id, title, sourceUrl, sourceProvider);
+  };
+  private playItem = (item: IItemResponse) => {
+    const { PlayerActions } = this.props;
+    PlayerActions.setCurrentItem(item);
+    PlayerActions.play();
   };
 
   public render(): React.ReactNode {
@@ -99,6 +103,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
             onSortEnd={this.handleSortEnd}
             lockToContainerEdges={true}
             onClickItem={this.handleClickItem}
+            playItem={this.playItem}
           />
         )}
       </>

@@ -10,6 +10,7 @@ interface Props {
   item: IItemResponse;
   itemIndex: number;
   onClickItem: (e: React.MouseEvent) => void;
+  playItem: (item: IItemResponse) => void;
 }
 
 const DragIcon = ({ size = 16, color = '#fff' }) => (
@@ -30,6 +31,11 @@ const DragHandle = SortableHandle(() => (
 ));
 
 class CollectionItem extends React.Component<Props, {}> {
+  private handleClickPlay = () => {
+    const { item, playItem } = this.props;
+    playItem(item);
+  };
+
   // FIXME: currentUser와 collection의 소유자가 다르면 handle 출력 X
   public render(): React.ReactNode {
     const {
@@ -40,7 +46,12 @@ class CollectionItem extends React.Component<Props, {}> {
 
     return (
       <div className={styles.itemContainer}>
-        <Button icon="caret-right" shape="circle" size="small" />
+        <Button
+          icon="caret-right"
+          shape="circle"
+          size="small"
+          onClick={this.handleClickPlay}
+        />
         <div
           className={styles.itemContent}
           id={itemIndex.toString()}

@@ -9,12 +9,13 @@ import CollectionItem from './CollectionItem';
 interface Props {
   items: IItemResponse[] | null;
   onClickItem: (e: React.MouseEvent) => void;
+  playItem: (item: IItemResponse) => void;
 }
 
 // FIXME: Hide editables when auth not exist
 class CollectionItems extends React.Component<Props, {}> {
   public render(): React.ReactNode {
-    const { items, onClickItem } = this.props;
+    const { items, onClickItem, playItem } = this.props;
 
     if (items == null) {
       return <LoadingIndicator />;
@@ -29,6 +30,7 @@ class CollectionItems extends React.Component<Props, {}> {
             index={index}
             item={item}
             onClickItem={onClickItem}
+            playItem={playItem}
           />
         ))}
       </div>

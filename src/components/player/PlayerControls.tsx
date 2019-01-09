@@ -6,7 +6,6 @@ import { Button, Layout } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
-import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 
 import styles from './PlayerControls.module.less';
@@ -14,7 +13,6 @@ import PlayerDrawer from './PlayerDrawer';
 import SeekBar from './SeekBar';
 
 interface Props {
-  ItemActions: typeof itemActions;
   player: PlayerState;
   PlayerActions: typeof playerActions;
 }
@@ -22,10 +20,15 @@ interface Props {
 class PlayerControls extends React.Component<Props, {}> {
   private seekTo = (seconds: number) => {
     const { player } = this.props;
-    if (!player.ref) {
+    const { currentTarget } = player;
+
+    if (currentTarget == null) {
       return;
     }
-    player.ref.seekTo(seconds);
+    if (!player[currentTarget].ref) {
+      return;
+    }
+    player[currentTarget].ref!.seekTo(seconds);
   };
 
   public componentWillUnmount() {
@@ -33,50 +36,62 @@ class PlayerControls extends React.Component<Props, {}> {
   }
 
   public render(): React.ReactNode {
-    const { player, PlayerActions, ItemActions } = this.props;
-
-    if (!player.currentItem) {
+    const { player, PlayerActions } = this.props;
+    const { currentTarget } = player;
+    if (!currentTarget) {
       return <div />;
     }
+
     return (
       <Layout.Footer>
         <SeekBar
-          duration={Math.floor(player.status.duration)}
-          playedSeconds={player.status.playedSeconds}
+          duration={Math.floor(player[currentTarget].status.duration)}
+          playedSeconds={player[currentTarget].status.playedSeconds}
           seekTo={this.seekTo}
         />
         <div className={styles.container}>
           <div className={styles.controls}>
             <ButtonGroup>
               <MediaQuery minWidth={769}>
-                <Button icon="step-backward" size="large" />
+                <Button
+                  icon="step-backward"
+                  size="large"
+                  onClick={() =>
+                    PlayerActions.playNextOrPrev(currentTarget, false)
+                  }
+                />
               </MediaQuery>
-              {player.status.playing ? (
+              {player[currentTarget].status.playing ? (
                 <Button
                   icon="pause"
                   size="large"
-                  onClick={() => PlayerActions.pause()}
+                  onClick={() => PlayerActions.pause(currentTarget)}
                 />
               ) : (
                 <Button
                   icon="caret-right"
                   size="large"
-                  onClick={() => PlayerActions.play()}
+                  onClick={() => PlayerActions.play(currentTarget)}
                 />
               )}
               <MediaQuery minWidth={769}>
-                <Button icon="step-forward" size="large" />
+                <Button
+                  icon="step-forward"
+                  size="large"
+                  onClick={() => PlayerActions.playNextOrPrev(currentTarget)}
+                />
               </MediaQuery>
             </ButtonGroup>
           </div>
           <div className={styles.title}>
             <a
               onClick={() => {
-                ItemActions.showPanel();
-                ItemActions.setItem(player.currentItem);
+                PlayerActions.setDrawerVisible(true);
               }}
             >
-              {player.currentItem.title}
+              {player[currentTarget].item
+                ? player[currentTarget].item!.title
+                : ''}
             </a>
           </div>
           <div className={styles.controls}>
@@ -99,7 +114,7 @@ class PlayerControls extends React.Component<Props, {}> {
               <Button
                 icon="close"
                 size="large"
-                onClick={() => PlayerActions.stop()}
+                onClick={() => PlayerActions.stop(currentTarget)}
               />
             </ButtonGroup>
           </div>
@@ -117,7 +132,6 @@ const mapStateToProps = ({ player }: RootState) => ({
   player
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  ItemActions: bindActionCreators(itemActions, dispatch),
   PlayerActions: bindActionCreators(playerActions, dispatch)
 });
 

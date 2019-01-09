@@ -30,6 +30,9 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
           config={{
             youtube: {
               playerVars: { controls: 1 }
+            },
+            soundcloud: {
+              options: { single_active: false }
             }
           }}
           width="100%"

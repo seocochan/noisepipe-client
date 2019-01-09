@@ -31,16 +31,13 @@ const DragHandle = SortableHandle(() => (
 ));
 
 class CollectionItem extends React.Component<Props, {}> {
-  private handleClickPlay = () => {
-    const { item, playItem } = this.props;
-    playItem(item);
-  };
-
   // FIXME: currentUser와 collection의 소유자가 다르면 handle 출력 X
   public render(): React.ReactNode {
     const {
       itemIndex,
       onClickItem,
+      playItem,
+      item,
       item: { title, tags }
     } = this.props;
 
@@ -50,7 +47,7 @@ class CollectionItem extends React.Component<Props, {}> {
           icon="caret-right"
           shape="circle"
           size="small"
-          onClick={this.handleClickPlay}
+          onClick={() => playItem(item)}
         />
         <div
           className={styles.itemContent}

@@ -24,7 +24,16 @@ class SeekBar extends React.Component<Props, State> {
   public componentDidUpdate(prevProps: Props) {
     const { playedSeconds } = this.props;
     const { dragging } = this.state;
+
     if (dragging) {
+      /**
+       * The following if() statement is for fixing a bug that blocks slider to render proper value.
+       * When provider(YT|SC) changes for the first time, onChange(handleChange) event occurs (for unknown reason),
+       * and it sets State.dragging to true. Finally it blocks CDU to set proper State.value.
+       */
+      if (playedSeconds === 0) {
+        this.setState({ dragging: false });
+      }
       return;
     }
     if (prevProps.playedSeconds !== playedSeconds) {

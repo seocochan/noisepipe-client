@@ -80,8 +80,10 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   };
   private playItem = (item: IItemResponse) => {
     const { PlayerActions } = this.props;
-    PlayerActions.setCurrentItem(item);
-    PlayerActions.play();
+    const target = item.sourceProvider;
+
+    PlayerActions.stopOthers(target);
+    PlayerActions.setItem(target, item);
   };
 
   public render(): React.ReactNode {

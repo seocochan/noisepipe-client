@@ -12,7 +12,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
 import { actions as itemActions } from 'store/modules/item';
-import { actions as playerActions } from 'store/modules/player';
+import { actions as playerActions, PlayerState } from 'store/modules/player';
 import { Provider } from 'types';
 
 interface Props extends RouteComponentProps {
@@ -20,6 +20,7 @@ interface Props extends RouteComponentProps {
   collection: CollectionState;
   CollectionActions: typeof collectionActions;
   collectionId: number;
+  player: PlayerState;
   PlayerActions: typeof playerActions;
 }
 
@@ -82,13 +83,33 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   private playItem = (item: IItemResponse) => {
     const { PlayerActions } = this.props;
     const target = item.sourceProvider;
-
     PlayerActions.stopOthers(target);
     PlayerActions.setItem(target, item);
   };
+  private resumeItem = (item: IItemResponse) => {
+    const { PlayerActions } = this.props;
+    const target = item.sourceProvider;
+    PlayerActions.play(target);
+  };
+  private pauseItem = (item: IItemResponse) => {
+    const { PlayerActions } = this.props;
+    const target = item.sourceProvider;
+    PlayerActions.pause(target);
+  };
 
   public render(): React.ReactNode {
-    const { collection, items } = this.props.collection;
+    const {
+      collection: { collection, items },
+      player: { currentTarget },
+      player
+    } = this.props;
+    const playerItem =
+      currentTarget && player[currentTarget].item
+        ? {
+            id: player[currentTarget].item!.id,
+            playing: player[currentTarget].status.playing
+          }
+        : undefined;
 
     return (
       <>
@@ -103,11 +124,14 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
         {items && (
           <CollectionItems
             items={items}
-            useDragHandle={true}
-            onSortEnd={this.handleSortEnd}
+            playerItem={playerItem}
             lockToContainerEdges={true}
             onClickItem={this.handleClickItem}
             playItem={this.playItem}
+            resumeItem={this.resumeItem}
+            pauseItem={this.pauseItem}
+            useDragHandle={true}
+            onSortEnd={this.handleSortEnd}
           />
         )}
       </>
@@ -115,8 +139,9 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = ({ collection }: RootState) => ({
-  collection
+const mapStateToProps = ({ collection, player }: RootState) => ({
+  collection,
+  player
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   ItemActions: bindActionCreators(itemActions, dispatch),

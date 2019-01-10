@@ -8,14 +8,24 @@ import CollectionItem from './CollectionItem';
 
 interface Props {
   items: IItemResponse[] | null;
+  playerItem?: { id: number; playing: boolean };
   onClickItem: (e: React.MouseEvent) => void;
   playItem: (item: IItemResponse) => void;
+  resumeItem: (item: IItemResponse) => void;
+  pauseItem: (item: IItemResponse) => void;
 }
 
 // FIXME: Hide editables when auth not exist
 class CollectionItems extends React.Component<Props, {}> {
   public render(): React.ReactNode {
-    const { items, onClickItem, playItem } = this.props;
+    const {
+      items,
+      playerItem,
+      onClickItem,
+      playItem,
+      resumeItem,
+      pauseItem
+    } = this.props;
 
     if (items == null) {
       return <LoadingIndicator />;
@@ -26,11 +36,19 @@ class CollectionItems extends React.Component<Props, {}> {
         {items.map((item, index) => (
           <CollectionItem
             key={item.id}
-            itemIndex={index}
             index={index}
             item={item}
+            itemIndex={index}
+            isSet={playerItem && playerItem.id === item.id ? true : false}
+            isPlaying={
+              playerItem && playerItem.id === item.id && playerItem.playing
+                ? true
+                : false
+            }
             onClickItem={onClickItem}
             playItem={playItem}
+            resumeItem={resumeItem}
+            pauseItem={pauseItem}
           />
         ))}
       </div>

@@ -9,8 +9,12 @@ import styles from './CollectionItem.module.less';
 interface Props {
   item: IItemResponse;
   itemIndex: number;
+  isSet: boolean;
+  isPlaying: boolean;
   onClickItem: (e: React.MouseEvent) => void;
   playItem: (item: IItemResponse) => void;
+  resumeItem: (item: IItemResponse) => void;
+  pauseItem: (item: IItemResponse) => void;
 }
 
 const DragIcon = ({ size = 16, color = '#fff' }) => (
@@ -34,21 +38,43 @@ class CollectionItem extends React.Component<Props, {}> {
   // FIXME: currentUser와 collection의 소유자가 다르면 handle 출력 X
   public render(): React.ReactNode {
     const {
-      itemIndex,
-      onClickItem,
-      playItem,
       item,
-      item: { title, tags }
+      item: { title, tags },
+      itemIndex,
+      isSet,
+      isPlaying,
+      playItem,
+      resumeItem,
+      pauseItem,
+      onClickItem
     } = this.props;
 
     return (
       <div className={styles.itemContainer}>
-        <Button
-          icon="caret-right"
-          shape="circle"
-          size="small"
-          onClick={() => playItem(item)}
-        />
+        {isPlaying ? (
+          <Button
+            type="primary"
+            icon="pause"
+            shape="circle"
+            size="small"
+            onClick={() => pauseItem(item)}
+          />
+        ) : isSet ? (
+          <Button
+            type="primary"
+            icon="caret-right"
+            shape="circle"
+            size="small"
+            onClick={() => resumeItem(item)}
+          />
+        ) : (
+          <Button
+            icon="caret-right"
+            shape="circle"
+            size="small"
+            onClick={() => playItem(item)}
+          />
+        )}
         <div
           className={styles.itemContent}
           id={itemIndex.toString()}

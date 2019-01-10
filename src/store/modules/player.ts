@@ -17,6 +17,7 @@ const PAUSE = 'player/PAUSE';
 const STOP = 'player/STOP';
 const UPDATE_PROGRESS = 'player/UPDATE_PROGRESS';
 const SET_DRAWER_VISIBLE = 'player/SET_DRAWER_VISIBLE';
+const SET_LOADING = 'player/SET_LOADING';
 
 // action creators
 export const actions = {
@@ -71,7 +72,8 @@ export const actions = {
     const followingTarget = followingItem.sourceProvider;
     dispatch(actions.stopOthers(followingTarget));
     dispatch(actions.setItem(followingTarget, followingItem));
-  }
+  },
+  setLoading: (loading: boolean) => createAction(SET_LOADING, { loading })
 };
 export type PlayerAction = ActionType<typeof actions>;
 
@@ -95,6 +97,7 @@ export interface PlayerState {
   [Provider.Youtube]: Player;
   [Provider.Soundcloud]: Player;
   currentTarget: Provider | null;
+  loading: boolean;
   drawer: {
     visible: boolean;
   };
@@ -103,6 +106,7 @@ const initialState: PlayerState = {
   [Provider.Youtube]: playerInitialState,
   [Provider.Soundcloud]: playerInitialState,
   currentTarget: null,
+  loading: true,
   drawer: { visible: false }
 };
 
@@ -142,6 +146,7 @@ export default produce<PlayerState, PlayerAction>((draft, action) => {
         // open it to prevent AudioContext issue.
         draft.drawer.visible = true;
       }
+      draft.loading = true; // will be set to false at onReady()
       draft.currentTarget = target;
       draft[target].item = item;
       draft[target].status.played = 0;
@@ -160,9 +165,6 @@ export default produce<PlayerState, PlayerAction>((draft, action) => {
     }
     case STOP: {
       const { target } = action.payload;
-      if (!draft[target].item) {
-        return;
-      }
       draft[target].item = null;
       draft[target].status = {
         playing: false,
@@ -176,6 +178,10 @@ export default produce<PlayerState, PlayerAction>((draft, action) => {
       const { target, played, playedSeconds } = action.payload;
       draft[target].status.played = played;
       draft[target].status.playedSeconds = playedSeconds;
+      return;
+    }
+    case SET_LOADING: {
+      draft.loading = action.payload.loading;
       return;
     }
     case SET_DRAWER_VISIBLE: {

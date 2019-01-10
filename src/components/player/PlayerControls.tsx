@@ -37,12 +37,13 @@ class PlayerControls extends React.Component<Props, {}> {
 
   public render(): React.ReactNode {
     const { player, PlayerActions } = this.props;
-    const { currentTarget, drawer } = player;
+    const { currentTarget, loading, drawer } = player;
+    const disabled = loading || !currentTarget;
 
     return (
       <Layout.Footer>
         <SeekBar
-          disabled={currentTarget == null} // FIXME: load 중인 미디어가 있을 때도 true
+          disabled={disabled}
           duration={
             currentTarget && Math.floor(player[currentTarget].status.duration)
           }
@@ -56,7 +57,7 @@ class PlayerControls extends React.Component<Props, {}> {
             <ButtonGroup>
               <MediaQuery minWidth={769}>
                 <Button
-                  disabled={!currentTarget}
+                  disabled={disabled}
                   icon="step-backward"
                   size="large"
                   onClick={() =>
@@ -67,14 +68,14 @@ class PlayerControls extends React.Component<Props, {}> {
               </MediaQuery>
               {currentTarget && player[currentTarget].status.playing ? (
                 <Button
-                  disabled={!currentTarget}
+                  disabled={disabled}
                   icon="pause"
                   size="large"
                   onClick={() => PlayerActions.pause(currentTarget)}
                 />
               ) : (
                 <Button
-                  disabled={!currentTarget}
+                  disabled={disabled}
                   icon="caret-right"
                   size="large"
                   onClick={() =>
@@ -84,7 +85,7 @@ class PlayerControls extends React.Component<Props, {}> {
               )}
               <MediaQuery minWidth={769}>
                 <Button
-                  disabled={!currentTarget}
+                  disabled={disabled}
                   icon="step-forward"
                   size="large"
                   onClick={() =>

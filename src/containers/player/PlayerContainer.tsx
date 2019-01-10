@@ -38,6 +38,7 @@ class PlayerContainer extends React.Component<Props, {}> {
   private handleReady = () => {
     const { target, PlayerActions, player } = this.props;
     if (player[target].item) {
+      PlayerActions.setLoading(false);
       PlayerActions.play(target); // autoplay
     }
     const duration = this.player.getDuration();

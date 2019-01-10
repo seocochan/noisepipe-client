@@ -16,7 +16,7 @@ interface Props {
 class PlayersContainer extends React.Component<Props, {}> {
   public render(): React.ReactNode {
     const {
-      player: { currentTarget }
+      player: { currentTarget, loading }
     } = this.props;
 
     return (
@@ -24,7 +24,7 @@ class PlayersContainer extends React.Component<Props, {}> {
         {Object.keys(Provider).map(key => (
           <PlayerContainer
             key={Provider[key]}
-            visible={currentTarget === Provider[key]}
+            visible={!loading && currentTarget === Provider[key]}
             target={Provider[key]}
           />
         ))}

@@ -71,12 +71,16 @@ class PlayerContainer extends React.Component<Props, {}> {
         onEnded={() => PlayerActions.playNextOrPrev(target)}
         config={{
           youtube: {
-            playerVars: { controls: 1 }
+            playerVars: {
+              controls: 1,
+              autoplay: 1
+            }
           },
           soundcloud: {
             options: {
               single_active: false,
-              hide_related: true
+              hide_related: true,
+              auto_play: true
             }
           }
         }}

@@ -5,8 +5,9 @@ import { Slider } from 'antd';
 import styles from './SeekBar.module.less';
 
 interface Props {
-  duration: number;
-  playedSeconds: number;
+  disabled: boolean;
+  duration: number | null;
+  playedSeconds: number | null;
   seekTo: (seconds: number) => void;
 }
 interface State {
@@ -24,7 +25,9 @@ class SeekBar extends React.Component<Props, State> {
   public componentDidUpdate(prevProps: Props) {
     const { playedSeconds } = this.props;
     const { dragging } = this.state;
-
+    if (playedSeconds == null) {
+      return;
+    }
     if (dragging) {
       /**
        * The following if() statement is for fixing a bug that blocks slider to render proper value.
@@ -57,14 +60,15 @@ class SeekBar extends React.Component<Props, State> {
   };
 
   public render(): React.ReactNode {
-    const { duration } = this.props;
+    const { disabled, duration } = this.props;
     const { value } = this.state;
 
     return (
       <Slider
         className={styles.seekBar}
-        max={duration}
-        value={value}
+        disabled={disabled}
+        max={disabled ? Number.MAX_SAFE_INTEGER : duration!}
+        value={disabled ? 0 : value}
         onChange={this.handleChange}
         onAfterChange={this.handleAfterChange}
         tipFormatter={this.formatTipValue}

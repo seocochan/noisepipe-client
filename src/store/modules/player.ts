@@ -7,6 +7,7 @@ import { Provider } from 'types';
 import { action as createAction, ActionType } from 'typesafe-actions';
 
 // action types
+const INITIALIZE = 'player/INITIALIZE';
 const INITIALIZE_PLAYER = 'player/INITIALIZE_PLAYER';
 const SET_DURATION = 'player/SET_DURATION';
 const SET_REF = 'player/SET_REF';
@@ -19,6 +20,7 @@ const SET_DRAWER_VISIBLE = 'player/SET_DRAWER_VISIBLE';
 
 // action creators
 export const actions = {
+  initialize: () => createAction(INITIALIZE),
   initializePlayer: (target: Provider) =>
     createAction(INITIALIZE_PLAYER, { target }),
   setDuration: (target: Provider, duration: number) =>
@@ -101,12 +103,22 @@ const initialState: PlayerState = {
   [Provider.Youtube]: playerInitialState,
   [Provider.Soundcloud]: playerInitialState,
   currentTarget: null,
-  drawer: { visible: true }
+  drawer: { visible: false }
 };
 
 // reducer
 export default produce<PlayerState, PlayerAction>((draft, action) => {
   switch (action.type) {
+    case INITIALIZE: {
+      // Initialize states except Player.ref and drawer.visible
+      draft[Provider.Youtube].item = playerInitialState.item;
+      draft[Provider.Youtube].status = playerInitialState.status;
+      draft[Provider.Soundcloud].item = playerInitialState.item;
+      draft[Provider.Soundcloud].status = playerInitialState.status;
+      draft.currentTarget = initialState.currentTarget;
+      draft.drawer.visible = false;
+      return;
+    }
     case INITIALIZE_PLAYER: {
       const { target } = action.payload;
       draft[target].status.played = 0;
@@ -125,6 +137,11 @@ export default produce<PlayerState, PlayerAction>((draft, action) => {
     }
     case SET_ITEM: {
       const { target, item } = action.payload;
+      if (!draft.currentTarget) {
+        // If drawer's never been rendered yet after initializing,
+        // open it to prevent AudioContext issue.
+        draft.drawer.visible = true;
+      }
       draft.currentTarget = target;
       draft[target].item = item;
       draft[target].status.played = 0;

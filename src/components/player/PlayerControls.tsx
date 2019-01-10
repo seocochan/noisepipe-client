@@ -37,16 +37,18 @@ class PlayerControls extends React.Component<Props, {}> {
 
   public render(): React.ReactNode {
     const { player, PlayerActions } = this.props;
-    const { currentTarget } = player;
-    if (!currentTarget) {
-      return <div />;
-    }
+    const { currentTarget, drawer } = player;
 
     return (
       <Layout.Footer>
         <SeekBar
-          duration={Math.floor(player[currentTarget].status.duration)}
-          playedSeconds={player[currentTarget].status.playedSeconds}
+          disabled={currentTarget == null} // FIXME: load 중인 미디어가 있을 때도 true
+          duration={
+            currentTarget && Math.floor(player[currentTarget].status.duration)
+          }
+          playedSeconds={
+            currentTarget && player[currentTarget].status.playedSeconds
+          }
           seekTo={this.seekTo}
         />
         <div className={styles.container}>
@@ -54,31 +56,40 @@ class PlayerControls extends React.Component<Props, {}> {
             <ButtonGroup>
               <MediaQuery minWidth={769}>
                 <Button
+                  disabled={!currentTarget}
                   icon="step-backward"
                   size="large"
                   onClick={() =>
+                    currentTarget &&
                     PlayerActions.playNextOrPrev(currentTarget, false)
                   }
                 />
               </MediaQuery>
-              {player[currentTarget].status.playing ? (
+              {currentTarget && player[currentTarget].status.playing ? (
                 <Button
+                  disabled={!currentTarget}
                   icon="pause"
                   size="large"
                   onClick={() => PlayerActions.pause(currentTarget)}
                 />
               ) : (
                 <Button
+                  disabled={!currentTarget}
                   icon="caret-right"
                   size="large"
-                  onClick={() => PlayerActions.play(currentTarget)}
+                  onClick={() =>
+                    currentTarget && PlayerActions.play(currentTarget)
+                  }
                 />
               )}
               <MediaQuery minWidth={769}>
                 <Button
+                  disabled={!currentTarget}
                   icon="step-forward"
                   size="large"
-                  onClick={() => PlayerActions.playNextOrPrev(currentTarget)}
+                  onClick={() =>
+                    currentTarget && PlayerActions.playNextOrPrev(currentTarget)
+                  }
                 />
               </MediaQuery>
             </ButtonGroup>
@@ -86,10 +97,10 @@ class PlayerControls extends React.Component<Props, {}> {
           <div className={styles.title}>
             <a
               onClick={() => {
-                PlayerActions.setDrawerVisible(true);
+                PlayerActions.setDrawerVisible(!drawer.visible);
               }}
             >
-              {player[currentTarget].item
+              {currentTarget && player[currentTarget].item
                 ? player[currentTarget].item!.title
                 : ''}
             </a>
@@ -99,12 +110,14 @@ class PlayerControls extends React.Component<Props, {}> {
               <MediaQuery minWidth={769}>
                 {player.drawer.visible ? (
                   <Button
+                    disabled={!currentTarget}
                     icon="down"
                     size="large"
                     onClick={() => PlayerActions.setDrawerVisible(false)}
                   />
                 ) : (
                   <Button
+                    disabled={!currentTarget}
                     icon="up"
                     size="large"
                     onClick={() => PlayerActions.setDrawerVisible(true)}
@@ -112,9 +125,10 @@ class PlayerControls extends React.Component<Props, {}> {
                 )}
               </MediaQuery>
               <Button
+                disabled={!currentTarget}
                 icon="close"
                 size="large"
-                onClick={() => PlayerActions.stop(currentTarget)}
+                onClick={() => PlayerActions.initialize()}
               />
             </ButtonGroup>
           </div>

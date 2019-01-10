@@ -19,7 +19,8 @@ class PlayerDrawer extends React.Component<Props, {}> {
         visible={visible}
         mask={true}
         placement="bottom"
-        zIndex={2}
+        zIndex={4}
+        closable={false}
         onClose={() => handleDrawerClose()}
       >
         <PlayersContainer />

@@ -6,6 +6,7 @@ import { SortEndHandler } from 'react-sortable-hoc';
 import { Divider } from 'antd';
 import { CollectionHeader, CollectionItems } from 'components/collection';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
+import { DummyPlayer } from 'components/player';
 import { IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -96,6 +97,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
           itemCount={items ? items.length : 0}
           itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
         />
+        <DummyPlayer />
         <Divider />
         <ItemFilterInput />
         {items && (

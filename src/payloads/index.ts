@@ -71,13 +71,6 @@ export interface IItemPutRequest {
   description: string | null;
   tags: string[];
 }
-export interface ICommentResponse {
-  id: number;
-  text: string;
-  depth: number;
-  collection: ICollectionSummary;
-  createdBy: IUserSummary;
-}
 
 // item
 export interface IItemResponse {

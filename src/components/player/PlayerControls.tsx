@@ -18,6 +18,10 @@ interface Props {
 }
 
 class PlayerControls extends React.Component<Props, {}> {
+  public componentWillUnmount() {
+    this.props.PlayerActions.setDrawerVisible(false);
+  }
+
   private seekTo = (seconds: number) => {
     const { player } = this.props;
     const { currentTarget } = player;
@@ -30,10 +34,18 @@ class PlayerControls extends React.Component<Props, {}> {
     }
     player[currentTarget].ref!.seekTo(seconds);
   };
-
-  public componentWillUnmount() {
-    this.props.PlayerActions.setDrawerVisible(false);
-  }
+  private handleBackward = () => {
+    const { player, PlayerActions } = this.props;
+    const { currentTarget } = player;
+    if (!currentTarget) {
+      return;
+    }
+    if (player[currentTarget].status.playedSeconds <= 3) {
+      PlayerActions.playNextOrPrev(currentTarget, false);
+    } else {
+      this.seekTo(0);
+    }
+  };
 
   public render(): React.ReactNode {
     const { player, PlayerActions } = this.props;
@@ -59,10 +71,7 @@ class PlayerControls extends React.Component<Props, {}> {
                 disabled={disabled}
                 icon="step-backward"
                 size="large"
-                onClick={() =>
-                  currentTarget &&
-                  PlayerActions.playNextOrPrev(currentTarget, false)
-                }
+                onClick={this.handleBackward}
               />
               {currentTarget && player[currentTarget].status.playing ? (
                 <Button

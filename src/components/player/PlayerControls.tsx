@@ -55,17 +55,15 @@ class PlayerControls extends React.Component<Props, {}> {
         <div className={styles.container}>
           <div className={styles.controls}>
             <ButtonGroup>
-              <MediaQuery minWidth={769}>
-                <Button
-                  disabled={disabled}
-                  icon="step-backward"
-                  size="large"
-                  onClick={() =>
-                    currentTarget &&
-                    PlayerActions.playNextOrPrev(currentTarget, false)
-                  }
-                />
-              </MediaQuery>
+              <Button
+                disabled={disabled}
+                icon="step-backward"
+                size="large"
+                onClick={() =>
+                  currentTarget &&
+                  PlayerActions.playNextOrPrev(currentTarget, false)
+                }
+              />
               {currentTarget && player[currentTarget].status.playing ? (
                 <Button
                   disabled={disabled}
@@ -83,16 +81,14 @@ class PlayerControls extends React.Component<Props, {}> {
                   }
                 />
               )}
-              <MediaQuery minWidth={769}>
-                <Button
-                  disabled={disabled}
-                  icon="step-forward"
-                  size="large"
-                  onClick={() =>
-                    currentTarget && PlayerActions.playNextOrPrev(currentTarget)
-                  }
-                />
-              </MediaQuery>
+              <Button
+                disabled={disabled}
+                icon="step-forward"
+                size="large"
+                onClick={() =>
+                  currentTarget && PlayerActions.playNextOrPrev(currentTarget)
+                }
+              />
             </ButtonGroup>
           </div>
           <div className={styles.title}>

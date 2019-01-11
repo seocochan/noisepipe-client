@@ -104,13 +104,13 @@ class PlayerContainer extends React.Component<Props, {}> {
             }
           }
         }}
-        width="100%"
+        width="calc(100vw - 20px)" // assume scroll bar width is 20px
         height="100%"
         style={{
           display: visible ? 'block' : 'none',
           position: 'absolute',
           top: 0,
-          left: 0
+          left: '5px'
         }}
       />
     );

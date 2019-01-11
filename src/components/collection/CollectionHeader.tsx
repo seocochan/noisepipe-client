@@ -10,6 +10,7 @@ import styles from './CollectionHeader.module.less';
 
 interface Props {
   collection: ICollectionResponse | null;
+  collectionPlayButton: React.ReactChild;
   itemCount: number;
   itemAddForm: React.ReactChild;
 }
@@ -27,6 +28,7 @@ const menu = (
 
 const CollectionHead: React.SFC<Props> = ({
   collection,
+  collectionPlayButton,
   itemCount,
   itemAddForm
 }) => {
@@ -49,7 +51,7 @@ const CollectionHead: React.SFC<Props> = ({
         </Dropdown>
       </div>
       <div className={styles.titleSection}>
-        <Button icon="caret-right" shape="circle" />
+        {collectionPlayButton}
         <h1>{title}</h1>
       </div>
       <div className={styles.metadata}>

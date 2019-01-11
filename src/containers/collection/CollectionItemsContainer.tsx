@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Divider } from 'antd';
-import { CollectionHeader, CollectionItems } from 'components/collection';
+import { CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
 import { DummyPlayer } from 'components/player';
 import { IItemResponse } from 'payloads';
@@ -101,7 +101,8 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     const {
       collection: { collection, items },
       player: { currentTarget },
-      player
+      player,
+      PlayerActions
     } = this.props;
     const playerItem =
       currentTarget && player[currentTarget].item
@@ -115,6 +116,23 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       <>
         <CollectionHeader
           collection={collection}
+          collectionPlayButton={
+            <CollectionPlayButton
+              isPlaying={
+                currentTarget ? player[currentTarget].status.playing : false
+              }
+              isSet={currentTarget ? true : false}
+              onPause={() =>
+                currentTarget && PlayerActions.pause(currentTarget)
+              }
+              onPlay={() =>
+                items && items.length > 0 && this.playItem(items[0])
+              }
+              onResume={() =>
+                currentTarget && PlayerActions.play(currentTarget)
+              }
+            />
+          }
           itemCount={items ? items.length : 0}
           itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
         />

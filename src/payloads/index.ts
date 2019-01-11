@@ -71,8 +71,6 @@ export interface IItemPutRequest {
   description: string | null;
   tags: string[];
 }
-
-// item
 export interface IItemResponse {
   id: number;
   title: string;

@@ -34,6 +34,25 @@ class PlayerContainer extends React.Component<Props, {}> {
     const { target, PlayerActions } = this.props;
     PlayerActions.setRef(target, this.player);
   }
+  public componentDidUpdate(prevProps: Props) {
+    const { target, player, PlayerActions } = this.props;
+    const { player: prevPlayer } = prevProps;
+    const { item } = player[target];
+    const { item: prevItem } = prevPlayer[target];
+    if (!item || !prevItem) {
+      return;
+    }
+
+    // To manually initialize player when item changes to same medias,
+    // because ReactPlayer doesn't reload media on same url.
+    if (item.id !== prevItem.id && item.sourceUrl === prevItem.sourceUrl) {
+      this.player.seekTo(0);
+      PlayerActions.initializePlayer(target);
+      PlayerActions.play(target);
+      PlayerActions.setLoading(false);
+      return;
+    }
+  }
 
   private handleReady = () => {
     const { target, PlayerActions, player } = this.props;

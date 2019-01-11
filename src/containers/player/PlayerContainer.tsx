@@ -93,7 +93,10 @@ class PlayerContainer extends React.Component<Props, {}> {
           youtube: {
             playerVars: {
               controls: 1,
-              autoplay: 1
+              autoplay: 1,
+              iv_load_policy: 3,
+              rel: 0,
+              showinfo: 0
             }
           },
           soundcloud: {

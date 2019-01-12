@@ -1,4 +1,5 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunkMiddleware, { ThunkAction } from 'redux-thunk';
 import { StateType } from 'typesafe-actions';
 
@@ -13,7 +14,11 @@ const rootReducer = combineReducers({
   item: itemReducer,
   player: playerReducer
 });
-const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
+const composeEnhancers = composeWithDevTools({});
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(thunkMiddleware))
+);
 
 export type RootState = StateType<typeof rootReducer>;
 export type RootAction =

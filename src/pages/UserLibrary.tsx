@@ -2,12 +2,13 @@ import * as React from 'react';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 
 import { Tabs } from 'antd';
+import { BookmarksContainer, CollectionsContainer, CommentsContainer } from 'containers/userLibrary';
 
-import styles from './CollectionIndex.module.less';
+import styles from './UserLibrary.module.less';
 
 interface Props extends RouteComponentProps<{ username: string }> {}
 
-const CollectionIndex: React.SFC<Props> = ({
+const UserLibrary: React.SFC<Props> = ({
   location: { pathname },
   match: {
     params: { username }
@@ -38,23 +39,23 @@ const CollectionIndex: React.SFC<Props> = ({
   return (
     <div className={styles.container}>
       <Tabs
-        defaultActiveKey={pathname}
+        activeKey={pathname}
         size="large"
         onChange={handleChange}
         animated={false}
       >
         <Tabs.TabPane tab="컬렉션" key={routes.collections}>
-          collections
+          <CollectionsContainer username={username.slice(1)} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="북마크" key={routes.bookmarks}>
-          bookmarks
+          <BookmarksContainer />
         </Tabs.TabPane>
         <Tabs.TabPane tab="댓글" key={routes.comments}>
-          comments
+          <CommentsContainer />
         </Tabs.TabPane>
       </Tabs>
     </div>
   );
 };
 
-export default CollectionIndex;
+export default UserLibrary;

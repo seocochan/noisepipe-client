@@ -7,12 +7,14 @@ import authReducer, { AuthAction } from './modules/auth';
 import collectionReducer, { CollectionAction } from './modules/collection';
 import itemReducer, { ItemAction } from './modules/item';
 import playerReducer, { PlayerAction } from './modules/player';
+import userLibraryReducer, { UserLibraryAction } from './modules/userLibrary';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   collection: collectionReducer,
   item: itemReducer,
-  player: playerReducer
+  player: playerReducer,
+  userLibrary: userLibraryReducer
 });
 const composeEnhancers = composeWithDevTools({});
 const store = createStore(
@@ -25,7 +27,8 @@ export type RootAction =
   | AuthAction
   | CollectionAction
   | ItemAction
-  | PlayerAction;
+  | PlayerAction
+  | UserLibraryAction;
 export type ThunkResult<R> = ThunkAction<R, any, undefined, any>;
 
 export default store;

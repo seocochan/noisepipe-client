@@ -46,7 +46,6 @@ class AppHeader extends React.Component<Props, {}> {
       pathname === `/@${username}/bookmarks` ||
       pathname === `/@${username}/comments`
     ) {
-      console.log('@@', pathname);
       return '/me/*';
     }
     return pathname;

@@ -133,7 +133,6 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
               }
             />
           }
-          itemCount={items ? items.length : 0}
           itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
         />
         <DummyPlayer />

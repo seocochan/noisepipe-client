@@ -6,7 +6,7 @@ import { Layout, message } from 'antd';
 import { AppHeader, LoadingIndicator, PrivateRoute } from 'components/common';
 import { Login, Signup } from 'components/user';
 import { ItemPanelContainer } from 'containers/item';
-import { Collection, CollectionIndex, Home, NotFound, ServerError } from 'pages';
+import { Collection, Home, NotFound, ServerError, UserLibrary } from 'pages';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
@@ -54,7 +54,7 @@ class App extends React.Component<Props, {}> {
 
                 <Route
                   path="/:username/(collections|bookmarks|comments)"
-                  component={CollectionIndex}
+                  component={UserLibrary}
                 />
                 <Route path="/error" component={ServerError} />
                 <PrivateRoute path="/settings" component={NotFound} />

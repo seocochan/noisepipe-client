@@ -11,7 +11,6 @@ import styles from './CollectionHeader.module.less';
 interface Props {
   collection: ICollectionResponse | null;
   collectionPlayButton: React.ReactChild;
-  itemCount: number;
   itemAddForm: React.ReactChild;
 }
 
@@ -29,7 +28,6 @@ const menu = (
 const CollectionHead: React.SFC<Props> = ({
   collection,
   collectionPlayButton,
-  itemCount,
   itemAddForm
 }) => {
   if (!collection) {

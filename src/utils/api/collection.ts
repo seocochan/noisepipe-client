@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+import { ICollectionSummary, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
 export const loadCollection = (collectionId: number) => {
@@ -19,5 +21,16 @@ export const updateItemPosition = (itemId: number, position: number) => {
     url: `/items/${itemId}/position`,
     method: 'put',
     data: position
+  });
+};
+
+export const loadCollections = (
+  username: string,
+  page: number,
+  size: number
+): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
+  return request({
+    url: `/users/${username}/collections?page=${page}&size=${size}`,
+    method: 'get'
   });
 };

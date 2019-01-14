@@ -11,7 +11,7 @@ import { ACCESS_TOKEN } from 'values';
 
 import styles from './AppHeader.module.less';
 
-interface Props extends RouteComponentProps {
+interface Props extends RouteComponentProps<{ username: string }> {
   auth: AuthState;
   AuthActions: typeof authActions;
 }
@@ -34,7 +34,19 @@ class AppHeader extends React.Component<Props, {}> {
   };
 
   private mapPathnameToKey = (pathname: string) => {
-    if (pathname.startsWith('/me')) {
+    const { currentUser } = this.props.auth;
+    if (!currentUser) {
+      return pathname;
+    }
+    const { username } = currentUser;
+
+    // FIXME: use regex
+    if (
+      pathname === `/@${username}/collections` ||
+      pathname === `/@${username}/bookmarks` ||
+      pathname === `/@${username}/comments`
+    ) {
+      console.log('@@', pathname);
       return '/me/*';
     }
     return pathname;
@@ -52,7 +64,7 @@ class AppHeader extends React.Component<Props, {}> {
           </Link>
         </Menu.Item>,
         <Menu.Item key="/me/*">
-          <Link to="/me/collections">
+          <Link to={`/@${currentUser.username}/collections`}>
             <Icon type="database" />
             컬렉션
           </Link>

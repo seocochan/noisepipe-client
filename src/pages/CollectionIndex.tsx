@@ -1,17 +1,23 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 
 import { Tabs } from 'antd';
 
 import styles from './CollectionIndex.module.less';
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps<{ username: string }> {}
 
-const CollectionIndex: React.SFC<Props> = ({ location, history }) => {
+const CollectionIndex: React.SFC<Props> = ({
+  location: { pathname },
+  match: {
+    params: { username }
+  },
+  history
+}) => {
   const routes = {
-    collections: '/me/collections',
-    bookmarks: '/me/bookmarks',
-    comments: '/me/comments'
+    collections: `/${username}/collections`,
+    bookmarks: `/${username}/bookmarks`,
+    comments: `/${username}/comments`
   };
 
   const handleChange = (activeKey: string) => {
@@ -25,11 +31,14 @@ const CollectionIndex: React.SFC<Props> = ({ location, history }) => {
       return history.push(routes.comments);
     }
   };
+  if (!username.startsWith('@')) {
+    return <Redirect to="/404" />;
+  }
 
   return (
     <div className={styles.container}>
       <Tabs
-        defaultActiveKey={location.pathname}
+        defaultActiveKey={pathname}
         size="large"
         onChange={handleChange}
         animated={false}

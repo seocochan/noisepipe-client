@@ -51,7 +51,6 @@ class App extends React.Component<Props, {}> {
                   path="/collections/:collectionId"
                   component={Collection}
                 />
-
                 <Route
                   path="/:username/(collections|bookmarks|comments)"
                   component={UserLibrary}
@@ -66,7 +65,7 @@ class App extends React.Component<Props, {}> {
           </Layout.Content>
           <ItemPanelContainer />
         </Layout>
-        <PlayerControls />
+        <Route path="/collections/:collectionId" component={PlayerControls} />
       </Layout>
     );
   }

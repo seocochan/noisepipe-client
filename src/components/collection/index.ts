@@ -1,4 +1,5 @@
 export { default as Collections } from './Collections';
+export { default as LoadMoreButton } from './LoadMoreButton';
 export { default as CollectionCard } from './CollectionCard';
 export { default as CollectionHeader } from './CollectionHeader';
 export { default as CollectionPlayButton } from './CollectionPlayButton';

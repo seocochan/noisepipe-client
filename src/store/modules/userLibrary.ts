@@ -8,6 +8,7 @@ import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from 'values';
 // action types
 const INITIALIZE = 'userLibrary/INITIALIZE';
 const LOAD_COLLECTIONS_SUCCESS = 'userLibrary/LOAD_COLLECTIONS_SUCCESS';
+const LOAD_MORE_COLLECTIONS = 'userLibrary/LOAD_MORE_COLLECTIONS';
 
 // action creators
 export const actions = {
@@ -15,17 +16,22 @@ export const actions = {
   loadCollections: (
     username: string,
     page = DEFAULT_PAGE_NUMBER,
-    size = DEFAULT_PAGE_SIZE
+    size = DEFAULT_PAGE_SIZE,
+    loadMore = false
   ): ThunkResult<Promise<void>> => async dispatch => {
     try {
       const res = await CollectionAPI.loadCollections(username, page, size);
-      dispatch(actions.loadCollectionsSuccess(res.data));
+      loadMore
+        ? dispatch(actions.loadMoreCollections(res.data))
+        : dispatch(actions.loadCollectionsSuccess(res.data));
     } catch (error) {
       throw error;
     }
   },
   loadCollectionsSuccess: (collections: IPagedResponse<ICollectionSummary>) =>
-    createAction(LOAD_COLLECTIONS_SUCCESS, { collections })
+    createAction(LOAD_COLLECTIONS_SUCCESS, { collections }),
+  loadMoreCollections: (collections: IPagedResponse<ICollectionSummary>) =>
+    createAction(LOAD_MORE_COLLECTIONS, { collections })
 };
 export type UserLibraryAction = ActionType<typeof actions>;
 
@@ -47,8 +53,17 @@ export default produce<UserLibraryState, UserLibraryAction>((draft, action) => {
     }
     case LOAD_COLLECTIONS_SUCCESS: {
       draft.collections = action.payload.collections;
-      // load more
-      // draft.collections!.content = [...draft.collections!.content, ...action.payload.collections.content];
+      return;
+    }
+    case LOAD_MORE_COLLECTIONS: {
+      const { collections } = action.payload;
+      if (!draft.collections) {
+        draft.collections = collections;
+        return;
+      }
+      const previousContent = draft.collections.content;
+      draft.collections = collections;
+      draft.collections.content = [...previousContent, ...collections.content];
       return;
     }
   }

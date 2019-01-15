@@ -21,19 +21,22 @@ const CollectionCard: React.SFC<Props> = ({
       actions={[
         <Icon key="bookmark-add" type="book" />,
         <Icon key="share" type="share-alt" />,
-        isOwner && (
-          <Dropdown
-            key="more"
-            overlay={
-              <Menu>
-                <Menu.Item key="edit">수정</Menu.Item>
-                <Menu.Item key="delete">삭제</Menu.Item>
-              </Menu>
-            }
-          >
-            <Icon type="ellipsis" />
-          </Dropdown>
-        )
+        <Dropdown
+          key="more"
+          trigger={['click']}
+          overlay={
+            <Menu>
+              <Menu.Item key="edit" disabled={!isOwner}>
+                수정
+              </Menu.Item>
+              <Menu.Item key="delete" disabled={!isOwner}>
+                삭제
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Icon type="ellipsis" />
+        </Dropdown>
       ]}
     >
       <Card.Meta

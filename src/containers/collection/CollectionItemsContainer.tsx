@@ -45,9 +45,9 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     CollectionActions.loadItems(collectionId);
   }
   public componentWillUnmount() {
-    const { ItemActions } = this.props;
-    ItemActions.hidePanel();
-    ItemActions.setItem(null);
+    const { ItemActions, CollectionActions } = this.props;
+    ItemActions.initialize();
+    CollectionActions.initialize();
   }
 
   private handleSubmit = (data: ICollectionRequest) => {

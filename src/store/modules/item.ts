@@ -65,8 +65,7 @@ const initialState: ItemState = {
 export default produce<ItemState, ItemAction>((draft, action) => {
   switch (action.type) {
     case INITIALIZE: {
-      draft.itemPanel = { collapsed: true, tab: Tab.Viewer };
-      draft.item = null;
+      return initialState;
     }
     case SHOW_PANEL: {
       draft.itemPanel.collapsed = false;

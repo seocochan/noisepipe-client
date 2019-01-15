@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import produce from 'immer';
-import { ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
+import { ICollectionRequest, ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
 import { ThunkResult } from 'store';
 import { Provider } from 'types';
 import { action as createAction, ActionType } from 'typesafe-actions';
@@ -9,12 +9,14 @@ import * as ItemAPI from 'utils/api/item';
 import * as Utils from 'utils/common';
 
 // action types
+const INITIALIZE = 'collection/INITIALIZE';
 const LOAD_COLLECTION_PENDING = 'collection/LOAD_COLLECTION_PENDING';
 const LOAD_COLLECTION_SUCCESS = 'collection/LOAD_COLLECTION_SUCCESS';
 const LOAD_COLLECTION_FAILURE = 'collection/LOAD_COLLECTION_FAILURE';
 const LOAD_ITEMS_PENDING = 'collection/LOAD_ITEMS_PENDING';
 const LOAD_ITEMS_SUCCESS = 'collection/LOAD_ITEMS_SUCCESS';
 const LOAD_ITEMS_FAILURE = 'collection/LOAD_ITEMS_FAILURE';
+const UPDATE_COLLECTION_SUCCESS = 'collection/UPDATE_COLLECTION_SUCCESS';
 const UPDATE_ITEM_POSITION_PENDING = 'collection/UPDATE_ITEM_POSITION_PENDING';
 const UPDATE_ITEM_POSITION_SUCCESS = 'collection/UPDATE_ITEM_POSITION_SUCCESS';
 const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
@@ -24,6 +26,7 @@ const REMOVE_ITEM = 'collection/REMOVE_ITEM';
 
 // action creators
 export const actions = {
+  initialize: () => createAction(INITIALIZE),
   loadCollection: (
     collectionId: number
   ): ThunkResult<Promise<void>> => async dispatch => {
@@ -41,6 +44,42 @@ export const actions = {
     createAction(LOAD_COLLECTION_SUCCESS, collection),
   loadColelctionFailure: (error: AxiosError) =>
     createAction(LOAD_COLLECTION_FAILURE, error),
+  createCollection: (
+    username: string,
+    collection: ICollectionRequest
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.createCollection(username, collection);
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateCollection: (
+    collectionId: number,
+    collection: ICollectionRequest
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      const res = await CollectionAPI.updateCollection(
+        collectionId,
+        collection
+      );
+      dispatch(actions.loadCollectionSuccess(res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeCollection: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CollectionAPI.removeCollection(collectionId);
+      dispatch(actions.initialize());
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateCollectionSuccess: (collection: ICollectionResponse) =>
+    createAction(UPDATE_COLLECTION_SUCCESS, { collection }),
   loadItems: (
     collectionId: number
   ): ThunkResult<Promise<void>> => async dispatch => {
@@ -126,6 +165,9 @@ const initialState: CollectionState = {
 // reducer
 export default produce<CollectionState, CollectionAction>((draft, action) => {
   switch (action.type) {
+    case INITIALIZE: {
+      return initialState;
+    }
     case LOAD_COLLECTION_PENDING: {
       draft.collection = null;
       return;
@@ -148,6 +190,10 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
     }
     case LOAD_ITEMS_FAILURE: {
       console.log(action.payload);
+      return;
+    }
+    case UPDATE_COLLECTION_SUCCESS: {
+      draft.collection = action.payload.collection;
       return;
     }
     case UPDATE_ITEM_POSITION_PENDING: {

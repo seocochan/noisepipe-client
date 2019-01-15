@@ -44,6 +44,11 @@ export interface ICollectionResponse extends ICollectionSummary {
   bookmarks: number;
   isBookmarked: boolean;
 }
+export interface ICollectionRequest {
+  title: string;
+  description: string | null;
+  tags: string[];
+}
 export interface ICommentResponse {
   id: number;
   text: string;

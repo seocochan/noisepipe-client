@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
-import { Divider } from 'antd';
-import { CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
+import { Divider, message } from 'antd';
+import { CollectionForm, CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
 import { DummyPlayer } from 'components/player';
-import { IItemResponse } from 'payloads';
+import { ICollectionRequest, IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
@@ -23,8 +23,15 @@ interface Props extends RouteComponentProps {
   player: PlayerState;
   PlayerActions: typeof playerActions;
 }
+interface State {
+  isFormVisible: boolean;
+}
 
-class CollectionItemsContainer extends React.Component<Props, {}> {
+class CollectionItemsContainer extends React.Component<Props, State> {
+  public readonly state: State = {
+    isFormVisible: false
+  };
+
   public async componentDidMount() {
     const { collectionId, CollectionActions, history } = this.props;
 
@@ -43,6 +50,26 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     ItemActions.setItem(null);
   }
 
+  private handleSubmit = (data: ICollectionRequest) => {
+    const { CollectionActions, collection } = this.props;
+    CollectionActions.updateCollection(collection.collection!.id, data);
+  };
+  private handleRemove = async () => {
+    const {
+      CollectionActions,
+      collection: { collection },
+      history
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    try {
+      await CollectionActions.removeCollection(collection.id);
+      history.replace(`/@${collection.createdBy.username}/collections`);
+    } catch (error) {
+      message.error('에러가 발생했습니다');
+    }
+  };
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
     const { collection, CollectionActions } = this.props;
 
@@ -104,6 +131,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
       player,
       PlayerActions
     } = this.props;
+    const { isFormVisible } = this.state;
     const playerItem =
       currentTarget && player[currentTarget].item
         ? {
@@ -114,27 +142,46 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
 
     return (
       <>
-        <CollectionHeader
-          collection={collection}
-          collectionPlayButton={
-            <CollectionPlayButton
-              isPlaying={
-                currentTarget ? player[currentTarget].status.playing : false
-              }
-              isSet={currentTarget ? true : false}
-              onPause={() =>
-                currentTarget && PlayerActions.pause(currentTarget)
-              }
-              onPlay={() =>
-                items && items.length > 0 && this.playItem(items[0])
-              }
-              onResume={() =>
-                currentTarget && PlayerActions.play(currentTarget)
-              }
-            />
-          }
-          itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
-        />
+        {isFormVisible ? (
+          <CollectionForm
+            collection={
+              collection
+                ? {
+                    title: collection.title,
+                    description: collection.description,
+                    tags: collection.tags
+                  }
+                : undefined
+            }
+            handleSubmit={this.handleSubmit}
+            onAfterReset={() => this.setState({ isFormVisible: false })}
+          />
+        ) : (
+          <CollectionHeader
+            collection={collection}
+            collectionPlayButton={
+              <CollectionPlayButton
+                isPlaying={
+                  currentTarget ? player[currentTarget].status.playing : false
+                }
+                isSet={currentTarget ? true : false}
+                onPause={() =>
+                  currentTarget && PlayerActions.pause(currentTarget)
+                }
+                onPlay={() =>
+                  items && items.length > 0 && this.playItem(items[0])
+                }
+                onResume={() =>
+                  currentTarget && PlayerActions.play(currentTarget)
+                }
+              />
+            }
+            itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
+            onClickEdit={() => this.setState({ isFormVisible: true })}
+            onClickRemove={this.handleRemove}
+          />
+        )}
+
         <DummyPlayer />
         <Divider />
         <ItemFilterInput />

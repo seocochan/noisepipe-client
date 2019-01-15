@@ -12,27 +12,31 @@ interface Props {
   collection: ICollectionResponse | null;
   collectionPlayButton: React.ReactChild;
   itemAddForm: React.ReactChild;
+  onClickEdit: () => void;
+  onClickRemove: () => void;
 }
 
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a>수정</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a>삭제</a>
-    </Menu.Item>
-  </Menu>
-);
-
-const CollectionHead: React.SFC<Props> = ({
+const CollectionHeader: React.SFC<Props> = ({
   collection,
   collectionPlayButton,
-  itemAddForm
+  itemAddForm,
+  onClickEdit,
+  onClickRemove
 }) => {
   if (!collection) {
     return <LoadingIndicator />;
   }
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0" onClick={onClickEdit}>
+        <a>수정</a>
+      </Menu.Item>
+      <Menu.Item key="1" onClick={onClickRemove}>
+        <a>삭제</a>
+      </Menu.Item>
+    </Menu>
+  );
 
   const { title, description, tags, createdBy, createdAt } = collection;
   return (
@@ -65,4 +69,4 @@ const CollectionHead: React.SFC<Props> = ({
   );
 };
 
-export default CollectionHead;
+export default CollectionHeader;

@@ -45,10 +45,18 @@ const UserLibrary: React.SFC<Props> = ({
         animated={false}
       >
         <Tabs.TabPane tab="컬렉션" key={routes.collections}>
-          <CollectionsContainer username={username.slice(1)} />
+          <CollectionsContainer
+            currentTab={pathname}
+            tabName={routes.collections}
+            username={username.slice(1)}
+          />
         </Tabs.TabPane>
         <Tabs.TabPane tab="북마크" key={routes.bookmarks}>
-          <BookmarksContainer />
+          <BookmarksContainer
+            currentTab={pathname}
+            tabName={routes.bookmarks}
+            username={username.slice(1)}
+          />
         </Tabs.TabPane>
         <Tabs.TabPane tab="댓글" key={routes.comments}>
           <CommentsContainer />

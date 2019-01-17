@@ -9,6 +9,7 @@ import styles from './CollectionCard.module.less';
 
 interface Props {
   collection: ICollectionSummary;
+  defaultBookmarked?: boolean;
   onCreateBookmark: (collectionId: number) => Promise<void>;
   onRemoveBookmark: (collectionId: number) => Promise<void>;
 }
@@ -18,7 +19,9 @@ interface State {
 
 class CollectionCard extends React.Component<Props, State> {
   public readonly state: State = {
-    isBookmarked: false
+    isBookmarked: this.props.defaultBookmarked
+      ? this.props.defaultBookmarked
+      : false
   };
 
   private handleCreateBookmark = async (collectionId: number) => {

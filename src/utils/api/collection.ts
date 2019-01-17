@@ -81,3 +81,14 @@ export const removeBookmark = (
     method: 'delete'
   });
 };
+
+export const getCollectionsBookmarkedByUser = (
+  username: string,
+  page: number,
+  size: number
+): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
+  return request({
+    url: `/users/${username}/bookmarks?page=${page}&size=${size}`,
+    method: 'get'
+  });
+};

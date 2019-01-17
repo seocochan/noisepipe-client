@@ -14,6 +14,8 @@ import { actions as userLibraryActions, UserLibraryState } from 'store/modules/u
 import { DEFAULT_PAGE_SIZE } from 'values';
 
 interface Props extends RouteComponentProps {
+  currentTab: string;
+  tabName: string;
   username: string;
   currentUser: AuthState['currentUser'];
   collections: UserLibraryState['collections'];
@@ -36,6 +38,15 @@ class CollectionsContainer extends React.Component<Props, State> {
     } catch (error) {
       message.error('에러가 발생했습니다');
       history.replace('/404');
+    }
+  }
+  public componentDidUpdate(prevProps: Props) {
+    const { currentTab, tabName, username, UserLibraryActions } = this.props;
+    if (currentTab !== prevProps.currentTab) {
+      UserLibraryActions.initialize();
+      if (currentTab === tabName) {
+        UserLibraryActions.loadCollections(username);
+      }
     }
   }
   public componentWillUnmount() {
@@ -100,6 +111,8 @@ class CollectionsContainer extends React.Component<Props, State> {
       <>
         <CollectionsHeader
           count={collections.totalElements}
+          name={'컬렉션'}
+          hasAddButton={true}
           isFormVisible={isFormVisible}
           handleClick={() => this.setState({ isFormVisible: !isFormVisible })}
         />

@@ -6,25 +6,33 @@ import styles from './CollectionsHeader.module.less';
 
 interface Props {
   count: number;
-  isFormVisible: boolean;
-  handleClick: () => void;
+  name: string;
+  hasAddButton?: boolean;
+  isFormVisible?: boolean;
+  handleClick?: () => void;
 }
 
 const CollectionsHeader: React.SFC<Props> = ({
   count,
-  isFormVisible,
+  name,
+  hasAddButton = false,
+  isFormVisible = false,
   handleClick
 }) => {
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{count}개의 컬렉션</h2>
-      <Button
-        icon={isFormVisible ? 'close' : 'plus'}
-        type={isFormVisible ? 'primary' : 'default'}
-        shape="circle"
-        size="large"
-        onClick={handleClick}
-      />
+      <h2 className={styles.title}>
+        {count}개의 {name}
+      </h2>
+      {hasAddButton && (
+        <Button
+          icon={isFormVisible ? 'close' : 'plus'}
+          type={isFormVisible ? 'primary' : 'default'}
+          shape="circle"
+          size="large"
+          onClick={handleClick}
+        />
+      )}
     </div>
   );
 };

@@ -73,7 +73,7 @@ class AppHeader extends React.Component<Props, {}> {
           title={
             <span>
               <Icon type="user" />
-              seoco
+              {currentUser.username}
             </span>
           }
         >

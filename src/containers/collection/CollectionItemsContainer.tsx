@@ -14,6 +14,7 @@ import { actions as collectionActions, CollectionState } from 'store/modules/col
 import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 import { Provider } from 'types';
+import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props extends RouteComponentProps {
   ItemActions: typeof itemActions;
@@ -67,7 +68,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       await CollectionActions.removeCollection(collection.id);
       history.replace(`/@${collection.createdBy.username}/collections`);
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
@@ -129,7 +130,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       await CollectionActions.createBookmark(collectionId);
       message.info('북마크를 추가했습니다');
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
   private handleRemoveBookmark = async (collectionId: number) => {
@@ -138,7 +139,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       await CollectionActions.removeBookmark(collectionId);
       message.info('북마크를 제거했습니다');
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
 

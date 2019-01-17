@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, Icon, message } from 'antd';
 import * as moment from 'moment';
 import { ICollectionSummary } from 'payloads';
+import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 import styles from './CollectionCard.module.less';
 
@@ -31,7 +32,7 @@ class CollectionCard extends React.Component<Props, State> {
       this.setState({ isBookmarked: true });
       message.info('북마크를 추가했습니다');
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
   private handleRemoveBookmark = async (collectionId: number) => {
@@ -41,7 +42,7 @@ class CollectionCard extends React.Component<Props, State> {
       this.setState({ isBookmarked: false });
       message.info('북마크를 제거했습니다');
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
 

@@ -1,5 +1,6 @@
 // common
 export const ACCESS_TOKEN = 'accessToken';
+export const DEFAULT_ERROR_MESSAGE = '오류가 발생했습니다';
 export const DEFAULT_PAGE_NUMBER = 0;
 export const DEFAULT_PAGE_SIZE = 12;
 export const ITEM_POSITION_UNIT = 2 ** 16;

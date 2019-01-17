@@ -9,6 +9,7 @@ import { RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 import { checkEmailAvailability, checkUsernameAvailability, signup } from 'utils/api/auth';
 import {
+  DEFAULT_ERROR_MESSAGE,
   MAX_EMAIL_LENGTH,
   MAX_NAME_LENGTH,
   MAX_PASSWORD_LENGTH,
@@ -82,7 +83,7 @@ class Signup extends React.Component<Props, State> {
       message.success('가입에 성공했습니다. 로그인 해주세요');
       this.props.history.push('/login');
     } catch (error) {
-      message.error('오류가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
 

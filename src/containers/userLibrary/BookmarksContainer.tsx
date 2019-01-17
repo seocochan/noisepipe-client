@@ -12,7 +12,7 @@ import { RootAction, RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 import { actions as collectionActions } from 'store/modules/collection';
 import { actions as userLibraryActions, UserLibraryState } from 'store/modules/userLibrary';
-import { DEFAULT_PAGE_SIZE } from 'values';
+import { DEFAULT_ERROR_MESSAGE, DEFAULT_PAGE_SIZE } from 'values';
 
 interface Props extends RouteComponentProps {
   currentTab: string;
@@ -30,7 +30,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
     try {
       await UserLibraryActions.loadBookmarkedCollections(username);
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
       history.replace('/404');
     }
   }

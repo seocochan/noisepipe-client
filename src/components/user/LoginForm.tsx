@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button, Form, Icon, Input, message } from 'antd';
 import { FormComponentProps } from 'antd/lib/form/Form';
 import { login } from 'utils/api/auth';
-import { ACCESS_TOKEN } from 'values';
+import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'values';
 
 import styles from './LoginForm.module.less';
 
@@ -25,7 +25,7 @@ const LoginForm: React.SFC<Props> = props => {
           if (error.response.status === 401) {
             message.error('아이디와 비밀번호를 확인해주세요');
           } else {
-            message.error('에러가 발생했습니다');
+            message.error(DEFAULT_ERROR_MESSAGE);
           }
         }
       }

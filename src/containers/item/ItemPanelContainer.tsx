@@ -10,6 +10,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as itemActions, ItemState } from 'store/modules/item';
 import { Tab } from 'types';
+import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props {
   item: ItemState;
@@ -39,7 +40,7 @@ class ItemPanelContainer extends React.Component<Props, {}> {
     try {
       await ItemActions.removeItem(item.id);
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
   private handleSubmit = async (itemId: number, data: IItemPutRequest) => {
@@ -47,7 +48,7 @@ class ItemPanelContainer extends React.Component<Props, {}> {
     try {
       await ItemActions.updateItem(itemId, data);
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
     ItemActions.changeTab(Tab.Viewer);
   };

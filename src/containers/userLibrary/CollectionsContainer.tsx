@@ -12,7 +12,7 @@ import { RootAction, RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 import { actions as collectionActions } from 'store/modules/collection';
 import { actions as userLibraryActions, UserLibraryState } from 'store/modules/userLibrary';
-import { DEFAULT_PAGE_SIZE } from 'values';
+import { DEFAULT_ERROR_MESSAGE, DEFAULT_PAGE_SIZE } from 'values';
 
 interface Props extends RouteComponentProps {
   currentTab: string;
@@ -37,7 +37,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     try {
       await UserLibraryActions.loadCollections(username);
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
       history.replace('/404');
     }
   }
@@ -83,7 +83,7 @@ class CollectionsContainer extends React.Component<Props, State> {
       );
       await UserLibraryActions.loadCollections(username);
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
   private handleCreateBookmark = async (collectionId: number) => {

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Button, message } from 'antd';
+import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props {
   loadMore: () => Promise<void>;
@@ -20,7 +21,7 @@ class LoadMoreButton extends React.Component<Props, State> {
       this.setState({ loading: true });
       await loadMore();
     } catch (error) {
-      message.error('에러가 발생했습니다');
+      message.error(DEFAULT_ERROR_MESSAGE);
     }
     this.setState({ loading: false });
   };

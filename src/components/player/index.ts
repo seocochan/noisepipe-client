@@ -1,4 +1,4 @@
 export { default as PlayerDrawer } from './PlayerDrawer';
-export { default as PlayerControls } from '../player/PlayerControls';
-export { default as SeekBar } from '../player/SeekBar';
-export { default as DummyPlayer } from '../player/DummyPlayer';
+export { default as PlayerControls } from './PlayerControls';
+export { default as SeekBar } from './SeekBar';
+export { default as DummyPlayer } from './DummyPlayer';

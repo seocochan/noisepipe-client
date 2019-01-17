@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Divider, message } from 'antd';
-import { CollectionCard, CollectionForm, Collections, CollectionsHeader, LoadMoreButton } from 'components/collection';
+import { CollectionCard, CollectionForm, CollectionsHeader } from 'components/collection';
 import { LoadingIndicator } from 'components/common';
+import { GridCardList, LoadMoreButton } from 'components/list';
 import { ICollectionRequest, ICollectionSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -125,7 +126,7 @@ class CollectionsContainer extends React.Component<Props, State> {
             <Divider />
           </>
         )}
-        <Collections
+        <GridCardList
           collections={collections.content}
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard

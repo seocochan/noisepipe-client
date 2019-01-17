@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { message } from 'antd';
-import { CollectionCard, Collections, CollectionsHeader, LoadMoreButton } from 'components/collection';
+import { CollectionCard, CollectionsHeader } from 'components/collection';
 import { LoadingIndicator } from 'components/common';
+import { GridCardList, LoadMoreButton } from 'components/list';
 import { ICollectionSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -82,7 +83,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
     return (
       <>
         <CollectionsHeader count={bookmarks.totalElements} name={'북마크'} />
-        <Collections
+        <GridCardList
           collections={bookmarks.content}
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard

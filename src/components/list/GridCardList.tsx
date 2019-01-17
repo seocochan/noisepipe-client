@@ -10,7 +10,7 @@ interface Props {
   loadMoreButton: React.ReactChild;
 }
 
-const Collections: React.SFC<Props> = ({
+const GridCardList: React.SFC<Props> = ({
   collections,
   renderCard,
   isLast,
@@ -30,4 +30,4 @@ const Collections: React.SFC<Props> = ({
   );
 };
 
-export default Collections;
+export default GridCardList;

@@ -1,5 +1,3 @@
-export { default as Collections } from './Collections';
-export { default as LoadMoreButton } from './LoadMoreButton';
 export { default as CollectionForm } from './CollectionForm';
 export { default as CollectionCard } from './CollectionCard';
 export { default as CollectionsHeader } from './CollectionsHeader';

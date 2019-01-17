@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Dropdown, Menu } from 'antd';
+import { Badge, Button, Dropdown, Menu } from 'antd';
 import { LoadingIndicator } from 'components/common';
 import * as moment from 'moment';
 import { ICollectionResponse } from 'payloads';
@@ -14,6 +14,8 @@ interface Props {
   itemAddForm: React.ReactChild;
   onClickEdit: () => void;
   onClickRemove: () => void;
+  onCreateBookmark: (collectionId: number) => void;
+  onRemoveBookmark: (collectionId: number) => void;
 }
 
 const CollectionHeader: React.SFC<Props> = ({
@@ -21,7 +23,9 @@ const CollectionHeader: React.SFC<Props> = ({
   collectionPlayButton,
   itemAddForm,
   onClickEdit,
-  onClickRemove
+  onClickRemove,
+  onCreateBookmark,
+  onRemoveBookmark
 }) => {
   if (!collection) {
     return <LoadingIndicator />;
@@ -29,16 +33,32 @@ const CollectionHeader: React.SFC<Props> = ({
 
   const menu = (
     <Menu>
-      <Menu.Item key="0" onClick={onClickEdit}>
-        <a>수정</a>
-      </Menu.Item>
-      <Menu.Item key="1" onClick={onClickRemove}>
-        <a>삭제</a>
+      {true && (
+        <Menu.Item key="edit" onClick={onClickEdit}>
+          <a>수정</a>
+        </Menu.Item>
+      )}
+      {true && (
+        <Menu.Item key="remove" onClick={onClickRemove}>
+          <a>삭제</a>
+        </Menu.Item>
+      )}
+      <Menu.Item key="share">
+        <a>공유</a>
       </Menu.Item>
     </Menu>
   );
 
-  const { title, description, tags, createdBy, createdAt } = collection;
+  const {
+    id,
+    title,
+    description,
+    tags,
+    isBookmarked,
+    bookmarks,
+    createdBy,
+    createdAt
+  } = collection;
   return (
     <div className={styles.header}>
       <div className={styles.topContainer}>
@@ -47,7 +67,25 @@ const CollectionHeader: React.SFC<Props> = ({
             <span key={index}>{`#${tag}`}</span>
           ))}
         </div>
-        <Button className={styles.bookmarkButton} icon="book" shape="circle" />
+        <Badge
+          offset={[2, -2]}
+          count={bookmarks}
+          style={{
+            marginRight: 16,
+            backgroundColor: '#1890ff',
+            zIndex: 1
+          }}
+        >
+          <Button
+            className={styles.button}
+            icon="book"
+            shape="circle"
+            type={isBookmarked ? 'primary' : 'default'}
+            onClick={() =>
+              isBookmarked ? onRemoveBookmark(id) : onCreateBookmark(id)
+            }
+          />
+        </Badge>
         <Dropdown overlay={menu} trigger={['click']}>
           <Button icon="ellipsis" shape="circle" />
         </Dropdown>

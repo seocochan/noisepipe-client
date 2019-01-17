@@ -31,7 +31,25 @@ export const actions = {
   loadCollectionsSuccess: (collections: IPagedResponse<ICollectionSummary>) =>
     createAction(LOAD_COLLECTIONS_SUCCESS, { collections }),
   loadMoreCollections: (collections: IPagedResponse<ICollectionSummary>) =>
-    createAction(LOAD_MORE_COLLECTIONS, { collections })
+    createAction(LOAD_MORE_COLLECTIONS, { collections }),
+  createBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.createBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.removeBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 export type UserLibraryAction = ActionType<typeof actions>;
 

@@ -123,6 +123,24 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     const target = item.sourceProvider;
     PlayerActions.pause(target);
   };
+  private handleCreateBookmark = async (collectionId: number) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.createBookmark(collectionId);
+      message.info('북마크를 추가했습니다');
+    } catch (error) {
+      message.error('에러가 발생했습니다');
+    }
+  };
+  private handleRemoveBookmark = async (collectionId: number) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.removeBookmark(collectionId);
+      message.info('북마크를 제거했습니다');
+    } catch (error) {
+      message.error('에러가 발생했습니다');
+    }
+  };
 
   public render(): React.ReactNode {
     const {
@@ -179,6 +197,8 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
             onClickEdit={() => this.setState({ isFormVisible: true })}
             onClickRemove={this.handleRemove}
+            onCreateBookmark={this.handleCreateBookmark}
+            onRemoveBookmark={this.handleRemoveBookmark}
           />
         )}
 

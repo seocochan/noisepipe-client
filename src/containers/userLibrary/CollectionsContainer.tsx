@@ -72,6 +72,22 @@ class CollectionsContainer extends React.Component<Props, State> {
       message.error('에러가 발생했습니다');
     }
   };
+  private handleCreateBookmark = async (collectionId: number) => {
+    const { UserLibraryActions } = this.props;
+    try {
+      await UserLibraryActions.createBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  };
+  private handleRemoveBookmark = async (collectionId: number) => {
+    const { UserLibraryActions } = this.props;
+    try {
+      await UserLibraryActions.removeBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   public render(): React.ReactNode {
     const { collections } = this.props;
@@ -99,7 +115,11 @@ class CollectionsContainer extends React.Component<Props, State> {
         <Collections
           collections={collections.content}
           renderCard={(collection: ICollectionSummary) => (
-            <CollectionCard collection={collection} />
+            <CollectionCard
+              collection={collection}
+              onCreateBookmark={this.handleCreateBookmark}
+              onRemoveBookmark={this.handleRemoveBookmark}
+            />
           )}
           isLast={collections.last}
           loadMoreButton={<LoadMoreButton loadMore={this.loadMore} />}

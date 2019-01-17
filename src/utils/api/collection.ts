@@ -63,3 +63,21 @@ export const loadCollections = (
     method: 'get'
   });
 };
+
+export const createBookmark = (
+  collectionId: number
+): Promise<AxiosResponse<void>> => {
+  return request({
+    url: `/collections/${collectionId}/bookmarks`,
+    method: 'post'
+  });
+};
+
+export const removeBookmark = (
+  collectionId: number
+): Promise<AxiosResponse<void>> => {
+  return request({
+    url: `/collections/${collectionId}/bookmarks`,
+    method: 'delete'
+  });
+};

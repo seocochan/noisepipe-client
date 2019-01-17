@@ -23,6 +23,8 @@ const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
 const UPDATE_ITEM = 'collection/UPDATE_ITEM';
 const ADD_ITEM_SUCCESS = 'collection/ADD_ITEM_SUCCESS';
 const REMOVE_ITEM = 'collection/REMOVE_ITEM';
+const CREATE_BOOKMARK_SUCCESS = 'collection/CREATE_BOOKMARK_SUCCESS';
+const REMOVE_BOOKMARK_SUCCESS = 'collection/REMOVE_BOOKMARK_SUCCESS';
 
 // action creators
 export const actions = {
@@ -145,7 +147,29 @@ export const actions = {
   },
   addItemSuccess: (item: IItemResponse) =>
     createAction(ADD_ITEM_SUCCESS, { item }),
-  removeItem: (itemId: number) => createAction(REMOVE_ITEM, { itemId })
+  removeItem: (itemId: number) => createAction(REMOVE_ITEM, { itemId }),
+  createBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CollectionAPI.createBookmark(collectionId);
+      await dispatch(actions.createBookmarkSuccess());
+    } catch (error) {
+      throw error;
+    }
+  },
+  createBookmarkSuccess: () => createAction(CREATE_BOOKMARK_SUCCESS),
+  removeBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CollectionAPI.removeBookmark(collectionId);
+      await dispatch(actions.removeBookmarkSuccess());
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeBookmarkSuccess: () => createAction(REMOVE_BOOKMARK_SUCCESS)
   // TODO: loadComments: ICommentResponse[]
 };
 export type CollectionAction = ActionType<typeof actions>;
@@ -242,6 +266,22 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
         return;
       }
       draft.items.splice(index, 1);
+      return;
+    }
+    case CREATE_BOOKMARK_SUCCESS: {
+      if (!draft.collection) {
+        return;
+      }
+      draft.collection.isBookmarked = true;
+      draft.collection.bookmarks++;
+      return;
+    }
+    case REMOVE_BOOKMARK_SUCCESS: {
+      if (!draft.collection) {
+        return;
+      }
+      draft.collection.isBookmarked = false;
+      draft.collection.bookmarks--;
       return;
     }
   }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Badge, Button, Dropdown, Menu } from 'antd';
+import { Badge, Button, Dropdown, Icon, Menu, Popconfirm } from 'antd';
 import { LoadingIndicator } from 'components/common';
 import * as moment from 'moment';
 import { ICollectionResponse } from 'payloads';
@@ -14,6 +14,7 @@ interface Props {
   itemAddForm: React.ReactChild;
   onClickEdit: () => void;
   onClickRemove: () => void;
+  onClickShare: (title: string, id: number) => void;
   onCreateBookmark: (collectionId: number) => void;
   onRemoveBookmark: (collectionId: number) => void;
 }
@@ -24,6 +25,7 @@ const CollectionHeader: React.SFC<Props> = ({
   itemAddForm,
   onClickEdit,
   onClickRemove,
+  onClickShare,
   onCreateBookmark,
   onRemoveBookmark
 }) => {
@@ -31,20 +33,29 @@ const CollectionHeader: React.SFC<Props> = ({
     return <LoadingIndicator />;
   }
 
-  const menu = (
+  const shareMenus = (
     <Menu>
-      {true && (
-        <Menu.Item key="edit" onClick={onClickEdit}>
-          <a>수정</a>
-        </Menu.Item>
-      )}
-      {true && (
-        <Menu.Item key="remove" onClick={onClickRemove}>
-          <a>삭제</a>
-        </Menu.Item>
-      )}
-      <Menu.Item key="share">
-        <a>공유</a>
+      <Menu.Item
+        key="twitter"
+        onClick={() => onClickShare(collection.title, collection.id)}
+      >
+        <Icon type="twitter" />
+        트위터에 공유
+      </Menu.Item>
+    </Menu>
+  );
+  const moreMenus = (
+    <Menu>
+      <Menu.Item key="edit" onClick={onClickEdit}>
+        수정
+      </Menu.Item>
+      <Menu.Item key="remove">
+        <Popconfirm
+          title="컬렉션과 모든 아이템이 삭제됩니다. 삭제할까요?"
+          onConfirm={onClickRemove}
+        >
+          삭제
+        </Popconfirm>
       </Menu.Item>
     </Menu>
   );
@@ -77,7 +88,7 @@ const CollectionHeader: React.SFC<Props> = ({
           }}
         >
           <Button
-            className={styles.button}
+            className={styles.buttonLeft}
             icon="book"
             shape="circle"
             type={isBookmarked ? 'primary' : 'default'}
@@ -86,9 +97,18 @@ const CollectionHeader: React.SFC<Props> = ({
             }
           />
         </Badge>
-        <Dropdown overlay={menu} trigger={['click']}>
-          <Button icon="ellipsis" shape="circle" />
+        <Dropdown overlay={shareMenus} trigger={['click']}>
+          <Button icon="share-alt" shape="circle" />
         </Dropdown>
+        {true && (
+          <Dropdown
+            className={styles.buttonRight}
+            overlay={moreMenus}
+            trigger={['click']}
+          >
+            <Button icon="ellipsis" shape="circle" />
+          </Dropdown>
+        )}
       </div>
       <div className={styles.titleSection}>
         {collectionPlayButton}

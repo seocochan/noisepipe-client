@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Card, Icon, message } from 'antd';
+import { Card, Dropdown, Icon, Menu, message } from 'antd';
 import * as moment from 'moment';
 import { ICollectionSummary } from 'payloads';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
@@ -45,6 +45,27 @@ class CollectionCard extends React.Component<Props, State> {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
+  private handleClickShare = (title: string, id: number) => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${title}&url=${
+        process.env.REACT_APP_BASE_URL
+      }/collections/${id}`,
+      '_blank',
+      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no'
+    );
+  };
+  private shareMenus = (title: string, id: number) => {
+    return (
+      <Menu>
+        <Menu.Item
+          key="twitter"
+          onClick={() => this.handleClickShare(title, id)}
+        >
+          <Icon type="twitter" />트위터에 공유
+        </Menu.Item>
+      </Menu>
+    );
+  };
 
   public render() {
     const {
@@ -65,7 +86,13 @@ class CollectionCard extends React.Component<Props, State> {
                 : this.handleCreateBookmark(id)
             }
           />,
-          <Icon key="share" type="share-alt" />
+          <Dropdown
+            key="share"
+            overlay={this.shareMenus(title, id)}
+            trigger={['click']}
+          >
+            <Icon type="share-alt" />
+          </Dropdown>
         ]}
       >
         <Card.Meta

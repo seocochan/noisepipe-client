@@ -71,6 +71,15 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
+  private handleShare = (title: string, id: number) => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${title}&url=${
+        process.env.REACT_APP_BASE_URL
+      }/collections/${id}`,
+      '_blank',
+      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no'
+    );
+  };
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
     const { collection, CollectionActions } = this.props;
 
@@ -198,6 +207,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
             onClickEdit={() => this.setState({ isFormVisible: true })}
             onClickRemove={this.handleRemove}
+            onClickShare={this.handleShare}
             onCreateBookmark={this.handleCreateBookmark}
             onRemoveBookmark={this.handleRemoveBookmark}
           />

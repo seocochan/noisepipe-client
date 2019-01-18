@@ -76,7 +76,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
   };
 
   public render(): React.ReactNode {
-    const { bookmarks } = this.props;
+    const { bookmarks, username, currentUser } = this.props;
 
     if (!bookmarks) {
       return <LoadingIndicator />;
@@ -89,7 +89,10 @@ class BookmarksContainer extends React.Component<Props, {}> {
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard
               collection={collection}
-              defaultBookmarked={true}
+              defaultBookmarked={
+                currentUser ? currentUser.username === username : false
+              }
+              disableBookmark={currentUser ? false : true}
               onCreateBookmark={this.handleCreateBookmark}
               onRemoveBookmark={this.handleRemoveBookmark}
             />

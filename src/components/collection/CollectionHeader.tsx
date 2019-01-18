@@ -10,6 +10,8 @@ import styles from './CollectionHeader.module.less';
 
 interface Props {
   collection: ICollectionResponse | null;
+  isAuthenticated: boolean;
+  isAuthor: boolean;
   collectionPlayButton: React.ReactChild;
   itemAddForm: React.ReactChild;
   onClickEdit: () => void;
@@ -21,6 +23,8 @@ interface Props {
 
 const CollectionHeader: React.SFC<Props> = ({
   collection,
+  isAuthenticated,
+  isAuthor,
   collectionPlayButton,
   itemAddForm,
   onClickEdit,
@@ -95,12 +99,13 @@ const CollectionHeader: React.SFC<Props> = ({
             onClick={() =>
               isBookmarked ? onRemoveBookmark(id) : onCreateBookmark(id)
             }
+            disabled={isAuthenticated ? false : true}
           />
         </Badge>
         <Dropdown overlay={shareMenus} trigger={['click']}>
           <Button icon="share-alt" shape="circle" />
         </Dropdown>
-        {true && (
+        {isAuthor && (
           <Dropdown
             className={styles.buttonRight}
             overlay={moreMenus}
@@ -116,13 +121,13 @@ const CollectionHeader: React.SFC<Props> = ({
       </div>
       <div className={styles.metadata}>
         <span>
-          <Link to={`/${createdBy.username}`}>{createdBy.username}</Link> 제작
+          <Link to={`/@${createdBy.username}`}>{createdBy.username}</Link> 제작
         </span>
         <span>·</span>
         <span>{moment(createdAt).fromNow()}</span>
       </div>
       <article className={styles.description}>{description}</article>
-      <div>{itemAddForm}</div>
+      <div style={{ minHeight: 1 }}>{isAuthor && itemAddForm}</div>
     </div>
   );
 };

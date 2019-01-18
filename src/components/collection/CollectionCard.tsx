@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Card, Dropdown, Icon, Menu, message } from 'antd';
+import { Card, Dropdown, Icon, Menu, message, Tooltip } from 'antd';
 import * as moment from 'moment';
 import { ICollectionSummary } from 'payloads';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
@@ -10,6 +10,7 @@ import styles from './CollectionCard.module.less';
 
 interface Props {
   collection: ICollectionSummary;
+  disableBookmark: boolean;
   defaultBookmarked?: boolean;
   onCreateBookmark: (collectionId: number) => Promise<void>;
   onRemoveBookmark: (collectionId: number) => Promise<void>;
@@ -61,7 +62,8 @@ class CollectionCard extends React.Component<Props, State> {
           key="twitter"
           onClick={() => this.handleClickShare(title, id)}
         >
-          <Icon type="twitter" />트위터에 공유
+          <Icon type="twitter" />
+          트위터에 공유
         </Menu.Item>
       </Menu>
     );
@@ -69,6 +71,7 @@ class CollectionCard extends React.Component<Props, State> {
 
   public render() {
     const {
+      disableBookmark,
       collection: { createdAt, createdBy, id, items, tags, title }
     } = this.props;
     const { isBookmarked } = this.state;
@@ -76,16 +79,22 @@ class CollectionCard extends React.Component<Props, State> {
     return (
       <Card
         actions={[
-          <Icon
-            key="bookmark-add"
-            type="book"
-            theme={isBookmarked ? 'twoTone' : 'outlined'}
-            onClick={() =>
-              isBookmarked
-                ? this.handleRemoveBookmark(id)
-                : this.handleCreateBookmark(id)
-            }
-          />,
+          disableBookmark ? (
+            <Tooltip title="로그인이 필요합니다">
+              <Icon key="bookmark-disabled" type="book" />
+            </Tooltip>
+          ) : (
+            <Icon
+              key="bookmark-add"
+              type="book"
+              theme={isBookmarked ? 'twoTone' : 'outlined'}
+              onClick={() =>
+                isBookmarked
+                  ? this.handleRemoveBookmark(id)
+                  : this.handleCreateBookmark(id)
+              }
+            />
+          ),
           <Dropdown
             key="share"
             overlay={this.shareMenus(title, id)}

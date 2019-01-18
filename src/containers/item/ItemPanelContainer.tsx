@@ -8,11 +8,13 @@ import ItemPanelHeader from 'components/item/ItemPanelHeader';
 import { IItemPutRequest } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
+import { AuthState } from 'store/modules/auth';
 import { actions as itemActions, ItemState } from 'store/modules/item';
 import { Tab } from 'types';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props {
+  currentUser: AuthState['currentUser'];
   item: ItemState;
   ItemActions: typeof itemActions;
 }
@@ -55,9 +57,12 @@ class ItemPanelContainer extends React.Component<Props, {}> {
 
   public render(): React.ReactNode {
     const {
-      item,
-      itemPanel: { collapsed, tab }
-    } = this.props.item;
+      currentUser,
+      item: {
+        item,
+        itemPanel: { collapsed, tab }
+      }
+    } = this.props;
 
     if (item == null) {
       return <div />;
@@ -69,6 +74,9 @@ class ItemPanelContainer extends React.Component<Props, {}> {
         itemPanelHeader={
           <ItemPanelHeader
             tab={tab}
+            showEditables={
+              currentUser ? currentUser.id === item.createdBy : false
+            }
             handleClose={this.handleClose}
             handleTabChange={this.handleTabChange}
             handleRemove={this.handleRemove}
@@ -81,7 +89,8 @@ class ItemPanelContainer extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = ({ item }: RootState) => ({
+const mapStateToProps = ({ auth, item }: RootState) => ({
+  currentUser: auth.currentUser,
   item
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({

@@ -104,7 +104,7 @@ class CollectionsContainer extends React.Component<Props, State> {
   };
 
   public render(): React.ReactNode {
-    const { collections } = this.props;
+    const { collections, currentUser, username } = this.props;
     const { isFormVisible } = this.state;
 
     if (!collections) {
@@ -115,7 +115,7 @@ class CollectionsContainer extends React.Component<Props, State> {
         <CollectionsHeader
           count={collections.totalElements}
           name={'컬렉션'}
-          hasAddButton={true}
+          hasAddButton={currentUser ? currentUser.username === username : false}
           isFormVisible={isFormVisible}
           handleClick={() => this.setState({ isFormVisible: !isFormVisible })}
         />
@@ -133,6 +133,7 @@ class CollectionsContainer extends React.Component<Props, State> {
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard
               collection={collection}
+              disableBookmark={currentUser ? false : true}
               onCreateBookmark={this.handleCreateBookmark}
               onRemoveBookmark={this.handleRemoveBookmark}
             />

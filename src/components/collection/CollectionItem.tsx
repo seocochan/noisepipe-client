@@ -9,6 +9,7 @@ import styles from './CollectionItem.module.less';
 interface Props {
   item: IItemResponse;
   itemIndex: number;
+  showDragHandle: boolean;
   isSet: boolean;
   isPlaying: boolean;
   onClickItem: (e: React.MouseEvent) => void;
@@ -35,12 +36,12 @@ const DragHandle = SortableHandle(() => (
 ));
 
 class CollectionItem extends React.Component<Props, {}> {
-  // FIXME: currentUser와 collection의 소유자가 다르면 handle 출력 X
   public render(): React.ReactNode {
     const {
       item,
       item: { title, tags },
       itemIndex,
+      showDragHandle,
       isSet,
       isPlaying,
       playItem,
@@ -87,7 +88,7 @@ class CollectionItem extends React.Component<Props, {}> {
             ))}
           </div>
         </div>
-        <DragHandle />
+        {showDragHandle && <DragHandle />}
       </div>
     );
   }

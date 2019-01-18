@@ -10,6 +10,7 @@ import { DummyPlayer } from 'components/player';
 import { ICollectionRequest, IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
+import { AuthState } from 'store/modules/auth';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
 import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
@@ -17,6 +18,7 @@ import { Provider } from 'types';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props extends RouteComponentProps {
+  auth: AuthState;
   ItemActions: typeof itemActions;
   collection: CollectionState;
   CollectionActions: typeof collectionActions;
@@ -154,6 +156,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
 
   public render(): React.ReactNode {
     const {
+      auth: { isAuthenticated, currentUser },
       collection: { collection, items },
       player: { currentTarget },
       player,
@@ -167,6 +170,9 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             playing: player[currentTarget].status.playing
           }
         : undefined;
+    const isAuthor = currentUser
+      ? currentUser.id === (collection && collection.createdBy.id)
+      : false;
 
     return (
       <>
@@ -187,6 +193,8 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         ) : (
           <CollectionHeader
             collection={collection}
+            isAuthenticated={isAuthenticated}
+            isAuthor={isAuthor}
             collectionPlayButton={
               <CollectionPlayButton
                 isPlaying={
@@ -220,6 +228,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
           <CollectionItems
             items={items}
             playerItem={playerItem}
+            showDragHandle={isAuthor}
             lockToContainerEdges={true}
             onClickItem={this.handleClickItem}
             playItem={this.playItem}
@@ -234,7 +243,8 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ collection, player }: RootState) => ({
+const mapStateToProps = ({ auth, collection, player }: RootState) => ({
+  auth,
   collection,
   player
 });

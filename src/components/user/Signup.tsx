@@ -49,7 +49,7 @@ class Signup extends React.Component<Props, State> {
   public componentDidMount() {
     const { auth, history } = this.props;
 
-    if (auth.isAuthenticated) {
+    if (auth.currentUser) {
       history.replace('/');
     }
   }

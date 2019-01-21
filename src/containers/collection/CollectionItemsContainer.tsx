@@ -156,7 +156,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
 
   public render(): React.ReactNode {
     const {
-      auth: { isAuthenticated, currentUser },
+      auth: { currentUser },
       collection: { collection, items },
       player: { currentTarget },
       player,
@@ -193,7 +193,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         ) : (
           <CollectionHeader
             collection={collection}
-            isAuthenticated={isAuthenticated}
+            isAuthenticated={currentUser ? true : false}
             isAuthor={isAuthor}
             collectionPlayButton={
               <CollectionPlayButton

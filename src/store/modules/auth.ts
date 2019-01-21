@@ -35,12 +35,10 @@ export type AuthAction = ActionType<typeof actions>;
 // state
 export interface AuthState {
   currentUser?: IUserSummary | null;
-  isAuthenticated: boolean;
   isLoading: boolean;
 }
 const initialState: AuthState = {
   currentUser: null,
-  isAuthenticated: false,
   isLoading: true
 };
 
@@ -53,7 +51,6 @@ export default produce<AuthState, AuthAction>((draft, action) => {
     }
     case GET_CURRENT_USER_SUCCESS: {
       draft.currentUser = action.payload;
-      draft.isAuthenticated = true;
       draft.isLoading = false;
       return;
     }
@@ -63,7 +60,6 @@ export default produce<AuthState, AuthAction>((draft, action) => {
     }
     case LOGOUT: {
       draft.currentUser = null;
-      draft.isAuthenticated = false;
       return;
     }
   }

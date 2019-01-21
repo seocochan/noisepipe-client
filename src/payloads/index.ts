@@ -12,19 +12,16 @@ export interface IPagedResponse<T> {
 
 // auth & user
 export interface ILoginRequest {
-  usernameOrEmail: string;
+  username: string;
   password: string;
 }
 export interface ISignupReqeust {
-  name: string;
-  email: string;
   username: string;
   password: string;
 }
 export interface IUserSummary {
   id: number;
   username: string;
-  name: string;
 }
 export interface IUserProfileResponse extends IUserSummary {
   joinedAt: string;

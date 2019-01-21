@@ -24,13 +24,6 @@ export const checkUsernameAvailability = (username: string) => {
   });
 };
 
-export const checkEmailAvailability = (email: string) => {
-  return request({
-    url: `/users/checkEmailAvailability?email=${email}`,
-    method: 'get'
-  });
-};
-
 export const getUserProfile = (username: string) => {
   return request({ url: `/users/${username}`, method: 'get' });
 };

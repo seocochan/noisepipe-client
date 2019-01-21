@@ -36,16 +36,14 @@ const LoginForm: React.SFC<Props> = props => {
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Item>
-        {getFieldDecorator('usernameOrEmail', {
-          rules: [
-            { required: true, message: '아이디나 이메일 주소를 입력해주세요' }
-          ]
+        {getFieldDecorator('username', {
+          rules: [{ required: true, message: '아이디를 입력해주세요' }]
         })(
           <Input
             prefix={<Icon type="user" />}
             size="large"
-            name="usernameOrEmail"
-            placeholder="아이디 혹은 이메일 주소"
+            name="username"
+            placeholder="아이디"
           />
         )}
       </Form.Item>

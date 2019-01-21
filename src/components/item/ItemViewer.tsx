@@ -1,10 +1,18 @@
 import * as React from 'react';
 import ReactPlayer from 'react-player';
 
+import { Icon } from 'antd';
+import { SoundCloudIcon } from 'icons';
 import * as moment from 'moment';
 import { IItemResponse } from 'payloads';
+import { Provider } from 'types';
 
 import styles from './ItemViewer.module.less';
+
+const iconStyles = {
+  color: '#333',
+  marginRight: 8
+};
 
 interface Props {
   item: IItemResponse;
@@ -23,7 +31,18 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
           <span>{moment(item.createdAt).format('ll')}</span>
         </div>
       </div>
-      <h1>{item.title}</h1>
+      <div className={styles.title}>
+        <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer">
+          <h1>
+            {item.sourceProvider === Provider.Youtube ? (
+              <Icon type="youtube" theme="filled" style={iconStyles} />
+            ) : (
+              <SoundCloudIcon style={iconStyles} />
+            )}
+            <span>{item.title}</span>
+          </h1>
+        </a>
+      </div>
       <div className={styles.playerWrapper}>
         <ReactPlayer
           url={item.sourceUrl}

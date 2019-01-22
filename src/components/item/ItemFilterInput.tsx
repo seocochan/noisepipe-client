@@ -24,6 +24,7 @@ class ItemFilterInput extends React.Component<Props, State> {
         placeholder="필터"
         value={value}
         onChange={e => this.setState({ value: e.currentTarget.value })}
+        disabled={true}
       />
     );
   }

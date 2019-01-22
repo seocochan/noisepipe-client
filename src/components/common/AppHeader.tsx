@@ -77,7 +77,7 @@ class AppHeader extends React.Component<Props, {}> {
             </span>
           }
         >
-          <Menu.Item key="/settings">
+          <Menu.Item key="/settings" disabled={true}>
             <Link to="/settings">설정</Link>
           </Menu.Item>
           <Menu.Divider />
@@ -105,11 +105,12 @@ class AppHeader extends React.Component<Props, {}> {
             className={styles.search}
             placeholder="검색"
             style={{ margin: '10px 12px' }}
+            disabled={true}
           />
           <Menu
             mode="horizontal"
             selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}
-            style={{ lineHeight: '56px', marginLeft: 'auto' }}
+            style={{ lineHeight: '56px' }}
             onClick={this.handleClick}
           >
             {menuItems}

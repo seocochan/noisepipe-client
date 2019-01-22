@@ -11,6 +11,9 @@ export interface IPagedResponse<T> {
 }
 
 // auth & user
+export interface IUserIdentityAvailability {
+  available: boolean;
+}
 export interface ILoginRequest {
   username: string;
   password: string;

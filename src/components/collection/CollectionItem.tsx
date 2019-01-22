@@ -1,14 +1,28 @@
 import * as React from 'react';
 import { SortableElement, SortableHandle } from 'react-sortable-hoc';
 
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
+import { DragIcon, SoundCloudIcon } from 'icons';
 import { IItemResponse } from 'payloads';
+import { Provider } from 'types';
 
 import styles from './CollectionItem.module.less';
+
+const DragHandle = SortableHandle(() => (
+  <div className={styles.dragHandle}>
+    <DragIcon style={{ fontSize: 24, color: '#555' }} />
+  </div>
+));
+const iconStyles = {
+  fontSize: 21,
+  color: '#333',
+  marginRight: 4
+};
 
 interface Props {
   item: IItemResponse;
   itemIndex: number;
+  showDragHandle: boolean;
   isSet: boolean;
   isPlaying: boolean;
   onClickItem: (e: React.MouseEvent) => void;
@@ -17,30 +31,13 @@ interface Props {
   pauseItem: (item: IItemResponse) => void;
 }
 
-const DragIcon = ({ size = 16, color = '#fff' }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox={`0 0 ${size} ${size}`}
-  >
-    <path d="M20 9H4v2h16V9zM4 15h16v-2H4v2z" fill={color} />
-  </svg>
-);
-
-const DragHandle = SortableHandle(() => (
-  <div className={styles.dragHandle}>
-    <DragIcon size={16} color={'#555'} />
-  </div>
-));
-
 class CollectionItem extends React.Component<Props, {}> {
-  // FIXME: currentUser와 collection의 소유자가 다르면 handle 출력 X
   public render(): React.ReactNode {
     const {
       item,
-      item: { title, tags },
+      item: { title, tags, sourceProvider },
       itemIndex,
+      showDragHandle,
       isSet,
       isPlaying,
       playItem,
@@ -56,7 +53,6 @@ class CollectionItem extends React.Component<Props, {}> {
             type="primary"
             icon="pause"
             shape="circle"
-            size="small"
             onClick={() => pauseItem(item)}
           />
         ) : isSet ? (
@@ -64,14 +60,12 @@ class CollectionItem extends React.Component<Props, {}> {
             type="primary"
             icon="caret-right"
             shape="circle"
-            size="small"
             onClick={() => resumeItem(item)}
           />
         ) : (
           <Button
             icon="caret-right"
             shape="circle"
-            size="small"
             onClick={() => playItem(item)}
           />
         )}
@@ -80,14 +74,21 @@ class CollectionItem extends React.Component<Props, {}> {
           id={itemIndex.toString()}
           onClick={onClickItem}
         >
-          <div className={styles.title}>{title}</div>
+          <div className={styles.title}>
+            {sourceProvider === Provider.Youtube ? (
+              <Icon type="youtube" theme="filled" style={iconStyles} />
+            ) : (
+              <SoundCloudIcon style={iconStyles} />
+            )}
+            <span>{title}</span>
+          </div>
           <div className={styles.tags}>
             {tags.map((tag, index) => (
               <span key={index}>{`#${tag}`}</span>
             ))}
           </div>
         </div>
-        <DragHandle />
+        {showDragHandle && <DragHandle />}
       </div>
     );
   }

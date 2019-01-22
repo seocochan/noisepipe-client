@@ -1,9 +1,40 @@
+import { AxiosResponse } from 'axios';
+import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
 export const loadCollection = (collectionId: number) => {
   return request({
     url: `/collections/${collectionId}`,
     method: 'get'
+  });
+};
+
+export const createCollection = (
+  username: string,
+  data: ICollectionRequest
+): Promise<AxiosResponse<ICollectionResponse>> => {
+  return request({
+    url: `/users/${username}/collections`,
+    method: 'post',
+    data
+  });
+};
+
+export const updateCollection = (
+  collectionId: number,
+  data: ICollectionRequest
+): Promise<AxiosResponse<ICollectionResponse>> => {
+  return request({
+    url: `/collections/${collectionId}`,
+    method: 'put',
+    data
+  });
+};
+
+export const removeCollection = (collectionId: number) => {
+  return request({
+    url: `/collections/${collectionId}`,
+    method: 'delete'
   });
 };
 
@@ -19,5 +50,45 @@ export const updateItemPosition = (itemId: number, position: number) => {
     url: `/items/${itemId}/position`,
     method: 'put',
     data: position
+  });
+};
+
+export const loadCollections = (
+  username: string,
+  page: number,
+  size: number
+): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
+  return request({
+    url: `/users/${username}/collections?page=${page}&size=${size}`,
+    method: 'get'
+  });
+};
+
+export const createBookmark = (
+  collectionId: number
+): Promise<AxiosResponse<void>> => {
+  return request({
+    url: `/collections/${collectionId}/bookmarks`,
+    method: 'post'
+  });
+};
+
+export const removeBookmark = (
+  collectionId: number
+): Promise<AxiosResponse<void>> => {
+  return request({
+    url: `/collections/${collectionId}/bookmarks`,
+    method: 'delete'
+  });
+};
+
+export const getCollectionsBookmarkedByUser = (
+  username: string,
+  page: number,
+  size: number
+): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
+  return request({
+    url: `/users/${username}/bookmarks?page=${page}&size=${size}`,
+    method: 'get'
   });
 };

@@ -23,7 +23,7 @@ const PrivateRoute: React.SFC<Props> = ({
         if (auth.isLoading) {
           return null;
         }
-        if (auth.isAuthenticated) {
+        if (auth.currentUser) {
           return <Component {...rest} {...props} />;
         }
         return (

@@ -1,4 +1,5 @@
-import { ILoginRequest, ISignupReqeust } from 'payloads';
+import { AxiosResponse } from 'axios';
+import { ILoginRequest, ISignupReqeust, IUserIdentityAvailability } from 'payloads';
 import request from 'utils/api';
 import { ACCESS_TOKEN } from 'values';
 
@@ -17,16 +18,11 @@ export const signup = (signupRequest: ISignupReqeust) => {
   return request({ url: '/auth/signup', method: 'post', data: signupRequest });
 };
 
-export const checkUsernameAvailability = (username: string) => {
+export const checkUsernameAvailability = (
+  username: string
+): Promise<AxiosResponse<IUserIdentityAvailability>> => {
   return request({
     url: `/users/checkUsernameAvailability?username=${username}`,
-    method: 'get'
-  });
-};
-
-export const checkEmailAvailability = (email: string) => {
-  return request({
-    url: `/users/checkEmailAvailability?email=${email}`,
     method: 'get'
   });
 };

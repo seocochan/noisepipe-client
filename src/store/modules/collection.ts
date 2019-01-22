@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import produce from 'immer';
-import { ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
+import { ICollectionRequest, ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
 import { ThunkResult } from 'store';
 import { Provider } from 'types';
 import { action as createAction, ActionType } from 'typesafe-actions';
@@ -9,21 +9,26 @@ import * as ItemAPI from 'utils/api/item';
 import * as Utils from 'utils/common';
 
 // action types
+const INITIALIZE = 'collection/INITIALIZE';
 const LOAD_COLLECTION_PENDING = 'collection/LOAD_COLLECTION_PENDING';
 const LOAD_COLLECTION_SUCCESS = 'collection/LOAD_COLLECTION_SUCCESS';
 const LOAD_COLLECTION_FAILURE = 'collection/LOAD_COLLECTION_FAILURE';
 const LOAD_ITEMS_PENDING = 'collection/LOAD_ITEMS_PENDING';
 const LOAD_ITEMS_SUCCESS = 'collection/LOAD_ITEMS_SUCCESS';
 const LOAD_ITEMS_FAILURE = 'collection/LOAD_ITEMS_FAILURE';
+const UPDATE_COLLECTION_SUCCESS = 'collection/UPDATE_COLLECTION_SUCCESS';
 const UPDATE_ITEM_POSITION_PENDING = 'collection/UPDATE_ITEM_POSITION_PENDING';
 const UPDATE_ITEM_POSITION_SUCCESS = 'collection/UPDATE_ITEM_POSITION_SUCCESS';
 const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
 const UPDATE_ITEM = 'collection/UPDATE_ITEM';
 const ADD_ITEM_SUCCESS = 'collection/ADD_ITEM_SUCCESS';
 const REMOVE_ITEM = 'collection/REMOVE_ITEM';
+const CREATE_BOOKMARK_SUCCESS = 'collection/CREATE_BOOKMARK_SUCCESS';
+const REMOVE_BOOKMARK_SUCCESS = 'collection/REMOVE_BOOKMARK_SUCCESS';
 
 // action creators
 export const actions = {
+  initialize: () => createAction(INITIALIZE),
   loadCollection: (
     collectionId: number
   ): ThunkResult<Promise<void>> => async dispatch => {
@@ -41,6 +46,42 @@ export const actions = {
     createAction(LOAD_COLLECTION_SUCCESS, collection),
   loadColelctionFailure: (error: AxiosError) =>
     createAction(LOAD_COLLECTION_FAILURE, error),
+  createCollection: (
+    username: string,
+    collection: ICollectionRequest
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.createCollection(username, collection);
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateCollection: (
+    collectionId: number,
+    collection: ICollectionRequest
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      const res = await CollectionAPI.updateCollection(
+        collectionId,
+        collection
+      );
+      dispatch(actions.loadCollectionSuccess(res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeCollection: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CollectionAPI.removeCollection(collectionId);
+      dispatch(actions.initialize());
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateCollectionSuccess: (collection: ICollectionResponse) =>
+    createAction(UPDATE_COLLECTION_SUCCESS, { collection }),
   loadItems: (
     collectionId: number
   ): ThunkResult<Promise<void>> => async dispatch => {
@@ -106,7 +147,29 @@ export const actions = {
   },
   addItemSuccess: (item: IItemResponse) =>
     createAction(ADD_ITEM_SUCCESS, { item }),
-  removeItem: (itemId: number) => createAction(REMOVE_ITEM, { itemId })
+  removeItem: (itemId: number) => createAction(REMOVE_ITEM, { itemId }),
+  createBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CollectionAPI.createBookmark(collectionId);
+      await dispatch(actions.createBookmarkSuccess());
+    } catch (error) {
+      throw error;
+    }
+  },
+  createBookmarkSuccess: () => createAction(CREATE_BOOKMARK_SUCCESS),
+  removeBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CollectionAPI.removeBookmark(collectionId);
+      await dispatch(actions.removeBookmarkSuccess());
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeBookmarkSuccess: () => createAction(REMOVE_BOOKMARK_SUCCESS)
   // TODO: loadComments: ICommentResponse[]
 };
 export type CollectionAction = ActionType<typeof actions>;
@@ -126,6 +189,9 @@ const initialState: CollectionState = {
 // reducer
 export default produce<CollectionState, CollectionAction>((draft, action) => {
   switch (action.type) {
+    case INITIALIZE: {
+      return initialState;
+    }
     case LOAD_COLLECTION_PENDING: {
       draft.collection = null;
       return;
@@ -148,6 +214,10 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
     }
     case LOAD_ITEMS_FAILURE: {
       console.log(action.payload);
+      return;
+    }
+    case UPDATE_COLLECTION_SUCCESS: {
+      draft.collection = action.payload.collection;
       return;
     }
     case UPDATE_ITEM_POSITION_PENDING: {
@@ -196,6 +266,22 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
         return;
       }
       draft.items.splice(index, 1);
+      return;
+    }
+    case CREATE_BOOKMARK_SUCCESS: {
+      if (!draft.collection) {
+        return;
+      }
+      draft.collection.isBookmarked = true;
+      draft.collection.bookmarks++;
+      return;
+    }
+    case REMOVE_BOOKMARK_SUCCESS: {
+      if (!draft.collection) {
+        return;
+      }
+      draft.collection.isBookmarked = false;
+      draft.collection.bookmarks--;
       return;
     }
   }

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import { Layout, message } from 'antd';
 import { AppHeader, LoadingIndicator, PrivateRoute } from 'components/common';
 import { Login, Signup } from 'components/user';
 import { ItemPanelContainer } from 'containers/item';
-import { Collection, CollectionIndex, Home, NotFound, ServerError } from 'pages';
+import { Collection, Home, NotFound, ServerError, UserLibrary } from 'pages';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as authActions, AuthState } from 'store/modules/auth';
@@ -51,18 +51,21 @@ class App extends React.Component<Props, {}> {
                   path="/collections/:collectionId"
                   component={Collection}
                 />
-                <PrivateRoute
-                  path="/me/(collections|bookmarks|comments)"
-                  component={CollectionIndex}
+                <Route
+                  path="/:username/(collections|bookmarks|comments)"
+                  component={UserLibrary}
                 />
-                <Route exact={true} path="/error" component={ServerError} />
+                <Route path="/error" component={ServerError} />
+                <PrivateRoute path="/settings" component={NotFound} />
+                <Route path="/404" component={NotFound} />
+                <Redirect from="/:username" to="/:username/collections" />
                 <Route component={NotFound} />
               </Switch>
             </div>
           </Layout.Content>
           <ItemPanelContainer />
         </Layout>
-        <PlayerControls />
+        <Route path="/collections/:collectionId" component={PlayerControls} />
       </Layout>
     );
   }

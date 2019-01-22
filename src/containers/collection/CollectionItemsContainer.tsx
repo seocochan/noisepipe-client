@@ -3,19 +3,22 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { SortEndHandler } from 'react-sortable-hoc';
 
-import { Divider } from 'antd';
-import { CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
+import { Divider, message } from 'antd';
+import { CollectionForm, CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
 import { DummyPlayer } from 'components/player';
-import { IItemResponse } from 'payloads';
+import { ICollectionRequest, IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
+import { AuthState } from 'store/modules/auth';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
 import { actions as itemActions } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 import { Provider } from 'types';
+import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props extends RouteComponentProps {
+  auth: AuthState;
   ItemActions: typeof itemActions;
   collection: CollectionState;
   CollectionActions: typeof collectionActions;
@@ -23,8 +26,15 @@ interface Props extends RouteComponentProps {
   player: PlayerState;
   PlayerActions: typeof playerActions;
 }
+interface State {
+  isFormVisible: boolean;
+}
 
-class CollectionItemsContainer extends React.Component<Props, {}> {
+class CollectionItemsContainer extends React.Component<Props, State> {
+  public readonly state: State = {
+    isFormVisible: false
+  };
+
   public async componentDidMount() {
     const { collectionId, CollectionActions, history } = this.props;
 
@@ -38,11 +48,40 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     CollectionActions.loadItems(collectionId);
   }
   public componentWillUnmount() {
-    const { ItemActions } = this.props;
-    ItemActions.hidePanel();
-    ItemActions.setItem(null);
+    const { ItemActions, CollectionActions } = this.props;
+    ItemActions.initialize();
+    CollectionActions.initialize();
   }
 
+  private handleSubmit = (data: ICollectionRequest) => {
+    const { CollectionActions, collection } = this.props;
+    CollectionActions.updateCollection(collection.collection!.id, data);
+  };
+  private handleRemove = async () => {
+    const {
+      CollectionActions,
+      collection: { collection },
+      history
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    try {
+      await CollectionActions.removeCollection(collection.id);
+      history.replace(`/@${collection.createdBy.username}/collections`);
+    } catch (error) {
+      message.error(DEFAULT_ERROR_MESSAGE);
+    }
+  };
+  private handleShare = (title: string, id: number) => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${title}&url=${
+        process.env.REACT_APP_BASE_URL
+      }/collections/${id}`,
+      '_blank',
+      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no'
+    );
+  };
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
     const { collection, CollectionActions } = this.props;
 
@@ -96,14 +135,34 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
     const target = item.sourceProvider;
     PlayerActions.pause(target);
   };
+  private handleCreateBookmark = async (collectionId: number) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.createBookmark(collectionId);
+      message.info('북마크를 추가했습니다');
+    } catch (error) {
+      message.error(DEFAULT_ERROR_MESSAGE);
+    }
+  };
+  private handleRemoveBookmark = async (collectionId: number) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.removeBookmark(collectionId);
+      message.info('북마크를 제거했습니다');
+    } catch (error) {
+      message.error(DEFAULT_ERROR_MESSAGE);
+    }
+  };
 
   public render(): React.ReactNode {
     const {
+      auth: { currentUser },
       collection: { collection, items },
       player: { currentTarget },
       player,
       PlayerActions
     } = this.props;
+    const { isFormVisible } = this.state;
     const playerItem =
       currentTarget && player[currentTarget].item
         ? {
@@ -111,31 +170,57 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
             playing: player[currentTarget].status.playing
           }
         : undefined;
+    const isAuthor = currentUser
+      ? currentUser.id === (collection && collection.createdBy.id)
+      : false;
 
     return (
       <>
-        <CollectionHeader
-          collection={collection}
-          collectionPlayButton={
-            <CollectionPlayButton
-              isPlaying={
-                currentTarget ? player[currentTarget].status.playing : false
-              }
-              isSet={currentTarget ? true : false}
-              onPause={() =>
-                currentTarget && PlayerActions.pause(currentTarget)
-              }
-              onPlay={() =>
-                items && items.length > 0 && this.playItem(items[0])
-              }
-              onResume={() =>
-                currentTarget && PlayerActions.play(currentTarget)
-              }
-            />
-          }
-          itemCount={items ? items.length : 0}
-          itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
-        />
+        {isFormVisible ? (
+          <CollectionForm
+            collection={
+              collection
+                ? {
+                    title: collection.title,
+                    description: collection.description,
+                    tags: collection.tags
+                  }
+                : undefined
+            }
+            handleSubmit={this.handleSubmit}
+            onAfterReset={() => this.setState({ isFormVisible: false })}
+          />
+        ) : (
+          <CollectionHeader
+            collection={collection}
+            isAuthenticated={currentUser ? true : false}
+            isAuthor={isAuthor}
+            collectionPlayButton={
+              <CollectionPlayButton
+                isPlaying={
+                  currentTarget ? player[currentTarget].status.playing : false
+                }
+                isSet={currentTarget ? true : false}
+                onPause={() =>
+                  currentTarget && PlayerActions.pause(currentTarget)
+                }
+                onPlay={() =>
+                  items && items.length > 0 && this.playItem(items[0])
+                }
+                onResume={() =>
+                  currentTarget && PlayerActions.play(currentTarget)
+                }
+              />
+            }
+            itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
+            onClickEdit={() => this.setState({ isFormVisible: true })}
+            onClickRemove={this.handleRemove}
+            onClickShare={this.handleShare}
+            onCreateBookmark={this.handleCreateBookmark}
+            onRemoveBookmark={this.handleRemoveBookmark}
+          />
+        )}
+
         <DummyPlayer />
         <Divider />
         <ItemFilterInput />
@@ -143,6 +228,7 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
           <CollectionItems
             items={items}
             playerItem={playerItem}
+            showDragHandle={isAuthor}
             lockToContainerEdges={true}
             onClickItem={this.handleClickItem}
             playItem={this.playItem}
@@ -157,7 +243,8 @@ class CollectionItemsContainer extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = ({ collection, player }: RootState) => ({
+const mapStateToProps = ({ auth, collection, player }: RootState) => ({
+  auth,
   collection,
   player
 });

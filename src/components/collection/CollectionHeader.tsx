@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Dropdown, Menu } from 'antd';
+import { Badge, Button, Dropdown, Icon, Menu, Popconfirm } from 'antd';
 import { LoadingIndicator } from 'components/common';
 import * as moment from 'moment';
 import { ICollectionResponse } from 'payloads';
@@ -10,33 +10,70 @@ import styles from './CollectionHeader.module.less';
 
 interface Props {
   collection: ICollectionResponse | null;
+  isAuthenticated: boolean;
+  isAuthor: boolean;
   collectionPlayButton: React.ReactChild;
-  itemCount: number;
   itemAddForm: React.ReactChild;
+  onClickEdit: () => void;
+  onClickRemove: () => void;
+  onClickShare: (title: string, id: number) => void;
+  onCreateBookmark: (collectionId: number) => void;
+  onRemoveBookmark: (collectionId: number) => void;
 }
 
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <a>수정</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a>삭제</a>
-    </Menu.Item>
-  </Menu>
-);
-
-const CollectionHead: React.SFC<Props> = ({
+const CollectionHeader: React.SFC<Props> = ({
   collection,
+  isAuthenticated,
+  isAuthor,
   collectionPlayButton,
-  itemCount,
-  itemAddForm
+  itemAddForm,
+  onClickEdit,
+  onClickRemove,
+  onClickShare,
+  onCreateBookmark,
+  onRemoveBookmark
 }) => {
   if (!collection) {
     return <LoadingIndicator />;
   }
 
-  const { title, description, tags, createdBy, createdAt } = collection;
+  const shareMenus = (
+    <Menu>
+      <Menu.Item
+        key="twitter"
+        onClick={() => onClickShare(collection.title, collection.id)}
+      >
+        <Icon type="twitter" />
+        트위터에 공유
+      </Menu.Item>
+    </Menu>
+  );
+  const moreMenus = (
+    <Menu>
+      <Menu.Item key="edit" onClick={onClickEdit}>
+        수정
+      </Menu.Item>
+      <Menu.Item key="remove">
+        <Popconfirm
+          title="컬렉션과 모든 아이템이 삭제됩니다. 삭제할까요?"
+          onConfirm={onClickRemove}
+        >
+          삭제
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const {
+    id,
+    title,
+    description,
+    tags,
+    isBookmarked,
+    bookmarks,
+    createdBy,
+    createdAt
+  } = collection;
   return (
     <div className={styles.header}>
       <div className={styles.topContainer}>
@@ -45,10 +82,38 @@ const CollectionHead: React.SFC<Props> = ({
             <span key={index}>{`#${tag}`}</span>
           ))}
         </div>
-        <Button className={styles.bookmarkButton} icon="book" shape="circle" />
-        <Dropdown overlay={menu} trigger={['click']}>
-          <Button icon="ellipsis" shape="circle" />
+        <Badge
+          offset={[2, -2]}
+          count={bookmarks}
+          style={{
+            marginRight: 16,
+            backgroundColor: '#1890ff',
+            zIndex: 1
+          }}
+        >
+          <Button
+            className={styles.buttonLeft}
+            icon="book"
+            shape="circle"
+            type={isBookmarked ? 'primary' : 'default'}
+            onClick={() =>
+              isBookmarked ? onRemoveBookmark(id) : onCreateBookmark(id)
+            }
+            disabled={isAuthenticated ? false : true}
+          />
+        </Badge>
+        <Dropdown overlay={shareMenus} trigger={['click']}>
+          <Button icon="share-alt" shape="circle" />
         </Dropdown>
+        {isAuthor && (
+          <Dropdown
+            className={styles.buttonRight}
+            overlay={moreMenus}
+            trigger={['click']}
+          >
+            <Button icon="ellipsis" shape="circle" />
+          </Dropdown>
+        )}
       </div>
       <div className={styles.titleSection}>
         {collectionPlayButton}
@@ -56,15 +121,15 @@ const CollectionHead: React.SFC<Props> = ({
       </div>
       <div className={styles.metadata}>
         <span>
-          <Link to={`/${createdBy.username}`}>{createdBy.username}</Link> 제작
+          <Link to={`/@${createdBy.username}`}>{createdBy.username}</Link> 제작
         </span>
         <span>·</span>
         <span>{moment(createdAt).fromNow()}</span>
       </div>
       <article className={styles.description}>{description}</article>
-      <div>{itemAddForm}</div>
+      <div style={{ minHeight: 1 }}>{isAuthor && itemAddForm}</div>
     </div>
   );
 };
 
-export default CollectionHead;
+export default CollectionHeader;

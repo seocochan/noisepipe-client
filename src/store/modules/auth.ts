@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import produce from 'immer';
-import { IUserSummary } from 'payloads';
+import { ISignupReqeust, IUserSummary } from 'payloads';
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as AuthAPI from 'utils/api/auth';
@@ -13,6 +13,13 @@ const LOGOUT = 'auth/LOGOUT';
 
 // action creators
 export const actions = {
+  signup: (data: ISignupReqeust): ThunkResult<Promise<void>> => async () => {
+    try {
+      await AuthAPI.signup(data);
+    } catch (error) {
+      throw error;
+    }
+  },
   getCurrentUserPending: () => createAction(GET_CURRENT_USER_PENDING),
   getCurrentUserSuccess: (user: IUserSummary) =>
     createAction(GET_CURRENT_USER_SUCCESS, user),
@@ -35,12 +42,10 @@ export type AuthAction = ActionType<typeof actions>;
 // state
 export interface AuthState {
   currentUser?: IUserSummary | null;
-  isAuthenticated: boolean;
   isLoading: boolean;
 }
 const initialState: AuthState = {
   currentUser: null,
-  isAuthenticated: false,
   isLoading: true
 };
 
@@ -53,7 +58,6 @@ export default produce<AuthState, AuthAction>((draft, action) => {
     }
     case GET_CURRENT_USER_SUCCESS: {
       draft.currentUser = action.payload;
-      draft.isAuthenticated = true;
       draft.isLoading = false;
       return;
     }
@@ -63,7 +67,6 @@ export default produce<AuthState, AuthAction>((draft, action) => {
     }
     case LOGOUT: {
       draft.currentUser = null;
-      draft.isAuthenticated = false;
       return;
     }
   }

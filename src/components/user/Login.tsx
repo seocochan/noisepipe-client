@@ -19,7 +19,7 @@ class Login extends React.Component<Props, {}> {
   public componentDidMount() {
     const { auth, history, location } = this.props;
 
-    if (auth.isAuthenticated) {
+    if (auth.currentUser) {
       history.replace('/');
     }
     if (location.state && location.state.from) {

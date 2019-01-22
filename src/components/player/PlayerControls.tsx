@@ -2,15 +2,23 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import MediaQuery from 'react-responsive';
 
-import { Button, Layout } from 'antd';
+import { Button, Icon, Layout } from 'antd';
 import ButtonGroup from 'antd/lib/button/button-group';
+import { SoundCloudIcon } from 'icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
+import { Provider } from 'types';
 
 import styles from './PlayerControls.module.less';
 import PlayerDrawer from './PlayerDrawer';
 import SeekBar from './SeekBar';
+
+const iconStyles = {
+  fontSize: 21,
+  color: '#333',
+  marginRight: 4
+};
 
 interface Props {
   player: PlayerState;
@@ -101,15 +109,32 @@ class PlayerControls extends React.Component<Props, {}> {
             </ButtonGroup>
           </div>
           <div className={styles.title}>
-            <a
-              onClick={() => {
-                PlayerActions.setDrawerVisible(!drawer.visible);
-              }}
-            >
-              {currentTarget && player[currentTarget].item
-                ? player[currentTarget].item!.title
-                : ''}
-            </a>
+            {currentTarget && player[currentTarget].item ? (
+              <div className={styles.titleContainer}>
+                <a
+                  href={player[currentTarget].item!.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ lineHeight: 0 }}
+                >
+                  {player[currentTarget].item!.sourceProvider ===
+                  Provider.Youtube ? (
+                    <Icon type="youtube" theme="filled" style={iconStyles} />
+                  ) : (
+                    <SoundCloudIcon style={iconStyles} />
+                  )}
+                </a>
+                <a
+                  onClick={() => {
+                    PlayerActions.setDrawerVisible(!drawer.visible);
+                  }}
+                >
+                  <span>{player[currentTarget].item!.title}</span>
+                </a>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
           <div className={styles.controls}>
             <ButtonGroup>

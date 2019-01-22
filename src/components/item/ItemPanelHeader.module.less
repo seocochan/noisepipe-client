@@ -1,6 +1,15 @@
 .header {
+  position: fixed;
+  top: 56px;
+  width: 640px - 10px; // panel - scrollbar
+  height: 48px;
+  background-color: rgb(249, 249, 250);
   display: flex;
   justify-content: space-between;
+  z-index: 1;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
 }
 
 .innerMenu {

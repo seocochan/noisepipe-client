@@ -11,7 +11,7 @@ import { ACCESS_TOKEN } from 'values';
 
 import styles from './AppHeader.module.less';
 
-interface Props extends RouteComponentProps {
+interface Props extends RouteComponentProps<{ username: string }> {
   auth: AuthState;
   AuthActions: typeof authActions;
 }
@@ -34,7 +34,18 @@ class AppHeader extends React.Component<Props, {}> {
   };
 
   private mapPathnameToKey = (pathname: string) => {
-    if (pathname.startsWith('/me')) {
+    const { currentUser } = this.props.auth;
+    if (!currentUser) {
+      return pathname;
+    }
+    const { username } = currentUser;
+
+    // FIXME: use regex
+    if (
+      pathname === `/@${username}/collections` ||
+      pathname === `/@${username}/bookmarks` ||
+      pathname === `/@${username}/comments`
+    ) {
       return '/me/*';
     }
     return pathname;
@@ -52,7 +63,7 @@ class AppHeader extends React.Component<Props, {}> {
           </Link>
         </Menu.Item>,
         <Menu.Item key="/me/*">
-          <Link to="/me/collections">
+          <Link to={`/@${currentUser.username}/collections`}>
             <Icon type="database" />
             컬렉션
           </Link>
@@ -62,11 +73,11 @@ class AppHeader extends React.Component<Props, {}> {
           title={
             <span>
               <Icon type="user" />
-              seoco
+              {currentUser.username}
             </span>
           }
         >
-          <Menu.Item key="/settings">
+          <Menu.Item key="/settings" disabled={true}>
             <Link to="/settings">설정</Link>
           </Menu.Item>
           <Menu.Divider />
@@ -94,11 +105,12 @@ class AppHeader extends React.Component<Props, {}> {
             className={styles.search}
             placeholder="검색"
             style={{ margin: '10px 12px' }}
+            disabled={true}
           />
           <Menu
             mode="horizontal"
             selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}
-            style={{ lineHeight: '56px', marginLeft: 'auto' }}
+            style={{ lineHeight: '56px' }}
             onClick={this.handleClick}
           >
             {menuItems}

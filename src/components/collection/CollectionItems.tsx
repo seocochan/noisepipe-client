@@ -9,18 +9,19 @@ import CollectionItem from './CollectionItem';
 interface Props {
   items: IItemResponse[] | null;
   playerItem?: { id: number; playing: boolean };
+  showDragHandle: boolean;
   onClickItem: (e: React.MouseEvent) => void;
   playItem: (item: IItemResponse) => void;
   resumeItem: (item: IItemResponse) => void;
   pauseItem: (item: IItemResponse) => void;
 }
 
-// FIXME: Hide editables when auth not exist
 class CollectionItems extends React.Component<Props, {}> {
   public render(): React.ReactNode {
     const {
       items,
       playerItem,
+      showDragHandle,
       onClickItem,
       playItem,
       resumeItem,
@@ -39,6 +40,7 @@ class CollectionItems extends React.Component<Props, {}> {
             index={index}
             item={item}
             itemIndex={index}
+            showDragHandle={showDragHandle}
             isSet={playerItem && playerItem.id === item.id ? true : false}
             isPlaying={
               playerItem && playerItem.id === item.id && playerItem.playing

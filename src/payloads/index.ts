@@ -11,45 +11,43 @@ export interface IPagedResponse<T> {
 }
 
 // auth & user
+export interface IUserIdentityAvailability {
+  available: boolean;
+}
 export interface ILoginRequest {
-  usernameOrEmail: string;
+  username: string;
   password: string;
 }
 export interface ISignupReqeust {
-  name: string;
-  email: string;
   username: string;
   password: string;
 }
 export interface IUserSummary {
   id: number;
   username: string;
-  name: string;
 }
 export interface IUserProfileResponse extends IUserSummary {
   joinedAt: string;
-  pollCount: number;
-  voteCount: number;
 }
 
 // collection
-export interface ICollectionResponse {
-  id: number;
-  title: string;
-  description: string | null;
-  tags: string[];
-  bookmarks: number;
-  isBookmarked: boolean;
-  createdBy: IUserSummary;
-  createdAt: Date;
-}
 export interface ICollectionSummary {
   id: number;
   title: string;
-  description: string | null;
   items: number;
+  tags: string[];
   createdBy: IUserSummary;
   createdAt: Date;
+}
+export interface ICollectionResponse extends ICollectionSummary {
+  description: string | null;
+  bookmarks: number;
+  isBookmarked: boolean;
+}
+export interface ICollectionRequest {
+  title: string;
+  description: string | null;
+  tags: string[];
 }
 export interface ICommentResponse {
   id: number;

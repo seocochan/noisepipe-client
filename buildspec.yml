@@ -2,7 +2,10 @@ version: 0.2
 
 # === parameter store ===
 # CLIENT_REPOSITORY_URI
+# BASE_URL
 # API_BASE_URL
+# DEFAULT_YT_MEDIA_URL
+# DEFAULT_SC_MEDIA_URL
 # FOO
 
 phases:
@@ -18,7 +21,7 @@ phases:
     commands:
     - echo NPM Build started on `date`
     - echo Building files...
-    - REACT_APP_API_BASE_URL=$API_BASE_URL REACT_APP_FOO=$FOO REACT_APP_DEFAULT_YT_MEDIA_URL=$DEFAULT_YT_MEDIA_URL REACT_APP_DEFAULT_SC_MEDIA_URL=$DEFAULT_SC_MEDIA_URL npm run build
+    - REACT_APP_BASE_URL=$BASE_URL REACT_APP_API_BASE_URL=$API_BASE_URL REACT_APP_FOO=$FOO REACT_APP_DEFAULT_YT_MEDIA_URL=$DEFAULT_YT_MEDIA_URL REACT_APP_DEFAULT_SC_MEDIA_URL=$DEFAULT_SC_MEDIA_URL npm run build
   build:
     commands:
     - echo Docker Build started on `date`

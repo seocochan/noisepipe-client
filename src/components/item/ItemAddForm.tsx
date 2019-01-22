@@ -74,17 +74,18 @@ class ItemAddForm extends React.Component<Props, State> {
           validateStatus={validateStatus}
           help={errorMsg}
           hasFeedback={true}
+          style={{ marginRight: 8 }}
         >
           <Input
             prefix={<Icon type="link" />}
             placeholder="미디어 URL"
             value={value}
             onChange={this.handleChange}
-            style={{width: 200}}
+            style={{ width: 200 }}
           />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit">+</Button>
+          <Button htmlType="submit" icon="plus" />
         </Form.Item>
       </Form>
     );

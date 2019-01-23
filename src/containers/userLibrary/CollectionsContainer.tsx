@@ -57,11 +57,19 @@ class CollectionsContainer extends React.Component<Props, State> {
     UserLibraryActions.initialize();
   }
 
+  private getOffsetId = () => {
+    const { collections } = this.props;
+    return !collections
+      ? -1
+      : collections.content[collections.content.length - 1].id;
+  };
   private loadMore = async () => {
-    const { UserLibraryActions, collections, username } = this.props;
+    const { UserLibraryActions, username } = this.props;
+    const offsetId = this.getOffsetId();
+
     await UserLibraryActions.loadCollections(
       username,
-      collections!.page + 1,
+      offsetId === -1 ? undefined : offsetId,
       DEFAULT_PAGE_SIZE,
       true
     );

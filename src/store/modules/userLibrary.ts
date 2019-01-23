@@ -3,7 +3,7 @@ import { ICollectionSummary, IPagedResponse } from 'payloads';
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as CollectionAPI from 'utils/api/collection';
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from 'values';
+import { DEFAULT_PAGE_SIZE } from 'values';
 
 // action types
 const INITIALIZE = 'userLibrary/INITIALIZE';
@@ -20,16 +20,20 @@ export const actions = {
   initialize: () => createAction(INITIALIZE),
   loadCollections: (
     username: string,
-    page = DEFAULT_PAGE_NUMBER,
+    offsetId?: number,
     size = DEFAULT_PAGE_SIZE,
     loadMore = false
   ): ThunkResult<Promise<void>> => async dispatch => {
     try {
-      const res = await CollectionAPI.loadCollections(username, page, size);
+      const res = await CollectionAPI.loadCollections(username, size, offsetId);
       loadMore
         ? dispatch(actions.loadMoreCollections(res.data))
         : dispatch(actions.loadCollectionsSuccess(res.data));
     } catch (error) {
+      if (loadMore) {
+        // if error occurs while load more, init pagination
+        dispatch(actions.loadCollections(username));
+      }
       throw error;
     }
   },
@@ -77,6 +81,10 @@ export const actions = {
         ? dispatch(actions.loadMoreBookmarkedCollections(res.data))
         : dispatch(actions.loadBookmarkedCollectionsSuccess(res.data));
     } catch (error) {
+      if (loadMore) {
+        // if error occurs while load more, init pagination
+        dispatch(actions.loadBookmarkedCollections(username));
+      }
       throw error;
     }
   },

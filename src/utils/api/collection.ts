@@ -55,11 +55,13 @@ export const updateItemPosition = (itemId: number, position: number) => {
 
 export const loadCollections = (
   username: string,
-  page: number,
-  size: number
+  size: number,
+  offsetId?: number
 ): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
   return request({
-    url: `/users/${username}/collections?page=${page}&size=${size}`,
+    url: `/users/${username}/collections?${
+      offsetId ? `offsetId=${offsetId}&` : ''
+    }size=${size}`,
     method: 'get'
   });
 };

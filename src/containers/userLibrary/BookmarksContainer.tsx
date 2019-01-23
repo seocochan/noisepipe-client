@@ -51,7 +51,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
     UserLibraryActions.initialize();
   }
 
-  private loadMore = async () => {
+  private getOffsetId = () => {
     let offsetId = -1;
     // find first bookmarked card from the last
     for (let i = this.cards.length - 1; i >= 0; i--) {
@@ -59,13 +59,15 @@ class BookmarksContainer extends React.Component<Props, {}> {
         continue;
       }
       const { id, isBookmarked } = this.cards[i]!.getBookmarkState();
-      console.log('마지막 북마크: ', id);
       if (isBookmarked) {
         offsetId = id;
         break;
       }
     }
-
+    return offsetId;
+  };
+  private loadMore = async () => {
+    const offsetId = this.getOffsetId();
     // if offsetId is still -1
     // get more list without offsetId (fetch from first item)
     const { UserLibraryActions, username } = this.props;

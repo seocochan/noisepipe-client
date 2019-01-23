@@ -13,6 +13,7 @@ const LOAD_BOOKMARKED_COLLECTIONS_SUCCESS =
   'userLibrary/LOAD_BOOKMARKED_COLLECTIONS_SUCCESS';
 const LOAD_MORE_BOOKMARKED_COLLECTIONS =
   'userLibrary/LOAD_MORE_BOOKMARKED_COLLECTIONS';
+const REMOVE_BOOKMARK_SUCCESS = 'userLibrary/REMOVE_BOOKMARK_SUCCESS';
 
 // action creators
 export const actions = {
@@ -46,25 +47,31 @@ export const actions = {
     }
   },
   removeBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async () => {
+    collectionId: number,
+    index?: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
     try {
       await CollectionAPI.removeBookmark(collectionId);
+      if (index !== undefined) {
+        dispatch(actions.removeBookmarkSuccess(index));
+      }
     } catch (error) {
       throw error;
     }
   },
+  removeBookmarkSuccess: (index: number) =>
+    createAction(REMOVE_BOOKMARK_SUCCESS, { index }),
   loadBookmarkedCollections: (
     username: string,
-    page = DEFAULT_PAGE_NUMBER,
+    offsetId?: number,
     size = DEFAULT_PAGE_SIZE,
     loadMore = false
   ): ThunkResult<Promise<void>> => async dispatch => {
     try {
       const res = await CollectionAPI.getCollectionsBookmarkedByUser(
         username,
-        page,
-        size
+        size,
+        offsetId
       );
       loadMore
         ? dispatch(actions.loadMoreBookmarkedCollections(res.data))
@@ -127,6 +134,14 @@ export default produce<UserLibraryState, UserLibraryAction>((draft, action) => {
       const previousContent = draft.bookmarks.content;
       draft.bookmarks = collections;
       draft.bookmarks.content = [...previousContent, ...collections.content];
+      return;
+    }
+    case REMOVE_BOOKMARK_SUCCESS: {
+      if (!draft.bookmarks) {
+        return;
+      }
+      draft.bookmarks.content.splice(action.payload.index, 1);
+      draft.bookmarks.totalElements--;
       return;
     }
   }

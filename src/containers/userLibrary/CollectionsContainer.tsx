@@ -132,6 +132,7 @@ class CollectionsContainer extends React.Component<Props, State> {
           collections={collections.content}
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard
+              key={collection.id}
               collection={collection}
               disableBookmark={currentUser ? false : true}
               onCreateBookmark={this.handleCreateBookmark}

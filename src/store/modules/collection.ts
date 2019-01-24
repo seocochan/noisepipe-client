@@ -5,6 +5,7 @@ import { ThunkResult } from 'store';
 import { Provider } from 'types';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as CollectionAPI from 'utils/api/collection';
+import * as CommentAPI from 'utils/api/comment';
 import * as ItemAPI from 'utils/api/item';
 import * as Utils from 'utils/common';
 
@@ -25,6 +26,9 @@ const ADD_ITEM_SUCCESS = 'collection/ADD_ITEM_SUCCESS';
 const REMOVE_ITEM = 'collection/REMOVE_ITEM';
 const CREATE_BOOKMARK_SUCCESS = 'collection/CREATE_BOOKMARK_SUCCESS';
 const REMOVE_BOOKMARK_SUCCESS = 'collection/REMOVE_BOOKMARK_SUCCESS';
+const LOAD_COMMENTS_SUCCESS = 'collection/LOAD_COMMENTS_SUCCESS';
+const LOAD_REPLIES_SUCCESS = 'collection/LOAD_REPLIES_SUCCESS';
+// const CREATE_COMMENT
 
 // action creators
 export const actions = {
@@ -169,8 +173,32 @@ export const actions = {
       throw error;
     }
   },
-  removeBookmarkSuccess: () => createAction(REMOVE_BOOKMARK_SUCCESS)
-  // TODO: loadComments: ICommentResponse[]
+  removeBookmarkSuccess: () => createAction(REMOVE_BOOKMARK_SUCCESS),
+  loadComments: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      const res = await CommentAPI.getCommentsByCollection(collectionId);
+      await dispatch(actions.loadCommentsSuccess(res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  loadCommentsSuccess: (comments: ICommentResponse[]) =>
+    createAction(LOAD_COMMENTS_SUCCESS, { comments }),
+  loadReplies: (
+    collectionId: number,
+    commentId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      const res = await CommentAPI.getCommentReplies(collectionId, commentId);
+      await dispatch(actions.loadRepliesSuccess(commentId, res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  loadRepliesSuccess: (replyTo: number, replies: ICommentResponse[]) =>
+    createAction(LOAD_REPLIES_SUCCESS, { replies }, { replyTo })
 };
 export type CollectionAction = ActionType<typeof actions>;
 
@@ -179,11 +207,13 @@ export interface CollectionState {
   collection: ICollectionResponse | null;
   items: IItemResponse[] | null;
   comments: ICommentResponse[] | null;
+  replies: Map<ICommentResponse['id'], ICommentResponse[]>;
 }
 const initialState: CollectionState = {
   collection: null,
   items: null,
-  comments: null
+  comments: null,
+  replies: new Map()
 };
 
 // reducer
@@ -282,6 +312,16 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       }
       draft.collection.isBookmarked = false;
       draft.collection.bookmarks--;
+      return;
+    }
+    case LOAD_COMMENTS_SUCCESS: {
+      draft.comments = action.payload.comments;
+      return;
+    }
+    case LOAD_REPLIES_SUCCESS: {
+      const replies = new Map(draft.replies);
+      replies.set(action.meta.replyTo, action.payload.replies);
+      draft.replies = replies;
       return;
     }
   }

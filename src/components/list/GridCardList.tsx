@@ -5,7 +5,10 @@ import { ICollectionSummary } from 'payloads';
 
 interface Props {
   collections: ICollectionSummary[];
-  renderCard: (collection: ICollectionSummary, index: number) => React.ReactNode;
+  renderCard: (
+    collection: ICollectionSummary,
+    index: number
+  ) => React.ReactNode;
   isLast: boolean;
   loadMoreButton: React.ReactChild;
 }

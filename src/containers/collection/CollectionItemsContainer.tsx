@@ -5,7 +5,9 @@ import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Divider, message } from 'antd';
 import { CollectionForm, CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
+import { CommentHeader } from 'components/comment';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
+import { RecursiveList } from 'components/list';
 import { DummyPlayer } from 'components/player';
 import { ICollectionRequest, IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -46,6 +48,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       }
     }
     CollectionActions.loadItems(collectionId);
+    CollectionActions.loadComments(collectionId);
   }
   public componentWillUnmount() {
     const { ItemActions, CollectionActions } = this.props;
@@ -153,11 +156,21 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
+  private handleLoadReplies = (commentId: number) => {
+    const {
+      CollectionActions,
+      collection: { collection }
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    CollectionActions.loadReplies(collection.id, commentId);
+  };
 
   public render(): React.ReactNode {
     const {
       auth: { currentUser },
-      collection: { collection, items },
+      collection: { collection, items, comments, replies },
       player: { currentTarget },
       player,
       PlayerActions
@@ -220,7 +233,6 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             onRemoveBookmark={this.handleRemoveBookmark}
           />
         )}
-
         <DummyPlayer />
         <Divider />
         <ItemFilterInput />
@@ -236,6 +248,16 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             pauseItem={this.pauseItem}
             useDragHandle={true}
             onSortEnd={this.handleSortEnd}
+          />
+        )}
+        <Divider style={{ background: 'transparent' }} />
+        {collection && <CommentHeader comments={collection.comments} />}
+        {comments && (
+          <RecursiveList
+            depth={0}
+            comments={comments}
+            replies={replies}
+            onLoadReplies={this.handleLoadReplies}
           />
         )}
       </>

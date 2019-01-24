@@ -41,6 +41,7 @@ export interface ICollectionSummary {
 }
 export interface ICollectionResponse extends ICollectionSummary {
   description: string | null;
+  comments: number;
   bookmarks: number;
   isBookmarked: boolean;
 }
@@ -48,13 +49,6 @@ export interface ICollectionRequest {
   title: string;
   description: string | null;
   tags: string[];
-}
-export interface ICommentResponse {
-  id: number;
-  text: string;
-  depth: number;
-  collection: ICollectionSummary;
-  createdBy: IUserSummary;
 }
 
 // item
@@ -91,4 +85,25 @@ export interface ICueResponse {
 export interface IMediaDataResponse {
   url: string;
   title: string;
+}
+
+// comment
+export interface ICommentRequest {
+  text: string;
+  replyTo: number;
+}
+export interface ICommentResponse {
+  id: number;
+  text: string;
+  depth: number;
+  replies: number;
+  createdBy: IUserSummary;
+  createdAt: Date;
+}
+export interface ICommentDetail {
+  id: number;
+  text: string;
+  collection: ICollectionSummary;
+  createdBy: IUserSummary;
+  createdAt: Date;
 }

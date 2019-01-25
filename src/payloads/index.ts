@@ -90,7 +90,7 @@ export interface IMediaDataResponse {
 // comment
 export interface ICommentRequest {
   text: string;
-  replyTo: number;
+  replyTo?: number;
 }
 export interface ICommentResponse {
   id: number;

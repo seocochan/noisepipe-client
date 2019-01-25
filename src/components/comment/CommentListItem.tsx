@@ -1,63 +1,128 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Comment, Dropdown, Icon, Menu } from 'antd';
+import { Button, Comment, Dropdown, Icon, Menu, message, Popconfirm } from 'antd';
 import * as moment from 'moment';
-import { ICommentResponse } from 'payloads';
+import { ICommentRequest, ICommentResponse } from 'payloads';
+import { AuthState } from 'store/modules/auth';
+import { DEFAULT_ERROR_MESSAGE } from 'values';
 
+import CommentForm from './CommentForm';
 import styles from './CommentListItem.module.less';
 
 interface Props {
   comment: ICommentResponse;
+  replyTo?: number;
+  currentUser: AuthState['currentUser'];
   showReplyActions: boolean;
+  onCreate: (data: ICommentRequest) => Promise<void>;
+  onUpdate: (commentId: number, data: ICommentRequest) => Promise<void>;
+  onRemove: (commentId: number, replyTo?: number) => Promise<void>;
 }
 interface State {
   showReplies: boolean;
+  showEditForm: boolean;
+  showReplyForm: boolean;
 }
 
 class CommentListItem extends React.Component<Props, State> {
   public readonly state: State = {
-    showReplies: false
+    showReplies: false,
+    showEditForm: false,
+    showReplyForm: false
+  };
+
+  public componentDidUpdate(prevProps: Props) {
+    const { comment } = this.props;
+    if (comment.id !== prevProps.comment.id) {
+      this.setState({
+        showReplies: false,
+        showEditForm: false,
+        showReplyForm: false
+      });
+    }
+  }
+
+  private handleRemove = async () => {
+    const { comment, onRemove, replyTo } = this.props;
+    try {
+      await onRemove(comment.id, replyTo);
+
+      message.success('댓글을 삭제했습니다');
+    } catch (error) {
+      message.error(DEFAULT_ERROR_MESSAGE);
+      console.log(error);
+    }
+  };
+
+  private editActions = () => {
+    return (
+      <Menu>
+        <Menu.Item
+          key="edit"
+          onClick={() => this.setState({ showEditForm: true })}
+        >
+          수정
+        </Menu.Item>
+        <Menu.Item key="remove">
+          <Popconfirm title="삭제할까요?" onConfirm={this.handleRemove}>
+            삭제
+          </Popconfirm>
+        </Menu.Item>
+      </Menu>
+    );
   };
 
   public render() {
     const {
-      comment: { createdBy, text, createdAt, replies },
+      comment: { id, createdBy, text, createdAt, replies },
+      replyTo,
+      currentUser,
       showReplyActions,
+      onCreate,
+      onUpdate,
       children
     } = this.props;
-    const { showReplies } = this.state;
+    const { showReplies, showReplyForm, showEditForm } = this.state;
 
     return (
       <Comment
         author={
           <>
             <Link to={`/@${createdBy.username}`}>{createdBy.username}</Link>
-            <div className={styles.editActions}>
-              <Dropdown
-                trigger={['click']}
-                overlay={
-                  <Menu>
-                    <Menu.Item>수정</Menu.Item>
-                    <Menu.Item>삭제</Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button shape="circle" icon="ellipsis" size="small"/>
-              </Dropdown>
-            </div>
+            {currentUser && currentUser.id === createdBy.id && (
+              <div className={styles.editActions}>
+                <Dropdown trigger={['click']} overlay={this.editActions()}>
+                  <Button shape="circle" icon="ellipsis" size="small" />
+                </Dropdown>
+              </div>
+            )}
           </>
         }
         datetime={moment(createdAt).fromNow()}
-        content={<p>{text}</p>}
+        content={
+          showEditForm ? (
+            <div className={styles.formContainer}>
+              <CommentForm
+                text={text}
+                replyTo={replyTo}
+                submitPlaceholder="수정"
+                showCancel={true}
+                onSubmit={data => onUpdate(id, data)}
+                onCancel={() => this.setState({ showEditForm: false })}
+                onSuccess={() => this.setState({ showEditForm: false })}
+              />
+            </div>
+          ) : (
+            <p>{text}</p>
+          )
+        }
         actions={
           showReplyActions
             ? [
                 <span
                   key="reply-view"
-                  onClick={() =>
-                    replies > 0 && this.setState({ showReplies: !showReplies })
-                  }
+                  onClick={() => this.setState({ showReplies: !showReplies })}
                 >
                   {`답글 ${replies}개`}
                   <Icon
@@ -65,14 +130,35 @@ class CommentListItem extends React.Component<Props, State> {
                     type={showReplies ? 'up' : 'down'}
                   />
                 </span>,
-                <span key="add">
+                <span
+                  key="add"
+                  onClick={() =>
+                    this.setState({ showReplyForm: !showReplyForm })
+                  }
+                >
                   답글 달기
-                  <Icon className={styles.icon} type="enter" />
+                  <Icon
+                    className={styles.icon}
+                    type={showReplyForm ? 'rollback' : 'enter'}
+                  />
                 </span>
               ]
             : undefined
         }
       >
+        {showReplyForm && (
+          <div className={styles.formContainer}>
+            <CommentForm
+              replyTo={id}
+              showCancel={true}
+              onSubmit={onCreate}
+              onCancel={() => this.setState({ showReplyForm: false })}
+              onSuccess={() =>
+                this.setState({ showReplyForm: false, showReplies: true })
+              }
+            />
+          </div>
+        )}
         {showReplies && children}
       </Comment>
     );

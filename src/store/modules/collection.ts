@@ -1,6 +1,13 @@
 import { AxiosError } from 'axios';
 import produce from 'immer';
-import { ICollectionRequest, ICollectionResponse, ICommentResponse, IItemPutRequest, IItemResponse } from 'payloads';
+import {
+  ICollectionRequest,
+  ICollectionResponse,
+  ICommentRequest,
+  ICommentResponse,
+  IItemPutRequest,
+  IItemResponse
+} from 'payloads';
 import { ThunkResult } from 'store';
 import { Provider } from 'types';
 import { action as createAction, ActionType } from 'typesafe-actions';
@@ -28,7 +35,12 @@ const CREATE_BOOKMARK_SUCCESS = 'collection/CREATE_BOOKMARK_SUCCESS';
 const REMOVE_BOOKMARK_SUCCESS = 'collection/REMOVE_BOOKMARK_SUCCESS';
 const LOAD_COMMENTS_SUCCESS = 'collection/LOAD_COMMENTS_SUCCESS';
 const LOAD_REPLIES_SUCCESS = 'collection/LOAD_REPLIES_SUCCESS';
-// const CREATE_COMMENT
+const CREATE_COMMENT = 'collection/CREATE_COMMENT';
+const CREATE_REPLY = 'collection/CREATE_REPLY';
+const UPDATE_COMMENT = 'collection/UPDATE_COMMENT';
+const UPDATE_REPLY = 'collection/UPDATE_REPLY';
+const REMOVE_COMMENT = 'collection/REMOVE_COMMENT';
+const REMOVE_REPLY = 'collection/REMOVE_REPLY';
 
 // action creators
 export const actions = {
@@ -198,7 +210,58 @@ export const actions = {
     }
   },
   loadRepliesSuccess: (replyTo: number, replies: ICommentResponse[]) =>
-    createAction(LOAD_REPLIES_SUCCESS, { replies }, { replyTo })
+    createAction(LOAD_REPLIES_SUCCESS, { replies }, { replyTo }),
+  createCommentOrReply: (
+    collectionId: number,
+    data: ICommentRequest
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      const res = await CommentAPI.createComment(collectionId, data);
+      data.replyTo
+        ? await dispatch(actions.createReply(res.data, data.replyTo))
+        : await dispatch(actions.createComment(res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  createComment: (comment: ICommentResponse) =>
+    createAction(CREATE_COMMENT, { comment }),
+  createReply: (reply: ICommentResponse, replyTo: number) =>
+    createAction(CREATE_REPLY, { reply }, { replyTo }),
+  updateCommentOrReply: (
+    commentId: number,
+    data: ICommentRequest
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      const res = await CommentAPI.updateCommentById(commentId, data);
+      data.replyTo
+        ? await dispatch(actions.updateReply(res.data, data.replyTo))
+        : await dispatch(actions.updateComment(res.data));
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateComment: (comment: ICommentResponse) =>
+    createAction(UPDATE_COMMENT, { comment }),
+  updateReply: (reply: ICommentResponse, replyTo: number) =>
+    createAction(UPDATE_REPLY, { reply }, { replyTo }),
+  removeCommentOrReply: (
+    commentId: number,
+    replyTo?: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      await CommentAPI.removeCommentById(commentId);
+      replyTo
+        ? await dispatch(actions.removeReply(commentId, replyTo))
+        : await dispatch(actions.removeComment(commentId));
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeComment: (commentId: number) =>
+    createAction(REMOVE_COMMENT, { commentId }),
+  removeReply: (replyId: number, replyTo: number) =>
+    createAction(REMOVE_REPLY, { replyId }, { replyTo })
 };
 export type CollectionAction = ActionType<typeof actions>;
 
@@ -321,6 +384,107 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
     case LOAD_REPLIES_SUCCESS: {
       const replies = new Map(draft.replies);
       replies.set(action.meta.replyTo, action.payload.replies);
+      draft.replies = replies;
+      return;
+    }
+    case CREATE_COMMENT: {
+      if (!draft.comments || !draft.collection) {
+        return;
+      }
+      draft.comments.push(action.payload.comment);
+      draft.collection.comments++;
+      return;
+    }
+    case CREATE_REPLY: {
+      const { replyTo } = action.meta;
+      if (!draft.comments || !draft.collection) {
+        return;
+      }
+      const parentIndex = draft.comments.findIndex(
+        comment => comment.id === replyTo
+      );
+      draft.comments[parentIndex].replies++;
+      draft.collection.comments++;
+
+      const replies = new Map(draft.replies);
+      const replyList = replies.get(replyTo);
+      if (!replyList) {
+        return;
+      }
+      replyList.push(action.payload.reply);
+      replies.set(replyTo, replyList);
+      draft.replies = replies;
+      return;
+    }
+    case UPDATE_COMMENT: {
+      const { comment: updatedComment } = action.payload;
+      if (!draft.comments) {
+        return;
+      }
+      const index = draft.comments.findIndex(
+        comment => comment.id === updatedComment.id
+      );
+      if (index === -1) {
+        return;
+      }
+      draft.comments[index].text = updatedComment.text; // update text only
+      return;
+    }
+    case UPDATE_REPLY: {
+      const { reply: updatedReply } = action.payload;
+      const { replyTo } = action.meta;
+      const replies = new Map(draft.replies);
+      const replyList = replies.get(replyTo);
+      if (!replyList) {
+        return;
+      }
+      const index = replyList.findIndex(reply => reply.id === updatedReply.id);
+      if (index === -1) {
+        return;
+      }
+      replyList[index].text = updatedReply.text; // update text only
+      replies.set(replyTo, replyList);
+      draft.replies = replies;
+      return;
+    }
+    case REMOVE_COMMENT: {
+      const { commentId } = action.payload;
+      if (!draft.comments || !draft.collection) {
+        return;
+      }
+      const index = draft.comments.findIndex(
+        comment => comment.id === commentId
+      );
+      if (index === -1) {
+        return;
+      }
+      draft.comments.splice(index, 1);
+      draft.collection.comments--;
+      return;
+    }
+    case REMOVE_REPLY: {
+      const { replyId } = action.payload;
+      const { replyTo } = action.meta;
+      if (!draft.comments || !draft.collection) {
+        return;
+      }
+      const parentIndex = draft.comments.findIndex(
+        comment => comment.id === replyTo
+      );
+      draft.comments[parentIndex].replies--;
+      draft.collection.comments--;
+
+      const replies = new Map(draft.replies);
+      const replyList = replies.get(replyTo);
+      if (!replyList) {
+        return;
+      }
+      const index = replyList.findIndex(reply => reply.id === replyId);
+      if (index === -1) {
+        return;
+      }
+      replyList.splice(index, 1);
+      replies.set(replyTo, replyList);
       draft.replies = replies;
       return;
     }

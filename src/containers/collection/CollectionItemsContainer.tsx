@@ -5,11 +5,11 @@ import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Divider, message } from 'antd';
 import { CollectionForm, CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
-import { CommentHeader } from 'components/comment';
+import { CommentForm, CommentHeader } from 'components/comment';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
 import { RecursiveList } from 'components/list';
 import { DummyPlayer } from 'components/player';
-import { ICollectionRequest, IItemResponse } from 'payloads';
+import { ICollectionRequest, ICommentRequest, IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
@@ -166,6 +166,39 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     }
     CollectionActions.loadReplies(collection.id, commentId);
   };
+  private handleCreateComment = async (data: ICommentRequest) => {
+    const {
+      CollectionActions,
+      collection: { collection }
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    try {
+      await CollectionActions.createCommentOrReply(collection.id, data);
+    } catch (error) {
+      throw error;
+    }
+  };
+  private handleUpdateComment = async (
+    commentId: number,
+    data: ICommentRequest
+  ) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.updateCommentOrReply(commentId, data);
+    } catch (error) {
+      throw error;
+    }
+  };
+  private handleRemoveComment = async (commentId: number, replyTo?: number) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.removeCommentOrReply(commentId, replyTo);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   public render(): React.ReactNode {
     const {
@@ -252,12 +285,17 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         )}
         <Divider style={{ background: 'transparent' }} />
         {collection && <CommentHeader comments={collection.comments} />}
+        <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />
         {comments && (
           <RecursiveList
             depth={0}
             comments={comments}
             replies={replies}
-            onLoadReplies={this.handleLoadReplies}
+            currentUser={currentUser}
+            onLoad={this.handleLoadReplies}
+            onCreate={this.handleCreateComment}
+            onUpdate={this.handleUpdateComment}
+            onRemove={this.handleRemoveComment}
           />
         )}
       </>

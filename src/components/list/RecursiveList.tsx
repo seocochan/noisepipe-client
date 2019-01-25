@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import { List } from 'antd';
 import { CommentListItem } from 'components/comment';
-import { ICommentResponse } from 'payloads';
+import { ICommentRequest, ICommentResponse } from 'payloads';
+import { AuthState } from 'store/modules/auth';
 import { MAX_COMMENT_DEPTH } from 'values';
 
 interface Props {
@@ -10,48 +11,59 @@ interface Props {
   comments?: ICommentResponse[];
   replies?: Map<ICommentResponse['id'], ICommentResponse[]>;
   parentCommentId?: ICommentResponse['id'];
-  onLoadReplies: (commentId: number) => void;
+  currentUser: AuthState['currentUser'];
+  onLoad: (commentId: number) => void;
+  onCreate: (data: ICommentRequest) => Promise<void>;
+  onUpdate: (commentId: number, data: ICommentRequest) => Promise<void>;
+  onRemove: (commentId: number, replyTo?: number) => Promise<void>;
 }
 
 class RecursiveList extends React.Component<Props, {}> {
   public componentDidMount() {
-    const { parentCommentId, onLoadReplies } = this.props;
-    if (!parentCommentId || !onLoadReplies) {
+    const { parentCommentId, onLoad } = this.props;
+    if (!parentCommentId || !onLoad) {
       return;
     }
-    onLoadReplies(parentCommentId);
+    onLoad(parentCommentId);
   }
 
   public render(): React.ReactNode {
     const {
       comments,
       replies,
-      depth,
       parentCommentId,
-      onLoadReplies
+      currentUser,
+      depth,
+      onLoad,
+      onCreate,
+      onUpdate,
+      onRemove
     } = this.props;
-
-    if (depth > MAX_COMMENT_DEPTH) {
-      return null;
-    }
-
-    console.log('--------------------');
-    console.log(depth, parentCommentId);
-    console.log(comments);
 
     return (
       <List
         dataSource={comments}
         renderItem={(comment: ICommentResponse) => (
           <CommentListItem
+            key={comment.id}
             comment={comment}
+            replyTo={parentCommentId}
+            currentUser={currentUser}
             showReplyActions={depth < MAX_COMMENT_DEPTH}
+            onCreate={onCreate}
+            onUpdate={onUpdate}
+            onRemove={onRemove}
           >
             <RecursiveList
+              key={comment.id}
               depth={depth + 1}
               comments={replies && replies.get(comment.id)}
               parentCommentId={comment.id}
-              onLoadReplies={onLoadReplies}
+              currentUser={currentUser}
+              onLoad={onLoad}
+              onCreate={onCreate}
+              onUpdate={onUpdate}
+              onRemove={onRemove} // FIXME: ...this.props
             />
           </CommentListItem>
         )}

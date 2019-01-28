@@ -159,7 +159,7 @@ class PlayerControls extends React.Component<Props, {}> {
                 disabled={!currentTarget}
                 icon="close"
                 size="large"
-                onClick={() => PlayerActions.initialize()}
+                onClick={() => PlayerActions.close()}
               />
             </ButtonGroup>
           </div>

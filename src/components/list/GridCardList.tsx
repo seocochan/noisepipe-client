@@ -5,7 +5,10 @@ import { ICollectionSummary } from 'payloads';
 
 interface Props {
   collections: ICollectionSummary[];
-  renderCard: (collection: ICollectionSummary) => React.ReactNode;
+  renderCard: (
+    collection: ICollectionSummary,
+    index: number
+  ) => React.ReactNode;
   isLast: boolean;
   loadMoreButton: React.ReactChild;
 }
@@ -22,7 +25,7 @@ const GridCardList: React.SFC<Props> = ({
         grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3, xxl: 3 }}
         dataSource={collections}
         renderItem={(item: ICollectionSummary, index: number) => (
-          <List.Item key={index}>{renderCard(item)}</List.Item>
+          <List.Item key={item.id}>{renderCard(item, index)}</List.Item>
         )}
       />
       {!isLast && loadMoreButton}

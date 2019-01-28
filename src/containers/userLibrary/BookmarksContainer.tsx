@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { message } from 'antd';
-import { CollectionCard, CollectionsHeader } from 'components/collection';
+import { CollectionCard } from 'components/collection';
 import { LoadingIndicator } from 'components/common';
-import { GridCardList, LoadMoreButton } from 'components/list';
+import { GridCardList, ListHeader, LoadMoreButton } from 'components/list';
 import { ICollectionSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -25,6 +25,8 @@ interface Props extends RouteComponentProps {
 }
 
 class BookmarksContainer extends React.Component<Props, {}> {
+  private cards: Array<CollectionCard | null> = [];
+
   public async componentDidMount() {
     const { username, UserLibraryActions, history } = this.props;
     try {
@@ -49,11 +51,29 @@ class BookmarksContainer extends React.Component<Props, {}> {
     UserLibraryActions.initialize();
   }
 
+  private getOffsetId = () => {
+    let offsetId = -1;
+    // find first bookmarked card from the last
+    for (let i = this.cards.length - 1; i >= 0; i--) {
+      if (this.cards[i] == null) {
+        continue;
+      }
+      const { id, isBookmarked } = this.cards[i]!.getBookmarkState();
+      if (isBookmarked) {
+        offsetId = id;
+        break;
+      }
+    }
+    return offsetId;
+  };
   private loadMore = async () => {
-    const { UserLibraryActions, bookmarks, username } = this.props;
+    const offsetId = this.getOffsetId();
+    // if offsetId is still -1
+    // get more list without offsetId (fetch from first item)
+    const { UserLibraryActions, username } = this.props;
     await UserLibraryActions.loadBookmarkedCollections(
       username,
-      bookmarks!.page + 1,
+      offsetId === -1 ? undefined : offsetId,
       DEFAULT_PAGE_SIZE,
       true
     );
@@ -66,10 +86,13 @@ class BookmarksContainer extends React.Component<Props, {}> {
       throw error;
     }
   };
-  private handleRemoveBookmark = async (collectionId: number) => {
+  private handleRemoveBookmark = async (
+    collectionId: number,
+    index: number
+  ) => {
     const { UserLibraryActions } = this.props;
     try {
-      await UserLibraryActions.removeBookmark(collectionId);
+      await UserLibraryActions.removeBookmark(collectionId, index);
     } catch (error) {
       throw error;
     }
@@ -83,18 +106,24 @@ class BookmarksContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <CollectionsHeader count={bookmarks.totalElements} name={'북마크'} />
+        <ListHeader count={bookmarks.totalElements} name={'북마크'} />
         <GridCardList
           collections={bookmarks.content}
-          renderCard={(collection: ICollectionSummary) => (
+          renderCard={(collection: ICollectionSummary, index: number) => (
             <CollectionCard
+              key={collection.id}
               collection={collection}
               defaultBookmarked={
                 currentUser ? currentUser.username === username : false
               }
               disableBookmark={currentUser ? false : true}
               onCreateBookmark={this.handleCreateBookmark}
-              onRemoveBookmark={this.handleRemoveBookmark}
+              onRemoveBookmark={collectionId =>
+                this.handleRemoveBookmark(collectionId, index)
+              }
+              ref={card => {
+                this.cards[index] = card;
+              }}
             />
           )}
           isLast={bookmarks.last}

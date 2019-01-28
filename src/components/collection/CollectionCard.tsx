@@ -25,6 +25,12 @@ class CollectionCard extends React.Component<Props, State> {
       ? this.props.defaultBookmarked
       : false
   };
+  public getBookmarkState = () => {
+    return {
+      id: this.props.collection.id,
+      isBookmarked: this.state.isBookmarked
+    };
+  };
 
   private handleCreateBookmark = async (collectionId: number) => {
     const { onCreateBookmark } = this.props;

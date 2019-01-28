@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Button } from 'antd';
 
-import styles from './CollectionsHeader.module.less';
+import styles from './ListHeader.module.less';
 
 interface Props {
   count: number;
@@ -12,7 +12,7 @@ interface Props {
   handleClick?: () => void;
 }
 
-const CollectionsHeader: React.SFC<Props> = ({
+const ListHeader: React.SFC<Props> = ({
   count,
   name,
   hasAddButton = false,
@@ -37,4 +37,4 @@ const CollectionsHeader: React.SFC<Props> = ({
   );
 };
 
-export default CollectionsHeader;
+export default ListHeader;

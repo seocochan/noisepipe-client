@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Divider, message } from 'antd';
-import { CollectionCard, CollectionForm, CollectionsHeader } from 'components/collection';
+import { CollectionCard, CollectionForm } from 'components/collection';
 import { LoadingIndicator } from 'components/common';
-import { GridCardList, LoadMoreButton } from 'components/list';
+import { GridCardList, ListHeader, LoadMoreButton } from 'components/list';
 import { ICollectionRequest, ICollectionSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -57,11 +57,19 @@ class CollectionsContainer extends React.Component<Props, State> {
     UserLibraryActions.initialize();
   }
 
+  private getOffsetId = () => {
+    const { collections } = this.props;
+    return !collections
+      ? -1
+      : collections.content[collections.content.length - 1].id;
+  };
   private loadMore = async () => {
-    const { UserLibraryActions, collections, username } = this.props;
+    const { UserLibraryActions, username } = this.props;
+    const offsetId = this.getOffsetId();
+
     await UserLibraryActions.loadCollections(
       username,
-      collections!.page + 1,
+      offsetId === -1 ? undefined : offsetId,
       DEFAULT_PAGE_SIZE,
       true
     );
@@ -112,7 +120,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     }
     return (
       <>
-        <CollectionsHeader
+        <ListHeader
           count={collections.totalElements}
           name={'컬렉션'}
           hasAddButton={currentUser ? currentUser.username === username : false}
@@ -132,6 +140,7 @@ class CollectionsContainer extends React.Component<Props, State> {
           collections={collections.content}
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard
+              key={collection.id}
               collection={collection}
               disableBookmark={currentUser ? false : true}
               onCreateBookmark={this.handleCreateBookmark}

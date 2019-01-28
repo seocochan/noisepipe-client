@@ -5,9 +5,11 @@ import { SortEndHandler } from 'react-sortable-hoc';
 
 import { Divider, message } from 'antd';
 import { CollectionForm, CollectionHeader, CollectionItems, CollectionPlayButton } from 'components/collection';
+import { CommentForm, CommentHeader } from 'components/comment';
 import { ItemAddForm, ItemFilterInput } from 'components/item';
+import { RecursiveList } from 'components/list';
 import { DummyPlayer } from 'components/player';
-import { ICollectionRequest, IItemResponse } from 'payloads';
+import { ICollectionRequest, ICommentRequest, IItemResponse } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
@@ -46,11 +48,13 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       }
     }
     CollectionActions.loadItems(collectionId);
+    CollectionActions.loadComments(collectionId);
   }
   public componentWillUnmount() {
-    const { ItemActions, CollectionActions } = this.props;
+    const { ItemActions, CollectionActions, PlayerActions } = this.props;
     ItemActions.initialize();
     CollectionActions.initialize();
+    PlayerActions.initialize();
   }
 
   private handleSubmit = (data: ICollectionRequest) => {
@@ -153,11 +157,54 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
   };
+  private handleLoadReplies = (commentId: number) => {
+    const {
+      CollectionActions,
+      collection: { collection }
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    CollectionActions.loadReplies(collection.id, commentId);
+  };
+  private handleCreateComment = async (data: ICommentRequest) => {
+    const {
+      CollectionActions,
+      collection: { collection }
+    } = this.props;
+    if (!collection) {
+      return;
+    }
+    try {
+      await CollectionActions.createCommentOrReply(collection.id, data);
+    } catch (error) {
+      throw error;
+    }
+  };
+  private handleUpdateComment = async (
+    commentId: number,
+    data: ICommentRequest
+  ) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.updateCommentOrReply(commentId, data);
+    } catch (error) {
+      throw error;
+    }
+  };
+  private handleRemoveComment = async (commentId: number, replyTo?: number) => {
+    const { CollectionActions } = this.props;
+    try {
+      await CollectionActions.removeCommentOrReply(commentId, replyTo);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   public render(): React.ReactNode {
     const {
       auth: { currentUser },
-      collection: { collection, items },
+      collection: { collection, items, comments, replies },
       player: { currentTarget },
       player,
       PlayerActions
@@ -220,7 +267,6 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             onRemoveBookmark={this.handleRemoveBookmark}
           />
         )}
-
         <DummyPlayer />
         <Divider />
         <ItemFilterInput />
@@ -236,6 +282,23 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             pauseItem={this.pauseItem}
             useDragHandle={true}
             onSortEnd={this.handleSortEnd}
+          />
+        )}
+        <Divider style={{ background: 'transparent' }} />
+        {collection && <CommentHeader comments={collection.comments} />}
+        {currentUser && (
+          <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />
+        )}
+        {comments && (
+          <RecursiveList
+            depth={0}
+            comments={comments}
+            replies={replies}
+            currentUser={currentUser}
+            onLoad={this.handleLoadReplies}
+            onCreate={this.handleCreateComment}
+            onUpdate={this.handleUpdateComment}
+            onRemove={this.handleRemoveComment}
           />
         )}
       </>

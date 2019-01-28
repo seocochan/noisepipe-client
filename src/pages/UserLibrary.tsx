@@ -59,7 +59,11 @@ const UserLibrary: React.SFC<Props> = ({
           />
         </Tabs.TabPane>
         <Tabs.TabPane tab="댓글" key={routes.comments}>
-          <CommentsContainer />
+          <CommentsContainer
+            currentTab={pathname}
+            tabName={routes.comments}
+            username={username.slice(1)}
+          />
         </Tabs.TabPane>
       </Tabs>
     </div>

@@ -51,9 +51,10 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     CollectionActions.loadComments(collectionId);
   }
   public componentWillUnmount() {
-    const { ItemActions, CollectionActions } = this.props;
+    const { ItemActions, CollectionActions, PlayerActions } = this.props;
     ItemActions.initialize();
     CollectionActions.initialize();
+    PlayerActions.initialize();
   }
 
   private handleSubmit = (data: ICollectionRequest) => {
@@ -285,7 +286,9 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         )}
         <Divider style={{ background: 'transparent' }} />
         {collection && <CommentHeader comments={collection.comments} />}
-        {currentUser && <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />}
+        {currentUser && (
+          <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />
+        )}
         {comments && (
           <RecursiveList
             depth={0}

@@ -9,6 +9,7 @@ import { action as createAction, ActionType } from 'typesafe-actions';
 // action types
 const INITIALIZE = 'player/INITIALIZE';
 const INITIALIZE_PLAYER = 'player/INITIALIZE_PLAYER';
+const CLOSE = 'player/CLOSE';
 const SET_DURATION = 'player/SET_DURATION';
 const SET_REF = 'player/SET_REF';
 const SET_ITEM = 'player/SET_ITEM';
@@ -24,6 +25,7 @@ export const actions = {
   initialize: () => createAction(INITIALIZE),
   initializePlayer: (target: Provider) =>
     createAction(INITIALIZE_PLAYER, { target }),
+  close: () => createAction(CLOSE),
   setDuration: (target: Provider, duration: number) =>
     createAction(SET_DURATION, { target, duration }),
   setRef: (target: Provider, ref: any | null) =>
@@ -114,6 +116,9 @@ const initialState: PlayerState = {
 export default produce<PlayerState, PlayerAction>((draft, action) => {
   switch (action.type) {
     case INITIALIZE: {
+      return initialState;
+    }
+    case CLOSE: {
       // Initialize states except Player.ref and drawer.visible
       draft[Provider.Youtube].item = playerInitialState.item;
       draft[Provider.Youtube].status = playerInitialState.status;

@@ -3,10 +3,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { List, message } from 'antd';
-import { CollectionsHeader } from 'components/collection';
 import { UserCommentListItem } from 'components/comment';
 import { LoadingIndicator } from 'components/common';
-import { LoadMoreButton } from 'components/list';
+import { ListHeader, LoadMoreButton } from 'components/list';
 import { ICommentRequest, ICommentSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -91,7 +90,7 @@ class CommentsContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <CollectionsHeader count={comments.totalElements} name={'댓글'} />
+        <ListHeader count={comments.totalElements} name={'댓글'} />
         <List
           dataSource={comments.content}
           renderItem={(comment: ICommentSummary) => (

@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Divider, message } from 'antd';
-import { CollectionCard, CollectionForm, CollectionsHeader } from 'components/collection';
+import { CollectionCard, CollectionForm } from 'components/collection';
 import { LoadingIndicator } from 'components/common';
-import { GridCardList, LoadMoreButton } from 'components/list';
+import { GridCardList, ListHeader, LoadMoreButton } from 'components/list';
 import { ICollectionRequest, ICollectionSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -120,7 +120,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     }
     return (
       <>
-        <CollectionsHeader
+        <ListHeader
           count={collections.totalElements}
           name={'컬렉션'}
           hasAddButton={currentUser ? currentUser.username === username : false}

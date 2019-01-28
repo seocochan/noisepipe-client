@@ -89,7 +89,15 @@ class CommentListItem extends React.Component<Props, State> {
       <Comment
         author={
           <>
-            <Link to={`/@${createdBy.username}`}>{createdBy.username}</Link>
+            <Link to={`/@${createdBy.username}`}>
+              {currentUser && currentUser.id === createdBy.id ? (
+                <span>
+                  <Icon type="user" /> {createdBy.username}
+                </span>
+              ) : (
+                <span>{createdBy.username}</span>
+              )}
+            </Link>
             {currentUser && currentUser.id === createdBy.id && (
               <div className={styles.editActions}>
                 <Dropdown trigger={['click']} overlay={this.editActions()}>

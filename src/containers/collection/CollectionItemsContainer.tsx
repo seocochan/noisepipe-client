@@ -285,7 +285,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         )}
         <Divider style={{ background: 'transparent' }} />
         {collection && <CommentHeader comments={collection.comments} />}
-        <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />
+        {currentUser && <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />}
         {comments && (
           <RecursiveList
             depth={0}

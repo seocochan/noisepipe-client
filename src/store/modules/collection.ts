@@ -458,8 +458,8 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (index === -1) {
         return;
       }
+      draft.collection.comments -= 1 + draft.comments[index].replies;
       draft.comments.splice(index, 1);
-      draft.collection.comments--;
       return;
     }
     case REMOVE_REPLY: {

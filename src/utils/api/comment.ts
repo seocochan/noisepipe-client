@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { ICommentRequest, ICommentResponse } from 'payloads';
+import { ICommentRequest, ICommentResponse, ICommentSummary, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
 export const createComment = (
@@ -48,6 +48,19 @@ export const getCommentReplies = (
 ): Promise<AxiosResponse<ICommentResponse[]>> => {
   return request({
     url: `/collections/${collectionId}/comments/${commentId}/replies`,
+    method: 'get'
+  });
+};
+
+export const getCommentsByUser = (
+  username: string,
+  size: number,
+  offsetId?: number
+): Promise<AxiosResponse<IPagedResponse<ICommentSummary>>> => {
+  return request({
+    url: `/users/${username}/comments?${
+      offsetId ? `offsetId=${offsetId}&` : ''
+    }size=${size}`,
     method: 'get'
   });
 };

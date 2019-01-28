@@ -100,10 +100,11 @@ export interface ICommentResponse {
   createdBy: IUserSummary;
   createdAt: Date;
 }
-export interface ICommentDetail {
+export interface ICommentSummary {
   id: number;
   text: string;
-  collection: ICollectionSummary;
+  collectionId: number;
+  collectionTitle: string;
   createdBy: IUserSummary;
   createdAt: Date;
 }

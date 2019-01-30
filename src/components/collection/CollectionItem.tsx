@@ -25,7 +25,7 @@ interface Props {
   showDragHandle: boolean;
   isSet: boolean;
   isPlaying: boolean;
-  onClickItem: (e: React.MouseEvent) => void;
+  onClickItem: (itemId: number) => void;
   playItem: (item: IItemResponse) => void;
   resumeItem: (item: IItemResponse) => void;
   pauseItem: (item: IItemResponse) => void;
@@ -35,7 +35,7 @@ class CollectionItem extends React.Component<Props, {}> {
   public render(): React.ReactNode {
     const {
       item,
-      item: { title, tags, sourceProvider },
+      item: { id, title, tags, sourceProvider },
       itemIndex,
       showDragHandle,
       isSet,
@@ -72,7 +72,7 @@ class CollectionItem extends React.Component<Props, {}> {
         <div
           className={styles.itemContent}
           id={itemIndex.toString()}
-          onClick={onClickItem}
+          onClick={() => onClickItem(id)}
         >
           <div className={styles.title}>
             {sourceProvider === Provider.Youtube ? (

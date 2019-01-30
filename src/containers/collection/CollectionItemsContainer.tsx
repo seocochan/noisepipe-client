@@ -99,8 +99,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       console.log(error);
     }
   };
-  private handleClickItem = (e: React.MouseEvent) => {
-    e.preventDefault();
+  private handleClickItem = (itemId: number) => {
     const {
       ItemActions,
       item: { item },
@@ -108,14 +107,13 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     } = this.props;
     const selectedItem =
       collection.items &&
-      e.currentTarget &&
-      collection.items[parseInt(e.currentTarget.id, 10)];
+      collection.items.find(collectionItem => collectionItem.id === itemId);
 
     if (item && selectedItem && item.id !== selectedItem.id) {
       ItemActions.clear();
     }
     ItemActions.showPanel();
-    ItemActions.setItem(selectedItem);
+    ItemActions.setItem(selectedItem || null);
   };
   private handleAddItem = (
     title: string,
@@ -212,7 +210,15 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   public render(): React.ReactNode {
     const {
       auth: { currentUser },
-      collection: { collection, items, comments, replies },
+      collection: {
+        collection,
+        items,
+        filteredItems,
+        comments,
+        replies,
+        isFilterActive
+      },
+      CollectionActions,
       player: { currentTarget },
       player,
       PlayerActions
@@ -277,12 +283,15 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         )}
         <DummyPlayer />
         <Divider />
-        <ItemFilterInput />
+        <ItemFilterInput
+          toggleFilterActive={CollectionActions.toggleFilterActive}
+          filterItems={CollectionActions.filterItems}
+        />
         {items && (
           <CollectionItems
-            items={items}
+            items={isFilterActive ? filteredItems : items}
             playerItem={playerItem}
-            showDragHandle={isAuthor}
+            showDragHandle={!isFilterActive && isAuthor}
             lockToContainerEdges={true}
             onClickItem={this.handleClickItem}
             playItem={this.playItem}

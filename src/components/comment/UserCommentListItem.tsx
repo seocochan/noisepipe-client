@@ -12,8 +12,8 @@ import styles from './UserCommentListItem.module.less';
 interface Props {
   comment: ICommentSummary;
   showEditActions: boolean;
-  onUpdate: (index: number, data: ICommentRequest) => Promise<void>;
-  onRemove: (index: number) => Promise<void>;
+  onUpdate: (commentId: number, data: ICommentRequest) => Promise<void>;
+  onRemove: (commentId: number) => Promise<void>;
 }
 interface State {
   showEditForm: boolean;
@@ -54,11 +54,9 @@ class UserCommentListItem extends React.Component<Props, State> {
     return (
       <Comment
         author={
-          <>
-            <Link to={`/collections/${collectionId}`}>
-              <span>{collectionTitle}</span>
-            </Link>
-          </>
+          <Link to={`/collections/${collectionId}`}>
+            <span>{collectionTitle}</span>
+          </Link>
         }
         datetime={moment(createdAt).fromNow()}
         content={

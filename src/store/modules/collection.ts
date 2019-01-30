@@ -41,6 +41,9 @@ const UPDATE_COMMENT = 'collection/UPDATE_COMMENT';
 const UPDATE_REPLY = 'collection/UPDATE_REPLY';
 const REMOVE_COMMENT = 'collection/REMOVE_COMMENT';
 const REMOVE_REPLY = 'collection/REMOVE_REPLY';
+const TOGGLE_FILTER_ACTIVE = 'collection/TOGGLE_FILTER_ACTIVE';
+const FILTER_ITEMS = 'collection/FILTER_ITEMS';
+// const CLEAR_FILTER = 'collection/CLEAR_FILTER';
 
 // action creators
 export const actions = {
@@ -261,7 +264,10 @@ export const actions = {
   removeComment: (commentId: number) =>
     createAction(REMOVE_COMMENT, { commentId }),
   removeReply: (replyId: number, replyTo: number) =>
-    createAction(REMOVE_REPLY, { replyId }, { replyTo })
+    createAction(REMOVE_REPLY, { replyId }, { replyTo }),
+  toggleFilterActive: (active: boolean) =>
+    createAction(TOGGLE_FILTER_ACTIVE, { active }),
+  filterItems: (value: string) => createAction(FILTER_ITEMS, { value })
 };
 export type CollectionAction = ActionType<typeof actions>;
 
@@ -269,12 +275,16 @@ export type CollectionAction = ActionType<typeof actions>;
 export interface CollectionState {
   collection: ICollectionResponse | null;
   items: IItemResponse[] | null;
+  filteredItems: IItemResponse[];
+  isFilterActive: boolean;
   comments: ICommentResponse[] | null;
   replies: Map<ICommentResponse['id'], ICommentResponse[]>;
 }
 const initialState: CollectionState = {
   collection: null,
   items: null,
+  filteredItems: [],
+  isFilterActive: false,
   comments: null,
   replies: new Map()
 };
@@ -458,8 +468,8 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (index === -1) {
         return;
       }
+      draft.collection.comments -= 1 + draft.comments[index].replies;
       draft.comments.splice(index, 1);
-      draft.collection.comments--;
       return;
     }
     case REMOVE_REPLY: {
@@ -486,6 +496,23 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       replyList.splice(index, 1);
       replies.set(replyTo, replyList);
       draft.replies = replies;
+      return;
+    }
+    case TOGGLE_FILTER_ACTIVE: {
+      draft.isFilterActive = action.payload.active;
+      return;
+    }
+    case FILTER_ITEMS: {
+      let { value } = action.payload;
+      value = value.trim().toLowerCase();
+
+      draft.filteredItems = draft.items
+        ? draft.items.filter(
+            item =>
+              item.title.toLowerCase().includes(value) ||
+              item.tags.find(tag => tag.toLowerCase().includes(value))
+          )
+        : [];
       return;
     }
   }

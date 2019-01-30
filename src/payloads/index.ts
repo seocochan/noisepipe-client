@@ -76,15 +76,43 @@ export interface IItemResponse {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface ICueResponse {
-  id: number;
-  seconds: number;
-  name?: string;
-  createdAt: Date;
-}
 export interface IMediaDataResponse {
   url: string;
   title: string;
+}
+
+// cue
+export interface ICueRequest {
+  seconds: number;
+  text?: string;
+}
+export interface ICueResponse {
+  id: number;
+  seconds: number;
+  text?: string;
+  createdAt: Date;
+}
+
+// comment
+export interface ICommentRequest {
+  text: string;
+  replyTo?: number;
+}
+export interface ICommentResponse {
+  id: number;
+  text: string;
+  depth: number;
+  replies: number;
+  createdBy: IUserSummary;
+  createdAt: Date;
+}
+export interface ICommentSummary {
+  id: number;
+  text: string;
+  collectionId: number;
+  collectionTitle: string;
+  createdBy: IUserSummary;
+  createdAt: Date;
 }
 
 // comment

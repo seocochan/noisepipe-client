@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Slider } from 'antd';
+import { secondsToString } from 'utils/common';
 
 import styles from './SeekBar.module.less';
 
@@ -53,11 +54,6 @@ class SeekBar extends React.Component<Props, State> {
     this.setState({ dragging: false });
     this.slider.blur();
   };
-  private formatTipValue = (value: number) => {
-    const minutes = Math.trunc(value / 60);
-    const seconds = `0${value % 60}`.slice(-2);
-    return `${minutes}:${seconds}`;
-  };
 
   public render(): React.ReactNode {
     const { disabled, duration } = this.props;
@@ -71,7 +67,7 @@ class SeekBar extends React.Component<Props, State> {
         value={disabled ? 0 : value}
         onChange={this.handleChange}
         onAfterChange={this.handleAfterChange}
-        tipFormatter={this.formatTipValue}
+        tipFormatter={secondsToString}
         ref={(slider: Slider) => {
           this.slider = slider;
         }}

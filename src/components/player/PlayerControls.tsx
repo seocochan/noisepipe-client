@@ -65,7 +65,7 @@ class PlayerControls extends React.Component<Props, {}> {
         <SeekBar
           disabled={disabled}
           duration={
-            currentTarget && Math.floor(player[currentTarget].status.duration)
+            currentTarget && Math.trunc(player[currentTarget].status.duration)
           }
           playedSeconds={
             currentTarget && player[currentTarget].status.playedSeconds

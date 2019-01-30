@@ -10,7 +10,7 @@ interface Props {
   items: IItemResponse[] | null;
   playerItem?: { id: number; playing: boolean };
   showDragHandle: boolean;
-  onClickItem: (e: React.MouseEvent) => void;
+  onClickItem: (itemId: number) => void;
   playItem: (item: IItemResponse) => void;
   resumeItem: (item: IItemResponse) => void;
   pauseItem: (item: IItemResponse) => void;

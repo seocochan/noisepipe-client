@@ -11,7 +11,7 @@ import 'moment/locale/ko';
 
 const Root: React.SFC<{}> = () => (
   <Provider store={store}>
-    <ConfigProvider /* snowyButton={true} */>
+    <ConfigProvider renderEmpty={() => ''}>
       <LocaleProvider locale={kr_KR}>
         <Router>
           <App />

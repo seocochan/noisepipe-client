@@ -144,6 +144,9 @@ class ItemPanelContainer extends React.Component<Props, {}> {
                 <CueSection>
                   <CueListHeader
                     count={cues.length}
+                    showEditables={
+                      currentUser ? currentUser.id === item.createdBy : false
+                    }
                     renderCueForm={props => (
                       <CueForm
                         submitPlaceholder="추가"
@@ -162,6 +165,11 @@ class ItemPanelContainer extends React.Component<Props, {}> {
                       <CueListItem
                         key={cue.id}
                         cue={cue}
+                        showEditables={
+                          currentUser
+                            ? currentUser.id === item.createdBy
+                            : false
+                        }
                         renderCueForm={props => (
                           <CueForm
                             submitPlaceholder="수정"

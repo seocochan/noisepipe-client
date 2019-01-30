@@ -7,6 +7,7 @@ import styles from './CueListHeader.module.less';
 
 interface Props {
   count: number;
+  showEditables: boolean;
   renderCueForm: (props: CueFormProps) => React.ReactNode;
 }
 interface State {
@@ -19,17 +20,20 @@ class CueListHeader extends React.Component<Props, State> {
   };
 
   public render(): React.ReactNode {
-    const { count, renderCueForm } = this.props;
+    const { count, showEditables, renderCueForm } = this.props;
     const { showForm } = this.state;
 
     return (
       <div className={styles.header}>
         <div className={styles.titleContainer}>
-          <Button
-            icon={showForm ? 'close' : 'plus'}
-            shape="circle"
-            onClick={() => this.setState({ showForm: !showForm })}
-          />
+          {showEditables && (
+            <Button
+              className={styles.addButton}
+              icon={showForm ? 'close' : 'plus'}
+              shape="circle"
+              onClick={() => this.setState({ showForm: !showForm })}
+            />
+          )}
           <h3 className={styles.title}>{`${count}개의 큐`}</h3>
         </div>
         <div className={styles.formContainer}>

@@ -10,6 +10,7 @@ import styles from './CueListItem.module.less';
 
 interface Props {
   cue: ICueResponse;
+  showEditables: boolean;
   renderCueForm: (props: CueFormProps) => React.ReactNode;
   onClick: () => void;
   onRemove: () => Promise<void>;
@@ -58,7 +59,7 @@ class CueListItem extends React.Component<Props, State> {
   };
 
   public render(): React.ReactNode {
-    const { cue, renderCueForm } = this.props;
+    const { cue, showEditables, renderCueForm } = this.props;
     const { showEditForm } = this.state;
 
     return (
@@ -75,14 +76,16 @@ class CueListItem extends React.Component<Props, State> {
                 <a className={styles.title} onClick={this.handleClick}>
                   <span>{secondsToString(cue.seconds)}</span>
                 </a>
-                <Dropdown trigger={['click']} overlay={this.editActions()}>
-                  <Button
-                    shape="circle"
-                    icon="ellipsis"
-                    size="small"
-                    style={{ background: 'transparent' }}
-                  />
-                </Dropdown>
+                {showEditables && (
+                  <Dropdown trigger={['click']} overlay={this.editActions()}>
+                    <Button
+                      shape="circle"
+                      icon="ellipsis"
+                      size="small"
+                      style={{ background: 'transparent' }}
+                    />
+                  </Dropdown>
+                )}
               </div>
             }
             description={cue.text}

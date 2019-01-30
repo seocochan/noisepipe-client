@@ -76,15 +76,21 @@ export interface IItemResponse {
   createdAt: Date;
   updatedAt: Date;
 }
-export interface ICueResponse {
-  id: number;
-  seconds: number;
-  name?: string;
-  createdAt: Date;
-}
 export interface IMediaDataResponse {
   url: string;
   title: string;
+}
+
+// cue
+export interface ICueRequest {
+  seconds: number;
+  text?: string;
+}
+export interface ICueResponse {
+  id: number;
+  seconds: number;
+  text?: string;
+  createdAt: Date;
 }
 
 // comment

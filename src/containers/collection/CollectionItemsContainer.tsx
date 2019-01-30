@@ -14,13 +14,14 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
 import { actions as collectionActions, CollectionState } from 'store/modules/collection';
-import { actions as itemActions } from 'store/modules/item';
+import { actions as itemActions, ItemState } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 import { Provider } from 'types';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
+  item: ItemState;
   ItemActions: typeof itemActions;
   collection: CollectionState;
   CollectionActions: typeof collectionActions;
@@ -100,14 +101,21 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   };
   private handleClickItem = (e: React.MouseEvent) => {
     e.preventDefault();
-    const { ItemActions, collection } = this.props;
-    const item =
+    const {
+      ItemActions,
+      item: { item },
+      collection
+    } = this.props;
+    const selectedItem =
       collection.items &&
       e.currentTarget &&
       collection.items[parseInt(e.currentTarget.id, 10)];
 
+    if (item && selectedItem && item.id !== selectedItem.id) {
+      ItemActions.clear();
+    }
     ItemActions.showPanel();
-    ItemActions.setItem(item);
+    ItemActions.setItem(selectedItem);
   };
   private handleAddItem = (
     title: string,
@@ -306,8 +314,9 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = ({ auth, collection, player }: RootState) => ({
+const mapStateToProps = ({ auth, item, collection, player }: RootState) => ({
   auth,
+  item,
   collection,
   player
 });

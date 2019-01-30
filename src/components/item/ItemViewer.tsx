@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactPlayer from 'react-player';
 
-import { Icon } from 'antd';
+import { Divider, Icon } from 'antd';
 import { SoundCloudIcon } from 'icons';
 import * as moment from 'moment';
 import { IItemResponse } from 'payloads';
@@ -16,9 +16,11 @@ const iconStyles = {
 
 interface Props {
   item: IItemResponse;
+  playerRef: (player: any) => void;
+  cueSection: React.ReactNode;
 }
 
-const ItemViewer: React.SFC<Props> = ({ item }) => {
+const ItemViewer: React.SFC<Props> = ({ item, playerRef, cueSection }) => {
   return (
     <div>
       <div className={styles.contentHeader}>
@@ -46,6 +48,7 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
       <div className={styles.playerWrapper}>
         <ReactPlayer
           url={item.sourceUrl}
+          ref={playerRef}
           config={{
             youtube: {
               playerVars: { controls: 1 }
@@ -57,11 +60,14 @@ const ItemViewer: React.SFC<Props> = ({ item }) => {
           width="100%"
           height="100%"
           style={{ position: 'absolute', top: 0, left: 0 }}
+          // FIXME: change to controlled component
         />
       </div>
       <article className={styles.description}>
         {item.description ? item.description : <i>{'설명이 없습니다'}</i>}
       </article>
+      <Divider style={{ background: 'transparent' }} />
+      {cueSection}
     </div>
   );
 };

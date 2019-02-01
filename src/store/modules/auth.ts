@@ -4,6 +4,7 @@ import { ISignupReqeust, IUserSummary } from 'payloads';
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as AuthAPI from 'utils/api/auth';
+import * as UserAPI from 'utils/api/user';
 
 // action types
 const GET_CURRENT_USER_PENDING = 'auth/GET_CURRENT_USER_PENDING';
@@ -28,7 +29,7 @@ export const actions = {
   getCurrnetUser: (): ThunkResult<Promise<void>> => async dispatch => {
     dispatch(actions.getCurrentUserPending());
     try {
-      const res = await AuthAPI.getCurrentUser();
+      const res = await UserAPI.getCurrentUser();
       dispatch(actions.getCurrentUserSuccess(res.data));
     } catch (error) {
       dispatch(actions.getCurrentUserFailure(error));

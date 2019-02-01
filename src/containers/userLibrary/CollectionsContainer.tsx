@@ -136,8 +136,8 @@ class CollectionsContainer extends React.Component<Props, State> {
             <Divider />
           </>
         )}
-        <GridCardList
-          collections={collections.content}
+        <GridCardList<ICollectionSummary>
+          dataSource={collections.content}
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard
               key={collection.id}

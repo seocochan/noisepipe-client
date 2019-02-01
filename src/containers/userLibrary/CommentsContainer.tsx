@@ -90,7 +90,11 @@ class CommentsContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader count={comments.totalElements} name={'댓글'} />
+        <ListHeader
+          username={username}
+          count={comments.totalElements}
+          name={'댓글'}
+        />
         <List
           dataSource={comments.content}
           renderItem={(comment: ICommentSummary) => (

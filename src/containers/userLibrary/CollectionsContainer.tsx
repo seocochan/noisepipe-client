@@ -121,6 +121,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     return (
       <>
         <ListHeader
+          username={username}
           count={collections.totalElements}
           name={'컬렉션'}
           hasAddButton={currentUser ? currentUser.username === username : false}

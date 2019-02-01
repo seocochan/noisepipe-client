@@ -5,6 +5,8 @@ import { Button } from 'antd';
 import styles from './ListHeader.module.less';
 
 interface Props {
+  q?: string;
+  username?: string;
   count: number;
   name: string;
   hasAddButton?: boolean;
@@ -13,6 +15,8 @@ interface Props {
 }
 
 const ListHeader: React.SFC<Props> = ({
+  q,
+  username,
   count,
   name,
   hasAddButton = false,
@@ -22,6 +26,16 @@ const ListHeader: React.SFC<Props> = ({
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>
+        {q && (
+          <span>
+            <span className={styles.highlight}>'{q}'</span>에 해당하는{' '}
+          </span>
+        )}
+        {username && (
+          <span>
+            <span className={styles.highlight}>{username}</span>님이 생성한{' '}
+          </span>
+        )}
         {count}개의 {name}
       </h2>
       {hasAddButton && (

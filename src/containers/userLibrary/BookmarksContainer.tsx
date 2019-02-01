@@ -106,7 +106,11 @@ class BookmarksContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader count={bookmarks.totalElements} name={'북마크'} />
+        <ListHeader
+          username={username}
+          count={bookmarks.totalElements}
+          name={'북마크'}
+        />
         <GridCardList<ICollectionSummary>
           dataSource={bookmarks.content}
           renderCard={(collection: ICollectionSummary, index: number) => (

@@ -7,6 +7,7 @@ import authReducer, { AuthAction } from './modules/auth';
 import collectionReducer, { CollectionAction } from './modules/collection';
 import itemReducer, { ItemAction } from './modules/item';
 import playerReducer, { PlayerAction } from './modules/player';
+import searchReducer, { SearchAction } from './modules/search';
 import userLibraryReducer, { UserLibraryAction } from './modules/userLibrary';
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   collection: collectionReducer,
   item: itemReducer,
   player: playerReducer,
+  search: searchReducer,
   userLibrary: userLibraryReducer
 });
 const composeEnhancers = composeWithDevTools({});
@@ -28,6 +30,7 @@ export type RootAction =
   | CollectionAction
   | ItemAction
   | PlayerAction
+  | SearchAction
   | UserLibraryAction;
 export type ThunkResult<R> = ThunkAction<R, any, undefined, any>;
 

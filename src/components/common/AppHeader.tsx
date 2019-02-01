@@ -39,17 +39,10 @@ class AppHeader extends React.Component<Props, {}> {
     if (!currentUser) {
       return pathname;
     }
-    const { username } = currentUser;
-
-    // FIXME: use regex
-    if (
-      pathname === `/@${username}/collections` ||
-      pathname === `/@${username}/bookmarks` ||
-      pathname === `/@${username}/comments`
-    ) {
-      return '/me/*';
-    }
-    return pathname;
+    const regex = new RegExp(
+      `/@${currentUser.username}/(collections|bookmarks|comments)`
+    );
+    return regex.test(pathname) ? '/me/*' : pathname;
   };
 
   public render(): React.ReactNode {

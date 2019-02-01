@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import { Icon, Input, Layout, Menu, message } from 'antd';
+import { Icon, Layout, Menu, message } from 'antd';
 import { ClickParam } from 'antd/lib/menu';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
@@ -10,6 +10,7 @@ import { actions as authActions, AuthState } from 'store/modules/auth';
 import { ACCESS_TOKEN } from 'values';
 
 import styles from './AppHeader.module.less';
+import SearchInput from './SearchInput';
 
 interface Props extends RouteComponentProps<{ username: string }> {
   auth: AuthState;
@@ -101,12 +102,7 @@ class AppHeader extends React.Component<Props, {}> {
           <div className={styles.title}>
             <Link to="/">NOISEPIPE</Link>
           </div>
-          <Input.Search
-            className={styles.search}
-            placeholder="검색"
-            style={{ margin: '10px 12px' }}
-            disabled={true}
-          />
+          <SearchInput />
           <Menu
             mode="horizontal"
             selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}

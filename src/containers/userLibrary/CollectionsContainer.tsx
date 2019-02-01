@@ -46,7 +46,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     if (currentTab !== prevProps.currentTab) {
       if (currentTab === tabName) {
         UserLibraryActions.loadCollections(username);
-      } else {
+      } else if (prevProps.currentTab === tabName) {
         this.setState({ isFormVisible: false });
         UserLibraryActions.initialize();
       }
@@ -121,6 +121,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     return (
       <>
         <ListHeader
+          username={username}
           count={collections.totalElements}
           name={'컬렉션'}
           hasAddButton={currentUser ? currentUser.username === username : false}
@@ -136,8 +137,8 @@ class CollectionsContainer extends React.Component<Props, State> {
             <Divider />
           </>
         )}
-        <GridCardList
-          collections={collections.content}
+        <GridCardList<ICollectionSummary>
+          dataSource={collections.content}
           renderCard={(collection: ICollectionSummary) => (
             <CollectionCard
               key={collection.id}

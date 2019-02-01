@@ -41,7 +41,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
     if (currentTab !== prevProps.currentTab) {
       if (currentTab === tabName) {
         UserLibraryActions.loadBookmarkedCollections(username);
-      } else {
+      } else if (prevProps.currentTab === tabName) {
         UserLibraryActions.initialize();
       }
     }
@@ -106,9 +106,13 @@ class BookmarksContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader count={bookmarks.totalElements} name={'북마크'} />
-        <GridCardList
-          collections={bookmarks.content}
+        <ListHeader
+          username={username}
+          count={bookmarks.totalElements}
+          name={'북마크'}
+        />
+        <GridCardList<ICollectionSummary>
+          dataSource={bookmarks.content}
           renderCard={(collection: ICollectionSummary, index: number) => (
             <CollectionCard
               key={collection.id}

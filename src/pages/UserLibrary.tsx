@@ -21,27 +21,15 @@ const UserLibrary: React.SFC<Props> = ({
     comments: `/${username}/comments`
   };
 
-  const handleChange = (activeKey: string) => {
-    if (activeKey === routes.collections) {
-      return history.push(routes.collections);
-    }
-    if (activeKey === routes.bookmarks) {
-      return history.push(routes.bookmarks);
-    }
-    if (activeKey === routes.comments) {
-      return history.push(routes.comments);
-    }
-  };
   if (!username.startsWith('@')) {
     return <Redirect to="/404" />;
   }
-
   return (
     <div className={styles.container}>
       <Tabs
         activeKey={pathname}
         size="large"
-        onChange={handleChange}
+        onChange={activeKey => history.push(activeKey)}
         animated={false}
       >
         <Tabs.TabPane tab="컬렉션" key={routes.collections}>

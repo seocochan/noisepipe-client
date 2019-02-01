@@ -1,13 +1,16 @@
-import { AxiosResponse } from 'axios';
-import { IItemPostRequest, IItemPutRequest, IItemResponse, IMediaDataResponse } from 'payloads';
+import {
+  IItemPostRequest,
+  IItemPutRequest,
+  IItemResponse,
+  IItemSummary,
+  IMediaDataResponse,
+  IPagedResponse
+} from 'payloads';
 import { Provider } from 'types';
 import request from 'utils/api';
 
-export const getMediaData = (
-  sourceUrl: string,
-  sourceProvider: Provider
-): Promise<AxiosResponse<IMediaDataResponse>> => {
-  return request({
+export const getMediaData = (sourceUrl: string, sourceProvider: Provider) => {
+  return request<IMediaDataResponse>({
     url: `/media?url=${encodeURIComponent(
       sourceUrl
     )}&provider=${sourceProvider}`,
@@ -15,22 +18,16 @@ export const getMediaData = (
   });
 };
 
-export const updateItem = (
-  itemId: number,
-  data: IItemPutRequest
-): Promise<AxiosResponse<IItemResponse>> => {
-  return request({
+export const updateItem = (itemId: number, data: IItemPutRequest) => {
+  return request<IItemResponse>({
     url: `/items/${itemId}`,
     method: 'put',
     data
   });
 };
 
-export const createItem = (
-  collectionId: number,
-  data: IItemPostRequest
-): Promise<AxiosResponse<IItemResponse>> => {
-  return request({
+export const createItem = (collectionId: number, data: IItemPostRequest) => {
+  return request<IItemResponse>({
     url: `/collections/${collectionId}/items`,
     method: 'post',
     data
@@ -38,8 +35,15 @@ export const createItem = (
 };
 
 export const removeItem = (itemId: number) => {
-  return request({
+  return request<void>({
     url: `/items/${itemId}`,
     method: 'delete'
+  });
+};
+
+export const searchItems = (q: string, page: number, size: number) => {
+  return request<IPagedResponse<IItemSummary>>({
+    url: `/items?q=${q}&page=${page}&size=${size}`,
+    method: 'get'
   });
 };

@@ -37,7 +37,7 @@ class CommentsContainer extends React.Component<Props, {}> {
     if (currentTab !== prevProps.currentTab) {
       if (currentTab === tabName) {
         UserLibraryActions.loadComments(username);
-      } else {
+      } else if (prevProps.currentTab === tabName) {
         UserLibraryActions.initialize();
       }
     }
@@ -90,7 +90,11 @@ class CommentsContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader count={comments.totalElements} name={'댓글'} />
+        <ListHeader
+          username={username}
+          count={comments.totalElements}
+          name={'댓글'}
+        />
         <List
           dataSource={comments.content}
           renderItem={(comment: ICommentSummary) => (

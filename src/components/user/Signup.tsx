@@ -7,7 +7,7 @@ import { FormComponentProps } from 'antd/lib/form';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction } from 'store';
 import { actions as authActions } from 'store/modules/auth';
-import { checkUsernameAvailability } from 'utils/api/auth';
+import { checkUsernameAvailability } from 'utils/api/user';
 import {
   DEFAULT_ERROR_MESSAGE,
   MAX_PASSWORD_LENGTH,

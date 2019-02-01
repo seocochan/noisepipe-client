@@ -1,11 +1,8 @@
-import { AxiosResponse } from 'axios';
 import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
-export const loadCollection = (
-  collectionId: number
-): Promise<AxiosResponse<ICollectionResponse>> => {
-  return request({
+export const loadCollection = (collectionId: number) => {
+  return request<ICollectionResponse>({
     url: `/collections/${collectionId}`,
     method: 'get'
   });
@@ -14,8 +11,8 @@ export const loadCollection = (
 export const createCollection = (
   username: string,
   data: ICollectionRequest
-): Promise<AxiosResponse<ICollectionResponse>> => {
-  return request({
+) => {
+  return request<ICollectionResponse>({
     url: `/users/${username}/collections`,
     method: 'post',
     data
@@ -25,18 +22,16 @@ export const createCollection = (
 export const updateCollection = (
   collectionId: number,
   data: ICollectionRequest
-): Promise<AxiosResponse<ICollectionResponse>> => {
-  return request({
+) => {
+  return request<ICollectionResponse>({
     url: `/collections/${collectionId}`,
     method: 'put',
     data
   });
 };
 
-export const removeCollection = (
-  collectionId: number
-): Promise<AxiosResponse<void>> => {
-  return request({
+export const removeCollection = (collectionId: number) => {
+  return request<void>({
     url: `/collections/${collectionId}`,
     method: 'delete'
   });
@@ -50,11 +45,8 @@ export const loadItems = (collectionId: number, page = 0, size = 100) => {
   });
 };
 
-export const updateItemPosition = (
-  itemId: number,
-  position: number
-): Promise<AxiosResponse<void>> => {
-  return request({
+export const updateItemPosition = (itemId: number, position: number) => {
+  return request<void>({
     url: `/items/${itemId}/position`,
     method: 'put',
     data: position
@@ -65,8 +57,8 @@ export const loadCollections = (
   username: string,
   size: number,
   offsetId?: number
-): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
-  return request({
+) => {
+  return request<IPagedResponse<ICollectionSummary>>({
     url: `/users/${username}/collections?${
       offsetId ? `offsetId=${offsetId}&` : ''
     }size=${size}`,
@@ -74,19 +66,15 @@ export const loadCollections = (
   });
 };
 
-export const createBookmark = (
-  collectionId: number
-): Promise<AxiosResponse<void>> => {
-  return request({
+export const createBookmark = (collectionId: number) => {
+  return request<void>({
     url: `/collections/${collectionId}/bookmarks`,
     method: 'post'
   });
 };
 
-export const removeBookmark = (
-  collectionId: number
-): Promise<AxiosResponse<void>> => {
-  return request({
+export const removeBookmark = (collectionId: number) => {
+  return request<void>({
     url: `/collections/${collectionId}/bookmarks`,
     method: 'delete'
   });
@@ -96,8 +84,8 @@ export const getCollectionsBookmarkedByUser = (
   username: string,
   size: number,
   offsetId?: number
-): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
-  return request({
+) => {
+  return request<IPagedResponse<ICollectionSummary>>({
     url: `/users/${username}/bookmarks?${
       offsetId ? `offsetId=${offsetId}&` : ''
     }size=${size}`,
@@ -105,12 +93,8 @@ export const getCollectionsBookmarkedByUser = (
   });
 };
 
-export const searchCollections = (
-  q: string,
-  page: number,
-  size: number
-): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
-  return request({
+export const searchCollections = (q: string, page: number, size: number) => {
+  return request<IPagedResponse<ICollectionSummary>>({
     url: `/collections?q=${q}&page=${page}&size=${size}`,
     method: 'get'
   });

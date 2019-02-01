@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ACCESS_TOKEN } from 'values';
 
 interface IRequestHeaders {
@@ -16,7 +16,9 @@ const req = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL
 });
 
-const request = async (options: IRequestOptions) => {
+async function request<T = any>(
+  options: IRequestOptions
+): Promise<AxiosResponse<T>> {
   let headers: IRequestHeaders = { 'Content-Type': 'application/json' };
 
   const token = localStorage.getItem(ACCESS_TOKEN);
@@ -30,6 +32,6 @@ const request = async (options: IRequestOptions) => {
   } catch (error) {
     return Promise.reject(error);
   }
-};
+}
 
 export default request;

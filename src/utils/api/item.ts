@@ -1,5 +1,12 @@
 import { AxiosResponse } from 'axios';
-import { IItemPostRequest, IItemPutRequest, IItemResponse, IMediaDataResponse } from 'payloads';
+import {
+  IItemPostRequest,
+  IItemPutRequest,
+  IItemResponse,
+  IItemSummary,
+  IMediaDataResponse,
+  IPagedResponse
+} from 'payloads';
 import { Provider } from 'types';
 import request from 'utils/api';
 
@@ -37,9 +44,20 @@ export const createItem = (
   });
 };
 
-export const removeItem = (itemId: number) => {
+export const removeItem = (itemId: number): Promise<AxiosResponse<void>> => {
   return request({
     url: `/items/${itemId}`,
     method: 'delete'
+  });
+};
+
+export const searchItems = (
+  q: string,
+  page: number,
+  size: number
+): Promise<AxiosResponse<IPagedResponse<IItemSummary>>> => {
+  return request({
+    url: `/items?q=${q}&page=${page}&size=${size}`,
+    method: 'get'
   });
 };

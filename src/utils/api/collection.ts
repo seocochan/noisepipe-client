@@ -2,7 +2,9 @@ import { AxiosResponse } from 'axios';
 import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
-export const loadCollection = (collectionId: number) => {
+export const loadCollection = (
+  collectionId: number
+): Promise<AxiosResponse<ICollectionResponse>> => {
   return request({
     url: `/collections/${collectionId}`,
     method: 'get'
@@ -31,13 +33,16 @@ export const updateCollection = (
   });
 };
 
-export const removeCollection = (collectionId: number) => {
+export const removeCollection = (
+  collectionId: number
+): Promise<AxiosResponse<void>> => {
   return request({
     url: `/collections/${collectionId}`,
     method: 'delete'
   });
 };
 
+// FIXME: remove pagination
 export const loadItems = (collectionId: number, page = 0, size = 100) => {
   return request({
     url: `/collections/${collectionId}/items?page=${page}&size=${size}`,
@@ -45,7 +50,10 @@ export const loadItems = (collectionId: number, page = 0, size = 100) => {
   });
 };
 
-export const updateItemPosition = (itemId: number, position: number) => {
+export const updateItemPosition = (
+  itemId: number,
+  position: number
+): Promise<AxiosResponse<void>> => {
   return request({
     url: `/items/${itemId}/position`,
     method: 'put',
@@ -93,6 +101,17 @@ export const getCollectionsBookmarkedByUser = (
     url: `/users/${username}/bookmarks?${
       offsetId ? `offsetId=${offsetId}&` : ''
     }size=${size}`,
+    method: 'get'
+  });
+};
+
+export const searchCollections = (
+  q: string,
+  page: number,
+  size: number
+): Promise<AxiosResponse<IPagedResponse<ICollectionSummary>>> => {
+  return request({
+    url: `/collections?q=${q}&page=${page}&size=${size}`,
     method: 'get'
   });
 };

@@ -8,6 +8,7 @@ interface Props {
   q?: string;
   username?: string;
   count: number;
+  unit?: string;
   name: string;
   hasAddButton?: boolean;
   isFormVisible?: boolean;
@@ -18,6 +19,7 @@ const ListHeader: React.SFC<Props> = ({
   q,
   username,
   count,
+  unit = '개',
   name,
   hasAddButton = false,
   isFormVisible = false,
@@ -36,7 +38,8 @@ const ListHeader: React.SFC<Props> = ({
             <span className={styles.highlight}>{username}</span>님이 생성한{' '}
           </span>
         )}
-        {count}개의 {name}
+        {count}
+        {unit}의 {name}
       </h2>
       {hasAddButton && (
         <Button

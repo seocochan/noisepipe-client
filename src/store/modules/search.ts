@@ -75,7 +75,25 @@ export const actions = {
   loadUsersSuccess: (users: IPagedResponse<IUserProfile>) =>
     createAction(LOAD_USERS_SUCCESS, { users }),
   loadMoreUsers: (users: IPagedResponse<IUserProfile>) =>
-    createAction(LOAD_MORE_USERS, { users })
+    createAction(LOAD_MORE_USERS, { users }),
+  createBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.createBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.removeBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 export type SearchAction = ActionType<typeof actions>;
 

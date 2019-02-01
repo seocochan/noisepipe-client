@@ -41,7 +41,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
     if (currentTab !== prevProps.currentTab) {
       if (currentTab === tabName) {
         UserLibraryActions.loadBookmarkedCollections(username);
-      } else {
+      } else if (prevProps.currentTab === tabName) {
         UserLibraryActions.initialize();
       }
     }

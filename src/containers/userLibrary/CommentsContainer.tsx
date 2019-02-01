@@ -37,7 +37,7 @@ class CommentsContainer extends React.Component<Props, {}> {
     if (currentTab !== prevProps.currentTab) {
       if (currentTab === tabName) {
         UserLibraryActions.loadComments(username);
-      } else {
+      } else if (prevProps.currentTab === tabName) {
         UserLibraryActions.initialize();
       }
     }

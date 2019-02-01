@@ -46,7 +46,7 @@ class CollectionsContainer extends React.Component<Props, State> {
     if (currentTab !== prevProps.currentTab) {
       if (currentTab === tabName) {
         UserLibraryActions.loadCollections(username);
-      } else {
+      } else if (prevProps.currentTab === tabName) {
         this.setState({ isFormVisible: false });
         UserLibraryActions.initialize();
       }

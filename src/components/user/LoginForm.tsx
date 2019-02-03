@@ -12,7 +12,7 @@ interface Props extends FormComponentProps {
   onLogin(): void;
 }
 
-const LoginForm: React.SFC<Props> = props => {
+const LoginForm: React.FC<Props> = props => {
   const handleSubmit = (event: React.FormEvent<any>) => {
     event.preventDefault();
     props.form.validateFields(async (error: any, values: any) => {

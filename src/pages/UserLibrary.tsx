@@ -8,7 +8,7 @@ import styles from './UserLibrary.module.less';
 
 interface Props extends RouteComponentProps<{ username: string }> {}
 
-const UserLibrary: React.SFC<Props> = ({
+const UserLibrary: React.FC<Props> = ({
   location: { pathname },
   match: {
     params: { username }

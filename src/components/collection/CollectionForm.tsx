@@ -13,7 +13,7 @@ interface Props extends FormComponentProps {
   onAfterReset?: () => void;
 }
 
-const CollectionForm: React.SFC<Props> = ({
+const CollectionForm: React.FC<Props> = ({
   collection,
   handleSubmit: submit,
   onAfterReset,

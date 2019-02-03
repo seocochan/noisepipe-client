@@ -2,7 +2,7 @@ import * as React from 'react';
 
 interface Props {}
 
-const CueSection: React.SFC<Props> = ({ children }) => {
+const CueSection: React.FC<Props> = ({ children }) => {
   return <div>{children}</div>;
 };
 

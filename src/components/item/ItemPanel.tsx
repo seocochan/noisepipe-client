@@ -13,7 +13,7 @@ interface Props {
   itemEditor: React.ReactChild;
 }
 
-const ItemPanel: React.SFC<Props> = ({
+const ItemPanel: React.FC<Props> = ({
   collapsed,
   tab,
   itemPanelHeader,

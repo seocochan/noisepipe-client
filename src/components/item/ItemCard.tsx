@@ -11,7 +11,7 @@ interface Props {
   item: IItemSummary;
 }
 
-const ItemCard: React.SFC<Props> = ({
+const ItemCard: React.FC<Props> = ({
   item: { createdBy, title, collectionId, collectionTitle, createdAt, tags }
 }) => {
   return (

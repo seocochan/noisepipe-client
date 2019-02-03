@@ -21,7 +21,7 @@ interface Props extends FormComponentProps {
  * - 개별 tag 문자열 trim
  */
 
-const ItemEditorForm: React.SFC<Props> = ({
+const ItemEditorForm: React.FC<Props> = ({
   item,
   handleSubmit: submit,
   form: { getFieldDecorator, validateFields }

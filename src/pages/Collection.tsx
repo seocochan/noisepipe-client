@@ -7,7 +7,7 @@ import styles from './Collection.module.less';
 
 interface Props extends RouteComponentProps<{ collectionId: string }> {}
 
-const Collection: React.SFC<Props> = ({ match }) => {
+const Collection: React.FC<Props> = ({ match }) => {
   return (
     <div className={styles.container}>
       <CollectionItemsContainer

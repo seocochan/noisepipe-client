@@ -15,7 +15,7 @@ interface Props {
   handleClick?: () => void;
 }
 
-const ListHeader: React.SFC<Props> = ({
+const ListHeader: React.FC<Props> = ({
   q,
   username,
   count,

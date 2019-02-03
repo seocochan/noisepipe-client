@@ -11,7 +11,7 @@ interface Props extends RouteProps {
   auth: AuthState;
 }
 
-const PrivateRoute: React.SFC<Props> = ({
+const PrivateRoute: React.FC<Props> = ({
   component: Component,
   auth,
   ...rest

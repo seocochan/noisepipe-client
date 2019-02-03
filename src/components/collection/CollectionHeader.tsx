@@ -21,7 +21,7 @@ interface Props {
   onRemoveBookmark: (collectionId: number) => void;
 }
 
-const CollectionHeader: React.SFC<Props> = ({
+const CollectionHeader: React.FC<Props> = ({
   collection,
   isAuthenticated,
   isAuthor,

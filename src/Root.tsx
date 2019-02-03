@@ -9,7 +9,7 @@ import store from 'store';
 
 import 'moment/locale/ko';
 
-const Root: React.SFC<{}> = () => (
+const Root: React.FC<{}> = () => (
   <Provider store={store}>
     <ConfigProvider renderEmpty={() => ''}>
       <LocaleProvider locale={kr_KR}>

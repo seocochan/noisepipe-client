@@ -14,7 +14,7 @@ interface Props {
   handleRemove: (e: React.MouseEvent) => void;
 }
 
-const ItemPanelHeader: React.SFC<Props> = ({
+const ItemPanelHeader: React.FC<Props> = ({
   tab,
   showEditables,
   handleClose,

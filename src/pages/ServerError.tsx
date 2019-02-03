@@ -5,7 +5,7 @@ import { Button } from 'antd';
 
 import styles from './ServerError.module.less';
 
-const ServerError: React.SFC<{}> = () => {
+const ServerError: React.FC<{}> = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>500</h1>

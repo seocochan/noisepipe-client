@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { Button, Form, Icon, Input } from 'antd';
+import { Button, Form, Icon, Input, Tooltip } from 'antd';
 import { FormItemProps } from 'antd/lib/form';
 import { Provider } from 'types';
 import * as ItemAPI from 'utils/api/item';
+import { MAX_COLLECTION_ITEMS_SIZE } from 'values';
 
 interface Props {
   handleAddItem: (
@@ -11,6 +12,7 @@ interface Props {
     sourceUrl: string,
     sourceProvider: Provider
   ) => void;
+  disabled: boolean;
 }
 interface State {
   value: string;
@@ -19,6 +21,9 @@ interface State {
 }
 
 class ItemAddForm extends React.Component<Props, State> {
+  public static defaultProps = {
+    disabled: false
+  };
   public readonly state: State = {
     value: '',
     validateStatus: undefined,
@@ -67,6 +72,7 @@ class ItemAddForm extends React.Component<Props, State> {
   };
 
   public render(): React.ReactNode {
+    const { disabled } = this.props;
     const { value, validateStatus, errorMsg } = this.state;
     return (
       <Form layout="inline" onSubmit={this.handleSubmit}>
@@ -77,6 +83,7 @@ class ItemAddForm extends React.Component<Props, State> {
           style={{ marginRight: 8 }}
         >
           <Input
+            disabled={disabled}
             prefix={<Icon type="link" />}
             placeholder="미디어 URL"
             value={value}
@@ -85,8 +92,15 @@ class ItemAddForm extends React.Component<Props, State> {
           />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" icon="plus" />
+          <Button disabled={disabled} htmlType="submit" icon="plus" />
         </Form.Item>
+        {disabled && (
+          <Tooltip
+            title={`최대 ${MAX_COLLECTION_ITEMS_SIZE}개까지의 아이템을 추가할 수 있어요`}
+          >
+            <Icon type="info-circle" style={{ color: '#f5222d' }} />
+          </Tooltip>
+        )}
       </Form>
     );
   }

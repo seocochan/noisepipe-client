@@ -52,6 +52,13 @@ export const updateItemPosition = (itemId: number, position: number) => {
   });
 };
 
+export const resetItemsPosition = (collectionId: number) => {
+  return request<void>({
+    url: `/collections/${collectionId}/items/position`,
+    method: 'put'
+  });
+};
+
 export const loadCollections = (
   username: string,
   size: number,

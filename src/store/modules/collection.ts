@@ -107,7 +107,7 @@ export const actions = {
     dispatch(actions.loadItemsPending());
     try {
       const res = await CollectionAPI.loadItems(collectionId);
-      dispatch(actions.loadItemsSuccess(res.data.content)); // ignore paged response
+      dispatch(actions.loadItemsSuccess(res.data));
     } catch (error) {
       dispatch(actions.loadItemsFailure(error));
       throw error;

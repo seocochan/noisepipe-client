@@ -1,4 +1,4 @@
-import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IPagedResponse } from 'payloads';
+import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IItemResponse, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
 export const loadCollection = (collectionId: number) => {
@@ -37,10 +37,9 @@ export const removeCollection = (collectionId: number) => {
   });
 };
 
-// FIXME: remove pagination
-export const loadItems = (collectionId: number, page = 0, size = 100) => {
-  return request({
-    url: `/collections/${collectionId}/items?page=${page}&size=${size}`,
+export const loadItems = (collectionId: number) => {
+  return request<IItemResponse[]>({
+    url: `/collections/${collectionId}/items`,
     method: 'get'
   });
 };

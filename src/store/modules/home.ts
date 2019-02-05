@@ -5,11 +5,11 @@ import { action as createAction, ActionType } from 'typesafe-actions';
 import * as CollectionAPI from 'utils/api/collection';
 
 // action types
-const INITIALIZE = 'main/initialize';
+const INITIALIZE = 'home/initialize';
 const LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS =
-  'main/LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS';
+  'home/LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS';
 const LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS =
-  'main/LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS';
+  'home/LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS';
 
 // action creators
 export const actions = {
@@ -39,20 +39,20 @@ export const actions = {
   loadRecentlyUpdatedCollectionsSuccess: (collections: ICollectionSummary[]) =>
     createAction(LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS, { collections })
 };
-export type MainAction = ActionType<typeof actions>;
+export type HomeAction = ActionType<typeof actions>;
 
 // state
-export interface MainState {
+export interface HomeState {
   recentlyCreatedCollections: ICollectionSummary[] | null;
   recentlyUpdatedCollections: ICollectionSummary[] | null;
 }
-const initialState: MainState = {
+const initialState: HomeState = {
   recentlyCreatedCollections: null,
   recentlyUpdatedCollections: null
 };
 
 // reducer
-export default produce<MainState, MainAction>((draft, action) => {
+export default produce<HomeState, HomeAction>((draft, action) => {
   switch (action.type) {
     case INITIALIZE: {
       return initialState;

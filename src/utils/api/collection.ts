@@ -105,3 +105,17 @@ export const searchCollections = (q: string, page: number, size: number) => {
     method: 'get'
   });
 };
+
+export const getRecentlyCreatedCollections = () => {
+  return request<ICollectionSummary[]>({
+    url: '/collections/recentlyCreated',
+    method: 'get'
+  });
+};
+
+export const getRecentlyUpdatedCollections = () => {
+  return request<ICollectionSummary[]>({
+    url: '/collections/recentlyUpdated',
+    method: 'get'
+  });
+};

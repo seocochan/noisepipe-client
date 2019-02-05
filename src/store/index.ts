@@ -6,6 +6,7 @@ import { StateType } from 'typesafe-actions';
 import authReducer, { AuthAction } from './modules/auth';
 import collectionReducer, { CollectionAction } from './modules/collection';
 import itemReducer, { ItemAction } from './modules/item';
+import mainReducer, { MainAction } from './modules/main';
 import playerReducer, { PlayerAction } from './modules/player';
 import searchReducer, { SearchAction } from './modules/search';
 import userLibraryReducer, { UserLibraryAction } from './modules/userLibrary';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   collection: collectionReducer,
   item: itemReducer,
+  main: mainReducer,
   player: playerReducer,
   search: searchReducer,
   userLibrary: userLibraryReducer
@@ -29,6 +31,7 @@ export type RootAction =
   | AuthAction
   | CollectionAction
   | ItemAction
+  | MainAction
   | PlayerAction
   | SearchAction
   | UserLibraryAction;

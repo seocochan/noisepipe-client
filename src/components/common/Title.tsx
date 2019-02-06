@@ -7,7 +7,7 @@ interface Props {
   prefix?: React.ReactChild;
 }
 
-const Title: React.SFC<Props> = ({ text, prefix }) => {
+const Title: React.FC<Props> = ({ text, prefix }) => {
   return (
     <div className={styles.container}>
       <h2>

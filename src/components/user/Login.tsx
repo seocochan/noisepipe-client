@@ -39,7 +39,6 @@ class Login extends React.Component<Props, {}> {
     } else {
       history.replace('/');
     }
-    message.success('로그인에 성공했습니다');
   };
 
   public render() {

@@ -21,7 +21,7 @@ interface Props extends RouteComponentProps {
 
 class App extends React.Component<Props, {}> {
   public async componentDidMount() {
-    message.config({ top: 64 });
+    message.config({ top: 64, duration: 1 });
 
     const { AuthActions } = this.props;
     try {

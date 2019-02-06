@@ -37,7 +37,7 @@ class CollectionCard extends React.Component<Props, State> {
     try {
       await onCreateBookmark(collectionId);
       this.setState({ isBookmarked: true });
-      message.info('북마크를 추가했습니다');
+      message.success('북마크를 추가했습니다');
     } catch (error) {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
@@ -47,7 +47,7 @@ class CollectionCard extends React.Component<Props, State> {
     try {
       await onRemoveBookmark(collectionId);
       this.setState({ isBookmarked: false });
-      message.info('북마크를 제거했습니다');
+      message.success('북마크를 제거했습니다');
     } catch (error) {
       message.error(DEFAULT_ERROR_MESSAGE);
     }

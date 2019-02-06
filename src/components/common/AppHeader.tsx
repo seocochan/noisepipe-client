@@ -25,7 +25,7 @@ class AppHeader extends React.Component<Props, {}> {
     AuthActions.logout();
 
     history.push('/');
-    message.success('로그아웃 되었습니다');
+    message.info('로그아웃 했습니다');
   };
 
   private handleClick = (e: ClickParam) => {

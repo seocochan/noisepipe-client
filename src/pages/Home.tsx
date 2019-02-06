@@ -1,7 +1,15 @@
 import * as React from 'react';
 
-const Home = () => {
-  return <div>Home: {process.env.REACT_APP_FOO}</div>;
+import { HomeContainer } from 'containers/home';
+
+import styles from './Home.module.less';
+
+const Home: React.FC<{}> = () => {
+  return (
+    <div className={styles.container}>
+      <HomeContainer />
+    </div>
+  );
 };
 
 export default Home;

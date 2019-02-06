@@ -37,7 +37,25 @@ export const actions = {
     }
   },
   loadRecentlyUpdatedCollectionsSuccess: (collections: ICollectionSummary[]) =>
-    createAction(LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS, { collections })
+    createAction(LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS, { collections }),
+  createBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.createBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeBookmark: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await CollectionAPI.removeBookmark(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 export type HomeAction = ActionType<typeof actions>;
 

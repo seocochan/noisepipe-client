@@ -5,11 +5,15 @@ import { List } from 'antd';
 interface Props<T = any> {
   dataSource: T[];
   renderCard: (item: T, index: number) => React.ReactNode;
-  isLast: boolean;
-  loadMoreButton: React.ReactChild;
+  isLast?: boolean;
+  loadMoreButton?: React.ReactChild;
 }
 
 class GridCardList<T> extends React.Component<Props<T>, {}> {
+  public static defaultProps = {
+    isLast: true
+  };
+
   public render() {
     const { dataSource, renderCard, isLast, loadMoreButton } = this.props;
 

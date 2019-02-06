@@ -53,13 +53,20 @@ class AppHeader extends React.Component<Props, {}> {
       menuItems = [
         <Menu.Item key="/">
           <Link to="/">
-            <Icon type="home" />홈
+            <Icon type="home" />
+            <span className={styles.menuText}>홈</span>
+          </Link>
+        </Menu.Item>,
+        <Menu.Item className={styles.searchMenu} key="/search">
+          <Link to="/search">
+            <Icon type="search" />
+            <span className={styles.menuText}>검색</span>
           </Link>
         </Menu.Item>,
         <Menu.Item key="/me/*">
           <Link to={`/@${currentUser.username}/collections`}>
             <Icon type="database" />
-            컬렉션
+            <span className={styles.menuText}>컬렉션</span>
           </Link>
         </Menu.Item>,
         <Menu.SubMenu
@@ -67,7 +74,7 @@ class AppHeader extends React.Component<Props, {}> {
           title={
             <span>
               <Icon type="user" />
-              {currentUser.username}
+              <span className={styles.menuText}>{currentUser.username}</span>
             </span>
           }
         >
@@ -79,6 +86,18 @@ class AppHeader extends React.Component<Props, {}> {
       ];
     } else {
       menuItems = [
+        <Menu.Item key="/">
+          <Link to="/">
+            <Icon type="home" />
+            <span className={styles.menuText}>홈</span>
+          </Link>
+        </Menu.Item>,
+        <Menu.Item className={styles.searchMenu} key="/search">
+          <Link to="/search">
+            <Icon type="search" />
+            <span className={styles.menuText}>검색</span>
+          </Link>
+        </Menu.Item>,
         <Menu.Item key="/login">
           <Link to="/login">로그인</Link>
         </Menu.Item>,
@@ -94,8 +113,9 @@ class AppHeader extends React.Component<Props, {}> {
           <div className={styles.title}>
             <Link to="/">NOISEPIPE</Link>
           </div>
-          <SearchInput />
+          <SearchInput className={styles.searchInput} />
           <Menu
+            className={styles.menu}
             mode="horizontal"
             selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}
             style={{ lineHeight: '56px' }}

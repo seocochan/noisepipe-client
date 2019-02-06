@@ -22,9 +22,42 @@
     display: inline-block;
   }
 }
+.searchInput {
+  max-width: 256px;
+  margin: 10px 12px !important;
+}
 
 @media (max-width: 768px) {
+  .header {
+    padding: 0 4px !important;
+  }
+  .container {
+    padding: 0;
+  }
   .title {
+    display: none !important;
+  }
+  .menuText {
+    display: none !important;
+  }
+  .searchInput {
+    display: none !important;
+  }
+  .menu {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+    li {
+      flex-grow: 1;
+      text-align: center;
+    }
+    i {
+      margin-right: 0 !important;
+    }
+  }
+}
+@media (min-width: 769px) {
+  .searchMenu {
     display: none !important;
   }
 }

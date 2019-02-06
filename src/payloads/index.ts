@@ -29,6 +29,10 @@ export interface ISignupReqeust {
 export interface IUserIdentityAvailability {
   available: boolean;
 }
+export interface IPasswordUpdateRequest {
+  oldPassword: string;
+  newPassword: string;
+}
 
 // collection
 export interface ICollectionSummary {

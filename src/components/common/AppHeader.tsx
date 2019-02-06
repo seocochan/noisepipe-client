@@ -71,10 +71,9 @@ class AppHeader extends React.Component<Props, {}> {
             </span>
           }
         >
-          <Menu.Item key="/settings" disabled={true}>
-            <Link to="/settings">설정</Link>
+          <Menu.Item key="/setting">
+            <Link to="/setting">설정</Link>
           </Menu.Item>
-          <Menu.Divider />
           <Menu.Item key="logout">로그아웃</Menu.Item>
         </Menu.SubMenu>
       ];

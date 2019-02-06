@@ -1,4 +1,5 @@
 export { default as Home } from './Home';
+export { default as UserSetting } from './UserSetting';
 export { default as UserLibrary } from './UserLibrary';
 export { default as Search } from './Search';
 export { default as Collection } from './Collection';

@@ -1,10 +1,14 @@
-import { ILoginRequest, ISignupReqeust } from 'payloads';
+import { ILoginRequest, IPasswordUpdateRequest, ISignupReqeust } from 'payloads';
 import request from 'utils/api';
 
-export const login = (loginRequest: ILoginRequest) => {
-  return request({ url: '/auth/signin', method: 'post', data: loginRequest });
+export const login = (data: ILoginRequest) => {
+  return request({ url: '/auth/signin', method: 'post', data });
 };
 
-export const signup = (signupRequest: ISignupReqeust) => {
-  return request({ url: '/auth/signup', method: 'post', data: signupRequest });
+export const signup = (data: ISignupReqeust) => {
+  return request({ url: '/auth/signup', method: 'post', data });
+};
+
+export const updatePassword = (data: IPasswordUpdateRequest) => {
+  return request<void>({ url: '/auth/updatePassword', method: 'post', data });
 };

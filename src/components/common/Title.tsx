@@ -3,7 +3,7 @@ import * as React from 'react';
 import styles from './Title.module.less';
 
 interface Props {
-  text: string;
+  text: React.ReactChild | string;
   prefix?: React.ReactChild;
 }
 

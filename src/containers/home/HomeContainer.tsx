@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import { Divider, Icon } from 'antd';
 import { CollectionCard } from 'components/collection';
-import { LoadingIndicator, Title } from 'components/common';
+import { LoadingIndicator, Notifications, Title } from 'components/common';
 import { GridCardList } from 'components/list';
 import { ICollectionSummary } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -22,8 +22,8 @@ class HomeContainer extends React.Component<Props, {}> {
   public async componentDidMount() {
     const { HomeActions, history } = this.props;
     try {
-      await HomeActions.loadRecentlyUpdatedCollections();
-      await HomeActions.loadRecentlyCreatedCollections();
+      HomeActions.loadRecentlyUpdatedCollections();
+      HomeActions.loadRecentlyCreatedCollections();
     } catch (error) {
       history.replace('/error');
     }
@@ -56,56 +56,52 @@ class HomeContainer extends React.Component<Props, {}> {
       home: { recentlyCreatedCollections, recentlyUpdatedCollections }
     } = this.props;
 
+    if (!recentlyCreatedCollections || !recentlyUpdatedCollections) {
+      return <LoadingIndicator />;
+    }
     return (
       <>
         <div>
-          {recentlyUpdatedCollections ? (
-            <>
-              <Title
-                text="새 아이템이 추가된 컬렉션"
-                prefix={<Icon type="thunderbolt" />}
+          <Title
+            text="새 아이템이 추가된 컬렉션"
+            prefix={<Icon type="thunderbolt" />}
+          />
+          <GridCardList<ICollectionSummary>
+            dataSource={recentlyUpdatedCollections}
+            renderCard={(collection: ICollectionSummary) => (
+              <CollectionCard
+                key={collection.id}
+                collection={collection}
+                disableBookmark={currentUser ? false : true}
+                onCreateBookmark={this.handleCreateBookmark}
+                onRemoveBookmark={this.handleRemoveBookmark}
               />
-              <GridCardList<ICollectionSummary>
-                dataSource={recentlyUpdatedCollections}
-                renderCard={(collection: ICollectionSummary) => (
-                  <CollectionCard
-                    key={collection.id}
-                    collection={collection}
-                    disableBookmark={currentUser ? false : true}
-                    onCreateBookmark={this.handleCreateBookmark}
-                    onRemoveBookmark={this.handleRemoveBookmark}
-                  />
-                )}
-              />
-            </>
-          ) : (
-            <LoadingIndicator />
-          )}
+            )}
+          />
         </div>
-        {recentlyCreatedCollections && <Divider />}
+        <Divider />
         <div>
-          {recentlyCreatedCollections ? (
-            <>
-              <Title
-                text="최근 생성된 컬렉션"
-                prefix={<Icon type="clock-circle" />}
-              />
-              <GridCardList<ICollectionSummary>
-                dataSource={recentlyCreatedCollections}
-                renderCard={(collection: ICollectionSummary) => (
-                  <CollectionCard
-                    key={collection.id}
-                    collection={collection}
-                    disableBookmark={currentUser ? false : true}
-                    onCreateBookmark={this.handleCreateBookmark}
-                    onRemoveBookmark={this.handleRemoveBookmark}
-                  />
-                )}
-              />
-            </>
-          ) : (
-            <div />
-          )}
+          <>
+            <Title
+              text="최근 생성된 컬렉션"
+              prefix={<Icon type="clock-circle" />}
+            />
+            <GridCardList<ICollectionSummary>
+              dataSource={recentlyCreatedCollections}
+              renderCard={(collection: ICollectionSummary) => (
+                <CollectionCard
+                  key={collection.id}
+                  collection={collection}
+                  disableBookmark={currentUser ? false : true}
+                  onCreateBookmark={this.handleCreateBookmark}
+                  onRemoveBookmark={this.handleRemoveBookmark}
+                />
+              )}
+            />
+          </>
+        </div>
+        <div style={{ marginTop: 24 }}>
+          <Notifications />
         </div>
       </>
     );

@@ -15,6 +15,7 @@ import * as CollectionAPI from 'utils/api/collection';
 import * as CommentAPI from 'utils/api/comment';
 import * as ItemAPI from 'utils/api/item';
 import * as Utils from 'utils/common';
+import { ITEM_POSITION_UNIT, MAX_ITEM_POSITION_VALUE } from 'values';
 
 // action types
 const INITIALIZE = 'collection/INITIALIZE';
@@ -28,6 +29,7 @@ const UPDATE_COLLECTION_SUCCESS = 'collection/UPDATE_COLLECTION_SUCCESS';
 const UPDATE_ITEM_POSITION_PENDING = 'collection/UPDATE_ITEM_POSITION_PENDING';
 const UPDATE_ITEM_POSITION_SUCCESS = 'collection/UPDATE_ITEM_POSITION_SUCCESS';
 const UPDATE_ITEM_POSITION_FAILURE = 'collection/UPDATE_ITEM_POSITION_FAILURE';
+const RESET_ITEMS_POSITION_SUCCESS = 'collection/RESET_ITEMS_POSITION_SUCCESS';
 const UPDATE_ITEM = 'collection/UPDATE_ITEM';
 const ADD_ITEM_SUCCESS = 'collection/ADD_ITEM_SUCCESS';
 const REMOVE_ITEM = 'collection/REMOVE_ITEM';
@@ -107,7 +109,7 @@ export const actions = {
     dispatch(actions.loadItemsPending());
     try {
       const res = await CollectionAPI.loadItems(collectionId);
-      dispatch(actions.loadItemsSuccess(res.data.content)); // ignore paged response
+      dispatch(actions.loadItemsSuccess(res.data));
     } catch (error) {
       dispatch(actions.loadItemsFailure(error));
       throw error;
@@ -125,13 +127,18 @@ export const actions = {
     dispatch(actions.updateItemPostionPending());
     try {
       const items = getState().collection.items as IItemResponse[];
-      const { newItems, newPosition } = Utils.updatePosition(
+      const { newItems, newPosition, needReset } = Utils.updatePosition(
         items,
         oldIndex,
         newIndex
       );
       dispatch(actions.updateItemPostionSuccess(newItems));
       await CollectionAPI.updateItemPosition(items[oldIndex].id, newPosition);
+
+      if (needReset) {
+        const collectionId = getState().collection.collection.id as number;
+        dispatch(actions.resetItemsPosition(collectionId));
+      }
     } catch (error) {
       dispatch(actions.updateItemPostionFailure(error));
       throw error;
@@ -142,6 +149,17 @@ export const actions = {
     createAction(UPDATE_ITEM_POSITION_SUCCESS, items),
   updateItemPostionFailure: (error: AxiosError) =>
     createAction(UPDATE_ITEM_POSITION_FAILURE, error),
+  resetItemsPosition: (
+    collectionId: number
+  ): ThunkResult<Promise<void>> => async dispatch => {
+    try {
+      dispatch(actions.resetItemsPositionSuccess());
+      CollectionAPI.resetItemsPosition(collectionId);
+    } catch (error) {
+      throw error;
+    }
+  },
+  resetItemsPositionSuccess: () => createAction(RESET_ITEMS_POSITION_SUCCESS),
   updateItem: (itemId: number, data: IItemPutRequest) =>
     createAction(UPDATE_ITEM, { itemId, data }),
   addItem: (
@@ -159,7 +177,11 @@ export const actions = {
         sourceProvider,
         position
       });
-      dispatch(actions.addItemSuccess(res.data));
+      await dispatch(actions.addItemSuccess(res.data));
+
+      if (position >= MAX_ITEM_POSITION_VALUE) {
+        dispatch(actions.resetItemsPosition(collectionId));
+      }
     } catch (error) {
       throw error;
     }
@@ -333,6 +355,16 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
     }
     case UPDATE_ITEM_POSITION_FAILURE: {
       console.log(action.payload);
+      return;
+    }
+    case RESET_ITEMS_POSITION_SUCCESS: {
+      if (!draft.items) {
+        return;
+      }
+      draft.items = draft.items.map((item, index) => {
+        item.position = (index + 1) * ITEM_POSITION_UNIT;
+        return item;
+      });
       return;
     }
     case UPDATE_ITEM: {

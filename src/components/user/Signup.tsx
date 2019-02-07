@@ -36,6 +36,7 @@ class Signup extends React.Component<Props, {}> {
       history,
       form: { validateFields }
     } = this.props;
+    validateFields(['confirm'], { force: true });
     validateFields(async (err, { username, password }: FormData) => {
       if (err) {
         return;

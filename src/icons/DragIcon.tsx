@@ -4,7 +4,7 @@ interface Props {
   style?: React.CSSProperties;
 }
 
-const DragIcon: React.SFC<Props> = ({ style }) => {
+const DragIcon: React.FC<Props> = ({ style }) => {
   return (
     <i className="anticon" style={{ ...style }}>
       <svg

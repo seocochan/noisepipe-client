@@ -10,7 +10,7 @@ interface Props {
   onResume: () => void;
 }
 
-const CollectionPlayButton: React.SFC<Props> = ({
+const CollectionPlayButton: React.FC<Props> = ({
   isPlaying,
   isSet,
   onPause,

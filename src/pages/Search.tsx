@@ -9,7 +9,7 @@ import styles from './Search.module.less';
 
 interface Props extends RouteComponentProps {}
 
-const Search: React.SFC<Props> = ({
+const Search: React.FC<Props> = ({
   location: { pathname, search },
   history
 }) => {

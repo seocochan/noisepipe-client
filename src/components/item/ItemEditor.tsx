@@ -10,7 +10,7 @@ interface Props {
   handleSubmit: (itemId: number, data: IItemPutRequest) => void;
 }
 
-const ItemEditor: React.SFC<Props> = ({ item, handleSubmit }) => {
+const ItemEditor: React.FC<Props> = ({ item, handleSubmit }) => {
   const WrappedItemEditorForm = Form.create()(ItemEditorForm);
 
   return (

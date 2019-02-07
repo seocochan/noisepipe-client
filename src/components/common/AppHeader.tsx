@@ -25,7 +25,7 @@ class AppHeader extends React.Component<Props, {}> {
     AuthActions.logout();
 
     history.push('/');
-    message.success('로그아웃 되었습니다');
+    message.info('로그아웃 했습니다');
   };
 
   private handleClick = (e: ClickParam) => {
@@ -53,13 +53,20 @@ class AppHeader extends React.Component<Props, {}> {
       menuItems = [
         <Menu.Item key="/">
           <Link to="/">
-            <Icon type="home" />홈
+            <Icon type="home" />
+            <span className={styles.menuText}>홈</span>
+          </Link>
+        </Menu.Item>,
+        <Menu.Item className={styles.searchMenu} key="/search">
+          <Link to="/search">
+            <Icon type="search" />
+            <span className={styles.menuText}>검색</span>
           </Link>
         </Menu.Item>,
         <Menu.Item key="/me/*">
           <Link to={`/@${currentUser.username}/collections`}>
             <Icon type="database" />
-            컬렉션
+            <span className={styles.menuText}>컬렉션</span>
           </Link>
         </Menu.Item>,
         <Menu.SubMenu
@@ -67,19 +74,30 @@ class AppHeader extends React.Component<Props, {}> {
           title={
             <span>
               <Icon type="user" />
-              {currentUser.username}
+              <span className={styles.menuText}>{currentUser.username}</span>
             </span>
           }
         >
-          <Menu.Item key="/settings" disabled={true}>
-            <Link to="/settings">설정</Link>
+          <Menu.Item key="/setting">
+            <Link to="/setting">설정</Link>
           </Menu.Item>
-          <Menu.Divider />
           <Menu.Item key="logout">로그아웃</Menu.Item>
         </Menu.SubMenu>
       ];
     } else {
       menuItems = [
+        <Menu.Item key="/">
+          <Link to="/">
+            <Icon type="home" />
+            <span className={styles.menuText}>홈</span>
+          </Link>
+        </Menu.Item>,
+        <Menu.Item className={styles.searchMenu} key="/search">
+          <Link to="/search">
+            <Icon type="search" />
+            <span className={styles.menuText}>검색</span>
+          </Link>
+        </Menu.Item>,
         <Menu.Item key="/login">
           <Link to="/login">로그인</Link>
         </Menu.Item>,
@@ -95,8 +113,9 @@ class AppHeader extends React.Component<Props, {}> {
           <div className={styles.title}>
             <Link to="/">NOISEPIPE</Link>
           </div>
-          <SearchInput />
+          <SearchInput className={styles.searchInput} />
           <Menu
+            className={styles.menu}
             mode="horizontal"
             selectedKeys={[this.mapPathnameToKey(this.props.location.pathname)]}
             style={{ lineHeight: '56px' }}

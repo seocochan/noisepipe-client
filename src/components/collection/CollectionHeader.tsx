@@ -10,6 +10,7 @@ import styles from './CollectionHeader.module.less';
 
 interface Props {
   collection: ICollectionResponse | null;
+  items: number | null;
   isAuthenticated: boolean;
   isAuthor: boolean;
   collectionPlayButton: React.ReactChild;
@@ -21,8 +22,9 @@ interface Props {
   onRemoveBookmark: (collectionId: number) => void;
 }
 
-const CollectionHeader: React.SFC<Props> = ({
+const CollectionHeader: React.FC<Props> = ({
   collection,
+  items,
   isAuthenticated,
   isAuthor,
   collectionPlayButton,
@@ -125,6 +127,12 @@ const CollectionHeader: React.SFC<Props> = ({
         </span>
         <span>·</span>
         <span>{moment(createdAt).fromNow()}</span>
+        {items && (
+          <>
+            <span>·</span>
+            <span>{items}개의 아이템</span>
+          </>
+        )}
       </div>
       <article className={styles.description}>{description}</article>
       <div style={{ minHeight: 1 }}>{isAuthor && itemAddForm}</div>

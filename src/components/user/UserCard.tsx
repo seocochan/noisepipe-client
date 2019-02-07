@@ -11,7 +11,7 @@ interface Props {
   user: IUserProfile;
 }
 
-const UserCard: React.SFC<Props> = ({ user: { username, joinedAt } }) => {
+const UserCard: React.FC<Props> = ({ user: { username, joinedAt } }) => {
   return (
     <Card>
       <Card.Meta

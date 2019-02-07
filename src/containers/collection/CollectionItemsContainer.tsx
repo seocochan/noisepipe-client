@@ -17,7 +17,7 @@ import { actions as collectionActions, CollectionState } from 'store/modules/col
 import { actions as itemActions, ItemState } from 'store/modules/item';
 import { actions as playerActions, PlayerState } from 'store/modules/player';
 import { Provider } from 'types';
-import { DEFAULT_ERROR_MESSAGE } from 'values';
+import { DEFAULT_ERROR_MESSAGE, MAX_COLLECTION_ITEMS_SIZE } from 'values';
 
 interface Props extends RouteComponentProps {
   auth: AuthState;
@@ -149,7 +149,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     const { CollectionActions } = this.props;
     try {
       await CollectionActions.createBookmark(collectionId);
-      message.info('북마크를 추가했습니다');
+      message.success('북마크를 추가했습니다');
     } catch (error) {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
@@ -158,7 +158,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     const { CollectionActions } = this.props;
     try {
       await CollectionActions.removeBookmark(collectionId);
-      message.info('북마크를 제거했습니다');
+      message.success('북마크를 제거했습니다');
     } catch (error) {
       message.error(DEFAULT_ERROR_MESSAGE);
     }
@@ -254,6 +254,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         ) : (
           <CollectionHeader
             collection={collection}
+            items={items && items.length}
             isAuthenticated={currentUser ? true : false}
             isAuthor={isAuthor}
             collectionPlayButton={
@@ -273,7 +274,14 @@ class CollectionItemsContainer extends React.Component<Props, State> {
                 }
               />
             }
-            itemAddForm={<ItemAddForm handleAddItem={this.handleAddItem} />}
+            itemAddForm={
+              <ItemAddForm
+                disabled={
+                  items ? items.length >= MAX_COLLECTION_ITEMS_SIZE : true
+                }
+                handleAddItem={this.handleAddItem}
+              />
+            }
             onClickEdit={() => this.setState({ isFormVisible: true })}
             onClickRemove={this.handleRemove}
             onClickShare={this.handleShare}

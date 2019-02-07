@@ -5,14 +5,20 @@ import { Input } from 'antd';
 import Search from 'antd/lib/input/Search';
 import * as qs from 'qs';
 
-import styles from './SearchInput.module.less';
-
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps {
+  className?: string;
+  autoFocus?: boolean;
+  large?: boolean;
+}
 interface State {
   value: string;
 }
 
 class SearchInput extends React.Component<Props, State> {
+  public static defaultProps = {
+    autoFocus: false,
+    large: false
+  };
   public readonly state: State = {
     value: ''
   };
@@ -62,17 +68,19 @@ class SearchInput extends React.Component<Props, State> {
   };
 
   public render(): React.ReactNode {
+    const { className, autoFocus, large } = this.props;
     const { value } = this.state;
 
     return (
       <Input.Search
-        className={styles.search}
+        className={className}
         placeholder="검색"
         value={value}
         onChange={e => this.setState({ value: e.currentTarget.value })}
         onSearch={this.handleSearch}
-        style={{ margin: '10px 12px' }}
         ref={search => (this.ref = search)}
+        autoFocus={autoFocus}
+        size={large ? 'large' : 'default'}
       />
     );
   }

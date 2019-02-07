@@ -20,7 +20,7 @@ interface Props {
   cueSection: React.ReactNode;
 }
 
-const ItemViewer: React.SFC<Props> = ({ item, playerRef, cueSection }) => {
+const ItemViewer: React.FC<Props> = ({ item, playerRef, cueSection }) => {
   return (
     <div>
       <div className={styles.contentHeader}>

@@ -1,4 +1,4 @@
-import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IPagedResponse } from 'payloads';
+import { ICollectionRequest, ICollectionResponse, ICollectionSummary, IItemResponse, IPagedResponse } from 'payloads';
 import request from 'utils/api';
 
 export const loadCollection = (collectionId: number) => {
@@ -37,10 +37,9 @@ export const removeCollection = (collectionId: number) => {
   });
 };
 
-// FIXME: remove pagination
-export const loadItems = (collectionId: number, page = 0, size = 100) => {
-  return request({
-    url: `/collections/${collectionId}/items?page=${page}&size=${size}`,
+export const loadItems = (collectionId: number) => {
+  return request<IItemResponse[]>({
+    url: `/collections/${collectionId}/items`,
     method: 'get'
   });
 };
@@ -50,6 +49,13 @@ export const updateItemPosition = (itemId: number, position: number) => {
     url: `/items/${itemId}/position`,
     method: 'put',
     data: position
+  });
+};
+
+export const resetItemsPosition = (collectionId: number) => {
+  return request<void>({
+    url: `/collections/${collectionId}/items/position`,
+    method: 'put'
   });
 };
 
@@ -96,6 +102,20 @@ export const getCollectionsBookmarkedByUser = (
 export const searchCollections = (q: string, page: number, size: number) => {
   return request<IPagedResponse<ICollectionSummary>>({
     url: `/collections?q=${q}&page=${page}&size=${size}`,
+    method: 'get'
+  });
+};
+
+export const getRecentlyCreatedCollections = () => {
+  return request<ICollectionSummary[]>({
+    url: '/collections/recentlyCreated',
+    method: 'get'
+  });
+};
+
+export const getRecentlyUpdatedCollections = () => {
+  return request<ICollectionSummary[]>({
+    url: '/collections/recentlyUpdated',
     method: 'get'
   });
 };

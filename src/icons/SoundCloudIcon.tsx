@@ -4,7 +4,7 @@ interface Props {
   style?: React.CSSProperties;
 }
 
-const SoundCloudIcon: React.SFC<Props> = ({ style }) => {
+const SoundCloudIcon: React.FC<Props> = ({ style }) => {
   return (
     <i className="anticon" style={{ ...style }}>
       <svg

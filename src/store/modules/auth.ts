@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import produce from 'immer';
-import { ISignupReqeust, IUserSummary } from 'payloads';
+import { IPasswordUpdateRequest, ISignupReqeust, IUserSummary } from 'payloads';
 import { ThunkResult } from 'store';
 import { action as createAction, ActionType } from 'typesafe-actions';
 import * as AuthAPI from 'utils/api/auth';
@@ -36,7 +36,16 @@ export const actions = {
       throw error;
     }
   },
-  logout: () => createAction(LOGOUT)
+  logout: () => createAction(LOGOUT),
+  updatePassword: (
+    data: IPasswordUpdateRequest
+  ): ThunkResult<Promise<void>> => async () => {
+    try {
+      await AuthAPI.updatePassword(data);
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 export type AuthAction = ActionType<typeof actions>;
 

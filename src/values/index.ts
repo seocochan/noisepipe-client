@@ -5,6 +5,8 @@ export const DEFAULT_PAGE_NUMBER = 0;
 export const DEFAULT_PAGE_SIZE = 12;
 export const ITEM_POSITION_UNIT = 2 ** 16;
 export const MAX_ITEMS_PER_COLLECTION = 100;
+export const MAX_ITEM_POSITION_VALUE = Number.MAX_VALUE - ITEM_POSITION_UNIT;
+export const MIN_ITEM_POSITION_INTERVAL = 1e-10;
 
 // constraints
 export const MAX_COLLECTION_TITLE_LENGTH = 40;

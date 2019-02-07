@@ -138,18 +138,20 @@ class CommentListItem extends React.Component<Props, State> {
                     type={showReplies ? 'up' : 'down'}
                   />
                 </span>,
-                <span
-                  key="add"
-                  onClick={() =>
-                    this.setState({ showReplyForm: !showReplyForm })
-                  }
-                >
-                  답글 달기
-                  <Icon
-                    className={styles.icon}
-                    type={showReplyForm ? 'rollback' : 'enter'}
-                  />
-                </span>
+                currentUser && (
+                  <span
+                    key="add"
+                    onClick={() =>
+                      this.setState({ showReplyForm: !showReplyForm })
+                    }
+                  >
+                    답글 달기
+                    <Icon
+                      className={styles.icon}
+                      type={showReplyForm ? 'rollback' : 'enter'}
+                    />
+                  </span>
+                )
               ]
             : undefined
         }

@@ -6,6 +6,10 @@ import { Provider } from 'types';
 import * as ItemAPI from 'utils/api/item';
 import { MAX_COLLECTION_ITEMS_SIZE } from 'values';
 
+const MATCH_HTTP_PREFIX = /^((https?):\/\/)/;
+const MATCH_URL_YT = /((https?):\/\/)?(?:youtu\.be\/|www\.youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/;
+const MATCH_URL_SC = /((https?):\/\/)?(soundcloud\.com|snd\.sc)\/.+$/;
+
 interface Props {
   handleAddItem: (
     title: string,
@@ -31,9 +35,6 @@ class ItemAddForm extends React.Component<Props, State> {
   };
 
   private validate = (value: string) => {
-    const MATCH_URL_YT = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})/;
-    const MATCH_URL_SC = /(soundcloud\.com|snd\.sc)\/.+$/;
-
     if (MATCH_URL_YT.test(value)) {
       return Provider.Youtube;
     } else if (MATCH_URL_SC.test(value)) {
@@ -41,6 +42,15 @@ class ItemAddForm extends React.Component<Props, State> {
     } else {
       return;
     }
+  };
+  private handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const value = e.clipboardData.getData('Text');
+    const result = value.match(new RegExp(`${MATCH_URL_YT.source}|${MATCH_URL_SC.source}`));
+    if (!result) {
+      return
+    }
+    e.preventDefault();
+    this.setState({ value: result[0] });
   };
   private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ value: e.currentTarget.value });
@@ -58,7 +68,7 @@ class ItemAddForm extends React.Component<Props, State> {
     }
     this.setState({ validateStatus: 'validating', errorMsg: '' });
     try {
-      const res = await ItemAPI.getMediaData(value, validProvider);
+      const res = await ItemAPI.getMediaData(MATCH_HTTP_PREFIX.test(value) ? value : `https://${value}`, validProvider);
       const { url, title } = res.data;
       handleAddItem(title, url, validProvider);
       this.setState({ value: '', validateStatus: undefined, errorMsg: '' });
@@ -88,6 +98,7 @@ class ItemAddForm extends React.Component<Props, State> {
             placeholder="미디어 URL"
             value={value}
             onChange={this.handleChange}
+            onPaste={this.handlePaste}
             style={{ width: 200 }}
           />
         </Form.Item>

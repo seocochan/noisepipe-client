@@ -7,6 +7,7 @@ import { MAX_ITEM_DESCRIPTION_LENGTH, MAX_ITEM_TAGS_SIZE, MAX_ITEM_TITLE_LENGTH 
 
 interface Props extends FormComponentProps {
   item: IItemResponse;
+  items: IItemResponse[];
   handleSubmit: (itemId: number, data: IItemPutRequest) => void;
 }
 
@@ -23,8 +24,9 @@ interface Props extends FormComponentProps {
 
 const ItemEditorForm: React.FC<Props> = ({
   item,
+  items,
   handleSubmit: submit,
-  form: { getFieldDecorator, validateFields }
+  form: { getFieldDecorator, validateFields },
 }) => {
   const handleSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault();
@@ -35,6 +37,10 @@ const ItemEditorForm: React.FC<Props> = ({
     });
   };
 
+  const currentTags = new Set(item.tags);
+  const othersTags = new Set(items.reduce((prev, i) => [...prev, ...i.tags], []));
+  const suggestionTags = new Set([...othersTags].filter((otherTag) => !currentTags.has(otherTag)));
+
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Item>
@@ -44,19 +50,15 @@ const ItemEditorForm: React.FC<Props> = ({
             {
               message: '제목을 입력하세요',
               required: true,
-              whitespace: true
+              whitespace: true,
             },
             {
               max: MAX_ITEM_TITLE_LENGTH,
-              message: `${MAX_ITEM_TITLE_LENGTH}자 이하로 작성해주세요`
-            }
-          ]
+              message: `${MAX_ITEM_TITLE_LENGTH}자 이하로 작성해주세요`,
+            },
+          ],
         })(
-          <Input
-            prefix={<Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="제목"
-            size="large"
-          />
+          <Input prefix={<Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="제목" size="large" />,
         )}
       </Form.Item>
       <Form.Item>
@@ -65,13 +67,13 @@ const ItemEditorForm: React.FC<Props> = ({
           rules: [
             {
               message: '설명을 입력하세요',
-              whitespace: true
+              whitespace: true,
             },
             {
               max: MAX_ITEM_DESCRIPTION_LENGTH,
-              message: `${MAX_ITEM_DESCRIPTION_LENGTH}자 이하로 작성해주세요`
-            }
-          ]
+              message: `${MAX_ITEM_DESCRIPTION_LENGTH}자 이하로 작성해주세요`,
+            },
+          ],
         })(<Input.TextArea placeholder="설명" autosize={{ minRows: 4 }} />)}
       </Form.Item>
       <Form.Item>
@@ -81,16 +83,17 @@ const ItemEditorForm: React.FC<Props> = ({
             {
               message: `${MAX_ITEM_TAGS_SIZE}개 이하의 태그를 추가해주세요`,
               type: 'array',
-              max: MAX_ITEM_TAGS_SIZE
-            }
-          ]
+              max: MAX_ITEM_TAGS_SIZE,
+            },
+          ],
         })(
-          <Select
-            mode="tags"
-            placeholder="태그를 추가하세요"
-            maxTagCount={MAX_ITEM_TAGS_SIZE}
-            tokenSeparators={[',']}
-          />
+          <Select mode="tags" placeholder="태그를 추가하세요" maxTagCount={MAX_ITEM_TAGS_SIZE} tokenSeparators={[',']}>
+            {[...suggestionTags].map((tag, i) => (
+              <Select.Option key={i.toString()} value={tag}>
+                {tag}
+              </Select.Option>
+            ))}
+          </Select>,
         )}
       </Form.Item>
       <Form.Item>

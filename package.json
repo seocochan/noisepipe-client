@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^3.13.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "immer": "^1.7.4",
     "moment": "^2.22.2",
     "qs": "^6.6.0",

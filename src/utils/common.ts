@@ -3,11 +3,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import { IItemResponse } from 'payloads';
 import { ITEM_POSITION_UNIT, MAX_ITEM_POSITION_VALUE, MIN_ITEM_POSITION_INTERVAL } from 'values';
 
-export const updatePosition = (
-  items: IItemResponse[],
-  oldIndex: number,
-  newIndex: number
-) => {
+export const updatePosition = (items: IItemResponse[], oldIndex: number, newIndex: number) => {
   let newPosition: number;
   if (newIndex === 0) {
     newPosition = items[newIndex].position / 2;
@@ -24,18 +20,14 @@ export const updatePosition = (
   const newItem = { ...oldItem, position: newPosition };
   const newItems = arrayMove(items, oldIndex, newIndex);
   newItems[newIndex] = newItem;
-  const needReset =
-    interval <= MIN_ITEM_POSITION_INTERVAL ||
-    newPosition >= MAX_ITEM_POSITION_VALUE;
+  const needReset = interval <= MIN_ITEM_POSITION_INTERVAL || newPosition >= MAX_ITEM_POSITION_VALUE;
 
   return { newItems, newPosition, needReset };
 };
 
 export const getNewPosition = (items: IItemResponse[]) => {
   const { length } = items;
-  return length === 0
-    ? ITEM_POSITION_UNIT - 1
-    : items[length - 1].position + ITEM_POSITION_UNIT;
+  return length === 0 ? ITEM_POSITION_UNIT - 1 : items[length - 1].position + ITEM_POSITION_UNIT;
 };
 
 export const secondsToString = (value: number) => {

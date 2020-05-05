@@ -6,7 +6,7 @@ import {
   ICommentRequest,
   ICommentResponse,
   IItemPutRequest,
-  IItemResponse
+  IItemResponse,
 } from 'payloads';
 import { ThunkResult } from 'store';
 import { Provider } from 'types';
@@ -50,9 +50,7 @@ const FILTER_ITEMS = 'collection/FILTER_ITEMS';
 // action creators
 export const actions = {
   initialize: () => createAction(INITIALIZE),
-  loadCollection: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  loadCollection: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     dispatch(actions.loadCollectionPending());
     try {
       const res = await CollectionAPI.loadCollection(collectionId);
@@ -63,37 +61,26 @@ export const actions = {
     }
   },
   loadCollectionPending: () => createAction(LOAD_COLLECTION_PENDING),
-  loadCollectionSuccess: (collection: ICollectionResponse) =>
-    createAction(LOAD_COLLECTION_SUCCESS, collection),
-  loadColelctionFailure: (error: AxiosError) =>
-    createAction(LOAD_COLLECTION_FAILURE, error),
-  createCollection: (
-    username: string,
-    collection: ICollectionRequest
-  ): ThunkResult<Promise<void>> => async () => {
+  loadCollectionSuccess: (collection: ICollectionResponse) => createAction(LOAD_COLLECTION_SUCCESS, collection),
+  loadColelctionFailure: (error: AxiosError) => createAction(LOAD_COLLECTION_FAILURE, error),
+  createCollection: (username: string, collection: ICollectionRequest): ThunkResult<Promise<void>> => async () => {
     try {
       await CollectionAPI.createCollection(username, collection);
     } catch (error) {
       throw error;
     }
   },
-  updateCollection: (
-    collectionId: number,
-    collection: ICollectionRequest
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateCollection: (collectionId: number, collection: ICollectionRequest): ThunkResult<Promise<void>> => async (
+    dispatch,
+  ) => {
     try {
-      const res = await CollectionAPI.updateCollection(
-        collectionId,
-        collection
-      );
+      const res = await CollectionAPI.updateCollection(collectionId, collection);
       dispatch(actions.loadCollectionSuccess(res.data));
     } catch (error) {
       throw error;
     }
   },
-  removeCollection: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  removeCollection: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CollectionAPI.removeCollection(collectionId);
       dispatch(actions.initialize());
@@ -101,11 +88,8 @@ export const actions = {
       throw error;
     }
   },
-  updateCollectionSuccess: (collection: ICollectionResponse) =>
-    createAction(UPDATE_COLLECTION_SUCCESS, { collection }),
-  loadItems: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateCollectionSuccess: (collection: ICollectionResponse) => createAction(UPDATE_COLLECTION_SUCCESS, { collection }),
+  loadItems: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     dispatch(actions.loadItemsPending());
     try {
       const res = await CollectionAPI.loadItems(collectionId);
@@ -116,22 +100,13 @@ export const actions = {
     }
   },
   loadItemsPending: () => createAction(LOAD_ITEMS_PENDING),
-  loadItemsSuccess: (items: IItemResponse[]) =>
-    createAction(LOAD_ITEMS_SUCCESS, items),
-  loadItemsFailure: (error: AxiosError) =>
-    createAction(LOAD_ITEMS_FAILURE, error),
-  updateItemPostion: (
-    oldIndex: number,
-    newIndex: number
-  ): ThunkResult<Promise<void>> => async (dispatch, getState) => {
+  loadItemsSuccess: (items: IItemResponse[]) => createAction(LOAD_ITEMS_SUCCESS, items),
+  loadItemsFailure: (error: AxiosError) => createAction(LOAD_ITEMS_FAILURE, error),
+  updateItemPostion: (oldIndex: number, newIndex: number): ThunkResult<Promise<void>> => async (dispatch, getState) => {
     dispatch(actions.updateItemPostionPending());
     try {
       const items = getState().collection.items as IItemResponse[];
-      const { newItems, newPosition, needReset } = Utils.updatePosition(
-        items,
-        oldIndex,
-        newIndex
-      );
+      const { newItems, newPosition, needReset } = Utils.updatePosition(items, oldIndex, newIndex);
       dispatch(actions.updateItemPostionSuccess(newItems));
       await CollectionAPI.updateItemPosition(items[oldIndex].id, newPosition);
 
@@ -145,13 +120,9 @@ export const actions = {
     }
   },
   updateItemPostionPending: () => createAction(UPDATE_ITEM_POSITION_PENDING),
-  updateItemPostionSuccess: (items: IItemResponse[]) =>
-    createAction(UPDATE_ITEM_POSITION_SUCCESS, items),
-  updateItemPostionFailure: (error: AxiosError) =>
-    createAction(UPDATE_ITEM_POSITION_FAILURE, error),
-  resetItemsPosition: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateItemPostionSuccess: (items: IItemResponse[]) => createAction(UPDATE_ITEM_POSITION_SUCCESS, items),
+  updateItemPostionFailure: (error: AxiosError) => createAction(UPDATE_ITEM_POSITION_FAILURE, error),
+  resetItemsPosition: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       dispatch(actions.resetItemsPositionSuccess());
       CollectionAPI.resetItemsPosition(collectionId);
@@ -160,13 +131,12 @@ export const actions = {
     }
   },
   resetItemsPositionSuccess: () => createAction(RESET_ITEMS_POSITION_SUCCESS),
-  updateItem: (itemId: number, data: IItemPutRequest) =>
-    createAction(UPDATE_ITEM, { itemId, data }),
+  updateItem: (itemId: number, data: IItemPutRequest) => createAction(UPDATE_ITEM, { itemId, data }),
   addItem: (
     collectionId: number,
     title: string,
     sourceUrl: string,
-    sourceProvider: Provider
+    sourceProvider: Provider,
   ): ThunkResult<Promise<void>> => async (dispatch, getState) => {
     const items = getState().collection.items as IItemResponse[];
     const position = Utils.getNewPosition(items);
@@ -175,7 +145,7 @@ export const actions = {
         title,
         sourceUrl,
         sourceProvider,
-        position
+        position,
       });
       await dispatch(actions.addItemSuccess(res.data));
 
@@ -186,12 +156,9 @@ export const actions = {
       throw error;
     }
   },
-  addItemSuccess: (item: IItemResponse) =>
-    createAction(ADD_ITEM_SUCCESS, { item }),
+  addItemSuccess: (item: IItemResponse) => createAction(ADD_ITEM_SUCCESS, { item }),
   removeItem: (itemId: number) => createAction(REMOVE_ITEM, { itemId }),
-  createBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  createBookmark: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CollectionAPI.createBookmark(collectionId);
       await dispatch(actions.createBookmarkSuccess());
@@ -200,9 +167,7 @@ export const actions = {
     }
   },
   createBookmarkSuccess: () => createAction(CREATE_BOOKMARK_SUCCESS),
-  removeBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  removeBookmark: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CollectionAPI.removeBookmark(collectionId);
       await dispatch(actions.removeBookmarkSuccess());
@@ -211,9 +176,7 @@ export const actions = {
     }
   },
   removeBookmarkSuccess: () => createAction(REMOVE_BOOKMARK_SUCCESS),
-  loadComments: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  loadComments: (collectionId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CommentAPI.getCommentsByCollection(collectionId);
       await dispatch(actions.loadCommentsSuccess(res.data));
@@ -221,12 +184,8 @@ export const actions = {
       throw error;
     }
   },
-  loadCommentsSuccess: (comments: ICommentResponse[]) =>
-    createAction(LOAD_COMMENTS_SUCCESS, { comments }),
-  loadReplies: (
-    collectionId: number,
-    commentId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  loadCommentsSuccess: (comments: ICommentResponse[]) => createAction(LOAD_COMMENTS_SUCCESS, { comments }),
+  loadReplies: (collectionId: number, commentId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CommentAPI.getCommentReplies(collectionId, commentId);
       await dispatch(actions.loadRepliesSuccess(commentId, res.data));
@@ -236,10 +195,9 @@ export const actions = {
   },
   loadRepliesSuccess: (replyTo: number, replies: ICommentResponse[]) =>
     createAction(LOAD_REPLIES_SUCCESS, { replies }, { replyTo }),
-  createCommentOrReply: (
-    collectionId: number,
-    data: ICommentRequest
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  createCommentOrReply: (collectionId: number, data: ICommentRequest): ThunkResult<Promise<void>> => async (
+    dispatch,
+  ) => {
     try {
       const res = await CommentAPI.createComment(collectionId, data);
       data.replyTo
@@ -249,14 +207,9 @@ export const actions = {
       throw error;
     }
   },
-  createComment: (comment: ICommentResponse) =>
-    createAction(CREATE_COMMENT, { comment }),
-  createReply: (reply: ICommentResponse, replyTo: number) =>
-    createAction(CREATE_REPLY, { reply }, { replyTo }),
-  updateCommentOrReply: (
-    commentId: number,
-    data: ICommentRequest
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  createComment: (comment: ICommentResponse) => createAction(CREATE_COMMENT, { comment }),
+  createReply: (reply: ICommentResponse, replyTo: number) => createAction(CREATE_REPLY, { reply }, { replyTo }),
+  updateCommentOrReply: (commentId: number, data: ICommentRequest): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CommentAPI.updateCommentById(commentId, data);
       data.replyTo
@@ -266,14 +219,9 @@ export const actions = {
       throw error;
     }
   },
-  updateComment: (comment: ICommentResponse) =>
-    createAction(UPDATE_COMMENT, { comment }),
-  updateReply: (reply: ICommentResponse, replyTo: number) =>
-    createAction(UPDATE_REPLY, { reply }, { replyTo }),
-  removeCommentOrReply: (
-    commentId: number,
-    replyTo?: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateComment: (comment: ICommentResponse) => createAction(UPDATE_COMMENT, { comment }),
+  updateReply: (reply: ICommentResponse, replyTo: number) => createAction(UPDATE_REPLY, { reply }, { replyTo }),
+  removeCommentOrReply: (commentId: number, replyTo?: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CommentAPI.removeCommentById(commentId);
       replyTo
@@ -283,13 +231,10 @@ export const actions = {
       throw error;
     }
   },
-  removeComment: (commentId: number) =>
-    createAction(REMOVE_COMMENT, { commentId }),
-  removeReply: (replyId: number, replyTo: number) =>
-    createAction(REMOVE_REPLY, { replyId }, { replyTo }),
-  toggleFilterActive: (active: boolean) =>
-    createAction(TOGGLE_FILTER_ACTIVE, { active }),
-  filterItems: (value: string) => createAction(FILTER_ITEMS, { value })
+  removeComment: (commentId: number) => createAction(REMOVE_COMMENT, { commentId }),
+  removeReply: (replyId: number, replyTo: number) => createAction(REMOVE_REPLY, { replyId }, { replyTo }),
+  toggleFilterActive: (active: boolean) => createAction(TOGGLE_FILTER_ACTIVE, { active }),
+  filterItems: (value: string) => createAction(FILTER_ITEMS, { value }),
 };
 export type CollectionAction = ActionType<typeof actions>;
 
@@ -308,7 +253,7 @@ const initialState: CollectionState = {
   filteredItems: [],
   isFilterActive: false,
   comments: null,
-  replies: new Map()
+  replies: new Map(),
 };
 
 // reducer
@@ -371,9 +316,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!draft.items) {
         return;
       }
-      const index = draft.items.findIndex(
-        item => item.id === action.payload.itemId
-      );
+      const index = draft.items.findIndex((item) => item.id === action.payload.itemId);
       if (index === -1) {
         return;
       }
@@ -394,9 +337,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!draft.items) {
         return;
       }
-      const index = draft.items.findIndex(
-        item => item.id === action.payload.itemId
-      );
+      const index = draft.items.findIndex((item) => item.id === action.payload.itemId);
       if (index === -1) {
         return;
       }
@@ -442,9 +383,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!draft.comments || !draft.collection) {
         return;
       }
-      const parentIndex = draft.comments.findIndex(
-        comment => comment.id === replyTo
-      );
+      const parentIndex = draft.comments.findIndex((comment) => comment.id === replyTo);
       draft.comments[parentIndex].replies++;
       draft.collection.comments++;
 
@@ -463,9 +402,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!draft.comments) {
         return;
       }
-      const index = draft.comments.findIndex(
-        comment => comment.id === updatedComment.id
-      );
+      const index = draft.comments.findIndex((comment) => comment.id === updatedComment.id);
       if (index === -1) {
         return;
       }
@@ -480,7 +417,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!replyList) {
         return;
       }
-      const index = replyList.findIndex(reply => reply.id === updatedReply.id);
+      const index = replyList.findIndex((reply) => reply.id === updatedReply.id);
       if (index === -1) {
         return;
       }
@@ -494,9 +431,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!draft.comments || !draft.collection) {
         return;
       }
-      const index = draft.comments.findIndex(
-        comment => comment.id === commentId
-      );
+      const index = draft.comments.findIndex((comment) => comment.id === commentId);
       if (index === -1) {
         return;
       }
@@ -510,9 +445,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!draft.comments || !draft.collection) {
         return;
       }
-      const parentIndex = draft.comments.findIndex(
-        comment => comment.id === replyTo
-      );
+      const parentIndex = draft.comments.findIndex((comment) => comment.id === replyTo);
       draft.comments[parentIndex].replies--;
       draft.collection.comments--;
 
@@ -521,7 +454,7 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
       if (!replyList) {
         return;
       }
-      const index = replyList.findIndex(reply => reply.id === replyId);
+      const index = replyList.findIndex((reply) => reply.id === replyId);
       if (index === -1) {
         return;
       }
@@ -540,9 +473,8 @@ export default produce<CollectionState, CollectionAction>((draft, action) => {
 
       draft.filteredItems = draft.items
         ? draft.items.filter(
-            item =>
-              item.title.toLowerCase().includes(value) ||
-              item.tags.find(tag => tag.toLowerCase().includes(value))
+            (item) =>
+              item.title.toLowerCase().includes(value) || item.tags.find((tag) => tag.toLowerCase().includes(value)),
           )
         : [];
       return;

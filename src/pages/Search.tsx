@@ -9,14 +9,11 @@ import styles from './Search.module.less';
 
 interface Props extends RouteComponentProps {}
 
-const Search: React.FC<Props> = ({
-  location: { pathname, search },
-  history
-}) => {
+const Search: React.FC<Props> = ({ location: { pathname, search }, history }) => {
   const routes = {
     collections: '/search/collections',
     items: '/search/items',
-    users: '/search/users'
+    users: '/search/users',
   };
 
   let q = '';
@@ -34,15 +31,11 @@ const Search: React.FC<Props> = ({
       <Tabs
         activeKey={pathname}
         size="large"
-        onChange={activeKey => history.push(`${activeKey}${search}`)}
+        onChange={(activeKey) => history.push(`${activeKey}${search}`)}
         animated={false}
       >
         <Tabs.TabPane tab="컬렉션" key={routes.collections}>
-          <CollectionsContainer
-            currentTab={pathname}
-            tabName={routes.collections}
-            q={q}
-          />
+          <CollectionsContainer currentTab={pathname} tabName={routes.collections} q={q} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="아이템" key={routes.items}>
           <ItemsContainer currentTab={pathname} tabName={routes.items} q={q} />

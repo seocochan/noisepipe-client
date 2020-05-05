@@ -10,7 +10,7 @@ import { Provider } from 'types';
 
 const DEFAULT_MEDIA_URL = {
   [Provider.Youtube]: process.env.REACT_APP_DEFAULT_YT_MEDIA_URL,
-  [Provider.Soundcloud]: process.env.REACT_APP_DEFAULT_SC_MEDIA_URL
+  [Provider.Soundcloud]: process.env.REACT_APP_DEFAULT_SC_MEDIA_URL,
 };
 
 interface Props {
@@ -81,12 +81,11 @@ class PlayerContainer extends React.Component<Props, {}> {
         ref={this.ref}
         playing={status.playing}
         onReady={this.handleReady}
-        onDuration={duration => PlayerActions.setDuration(target, duration)}
+        onDuration={(duration) => PlayerActions.setDuration(target, duration)}
         onPlay={() => PlayerActions.play(target)}
         onPause={() => PlayerActions.pause(target)}
         onProgress={({ played, playedSeconds }) =>
-          status.playing &&
-          PlayerActions.updateProgress(target, played, playedSeconds)
+          status.playing && PlayerActions.updateProgress(target, played, playedSeconds)
         }
         onEnded={() => PlayerActions.playNextOrPrev(target)}
         config={{
@@ -96,16 +95,16 @@ class PlayerContainer extends React.Component<Props, {}> {
               autoplay: 1,
               iv_load_policy: 3,
               rel: 0,
-              showinfo: 0
-            }
+              showinfo: 0,
+            },
           },
           soundcloud: {
             options: {
               single_active: false,
               hide_related: true,
-              auto_play: true
-            }
-          }
+              auto_play: true,
+            },
+          },
         }}
         width="calc(100vw - 20px)" // assume scroll bar width is 20px
         height="100%"
@@ -113,7 +112,7 @@ class PlayerContainer extends React.Component<Props, {}> {
           display: visible ? 'block' : 'none',
           position: 'absolute',
           top: 0,
-          left: '5px'
+          left: '5px',
         }}
       />
     );
@@ -122,13 +121,10 @@ class PlayerContainer extends React.Component<Props, {}> {
 
 const mapStateToProps = ({ player, collection }: RootState) => ({
   player,
-  collection
+  collection,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  PlayerActions: bindActionCreators(playerActions, dispatch)
+  PlayerActions: bindActionCreators(playerActions, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PlayerContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerContainer);

@@ -23,13 +23,11 @@ export const actions = {
     q: string,
     page = DEFAULT_PAGE_NUMBER,
     size = DEFAULT_PAGE_SIZE,
-    loadMore = false
-  ): ThunkResult<Promise<void>> => async dispatch => {
+    loadMore = false,
+  ): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CollectionAPI.searchCollections(q, page, size);
-      loadMore
-        ? dispatch(actions.loadMoreCollections(res.data))
-        : dispatch(actions.loadCollectionsSuccess(res.data));
+      loadMore ? dispatch(actions.loadMoreCollections(res.data)) : dispatch(actions.loadCollectionsSuccess(res.data));
     } catch (error) {
       throw error;
     }
@@ -42,58 +40,46 @@ export const actions = {
     q: string,
     page = DEFAULT_PAGE_NUMBER,
     size = DEFAULT_PAGE_SIZE,
-    loadMore = false
-  ): ThunkResult<Promise<void>> => async dispatch => {
+    loadMore = false,
+  ): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await ItemAPI.searchItems(q, page, size);
-      loadMore
-        ? dispatch(actions.loadMoreItems(res.data))
-        : dispatch(actions.loadItemsSuccess(res.data));
+      loadMore ? dispatch(actions.loadMoreItems(res.data)) : dispatch(actions.loadItemsSuccess(res.data));
     } catch (error) {
       throw error;
     }
   },
-  loadItemsSuccess: (items: IPagedResponse<IItemSummary>) =>
-    createAction(LOAD_ITEMS_SUCCESS, { items }),
-  loadMoreItems: (items: IPagedResponse<IItemSummary>) =>
-    createAction(LOAD_MORE_ITEMS, { items }),
+  loadItemsSuccess: (items: IPagedResponse<IItemSummary>) => createAction(LOAD_ITEMS_SUCCESS, { items }),
+  loadMoreItems: (items: IPagedResponse<IItemSummary>) => createAction(LOAD_MORE_ITEMS, { items }),
   loadUsers: (
     q: string,
     page = DEFAULT_PAGE_NUMBER,
     size = DEFAULT_PAGE_SIZE,
-    loadMore = false
-  ): ThunkResult<Promise<void>> => async dispatch => {
+    loadMore = false,
+  ): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await UserAPI.searchUsers(q, page, size);
-      loadMore
-        ? dispatch(actions.loadMoreUsers(res.data))
-        : dispatch(actions.loadUsersSuccess(res.data));
+      loadMore ? dispatch(actions.loadMoreUsers(res.data)) : dispatch(actions.loadUsersSuccess(res.data));
     } catch (error) {
       throw error;
     }
   },
-  loadUsersSuccess: (users: IPagedResponse<IUserProfile>) =>
-    createAction(LOAD_USERS_SUCCESS, { users }),
-  loadMoreUsers: (users: IPagedResponse<IUserProfile>) =>
-    createAction(LOAD_MORE_USERS, { users }),
-  createBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async () => {
+  loadUsersSuccess: (users: IPagedResponse<IUserProfile>) => createAction(LOAD_USERS_SUCCESS, { users }),
+  loadMoreUsers: (users: IPagedResponse<IUserProfile>) => createAction(LOAD_MORE_USERS, { users }),
+  createBookmark: (collectionId: number): ThunkResult<Promise<void>> => async () => {
     try {
       await CollectionAPI.createBookmark(collectionId);
     } catch (error) {
       throw error;
     }
   },
-  removeBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async () => {
+  removeBookmark: (collectionId: number): ThunkResult<Promise<void>> => async () => {
     try {
       await CollectionAPI.removeBookmark(collectionId);
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
 export type SearchAction = ActionType<typeof actions>;
 
@@ -106,7 +92,7 @@ export interface SearchState {
 const initialState: SearchState = {
   collections: null,
   items: null,
-  users: null
+  users: null,
 };
 
 // reducer

@@ -5,14 +5,14 @@ export const createCue = (itemId: number, data: ICueRequest) => {
   return request<ICueResponse>({
     url: `/items/${itemId}/cues`,
     method: 'post',
-    data
+    data,
   });
 };
 
 export const getCuesByItem = (itemId: number) => {
   return request<ICueResponse[]>({
     url: `/items/${itemId}/cues`,
-    method: 'get'
+    method: 'get',
   });
 };
 
@@ -20,13 +20,13 @@ export const updateCueById = (cueId: number, data: ICueRequest) => {
   return request<ICueResponse>({
     url: `/cues/${cueId}`,
     method: 'put',
-    data
+    data,
   });
 };
 
 export const removeCueById = (cueId: number) => {
   return request<void>({
     url: `/cues/${cueId}`,
-    method: 'delete'
+    method: 'delete',
   });
 };

@@ -20,7 +20,7 @@ class SeekBar extends React.Component<Props, State> {
   private slider: Slider;
   public readonly state: State = {
     dragging: false,
-    value: 0
+    value: 0,
   };
 
   public componentDidUpdate(prevProps: Props) {

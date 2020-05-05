@@ -35,7 +35,7 @@ interface State {
 
 class CollectionItemsContainer extends React.Component<Props, State> {
   public readonly state: State = {
-    isFormVisible: false
+    isFormVisible: false,
   };
 
   public async componentDidMount() {
@@ -66,7 +66,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     const {
       CollectionActions,
       collection: { collection },
-      history
+      history,
     } = this.props;
     if (!collection) {
       return;
@@ -80,11 +80,9 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   };
   private handleShare = (title: string, id: number) => {
     window.open(
-      `https://twitter.com/intent/tweet?text=${title}&url=${
-        process.env.REACT_APP_BASE_URL
-      }/collections/${id}`,
+      `https://twitter.com/intent/tweet?text=${title}&url=${process.env.REACT_APP_BASE_URL}/collections/${id}`,
       '_blank',
-      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no'
+      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no',
     );
   };
   private handleSortEnd: SortEndHandler = async ({ oldIndex, newIndex }) => {
@@ -103,11 +101,9 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     const {
       ItemActions,
       item: { item },
-      collection
+      collection,
     } = this.props;
-    const selectedItem =
-      collection.items &&
-      collection.items.find(collectionItem => collectionItem.id === itemId);
+    const selectedItem = collection.items && collection.items.find((collectionItem) => collectionItem.id === itemId);
 
     if (item && selectedItem && item.id !== selectedItem.id) {
       ItemActions.clear();
@@ -115,14 +111,10 @@ class CollectionItemsContainer extends React.Component<Props, State> {
     ItemActions.showPanel();
     ItemActions.setItem(selectedItem || null);
   };
-  private handleAddItem = (
-    title: string,
-    sourceUrl: string,
-    sourceProvider: Provider
-  ) => {
+  private handleAddItem = (title: string, sourceUrl: string, sourceProvider: Provider) => {
     const {
       CollectionActions,
-      collection: { collection }
+      collection: { collection },
     } = this.props;
     if (!collection) {
       return;
@@ -166,7 +158,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   private handleLoadReplies = (commentId: number) => {
     const {
       CollectionActions,
-      collection: { collection }
+      collection: { collection },
     } = this.props;
     if (!collection) {
       return;
@@ -176,7 +168,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   private handleCreateComment = async (data: ICommentRequest) => {
     const {
       CollectionActions,
-      collection: { collection }
+      collection: { collection },
     } = this.props;
     if (!collection) {
       return;
@@ -187,10 +179,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
       throw error;
     }
   };
-  private handleUpdateComment = async (
-    commentId: number,
-    data: ICommentRequest
-  ) => {
+  private handleUpdateComment = async (commentId: number, data: ICommentRequest) => {
     const { CollectionActions } = this.props;
     try {
       await CollectionActions.updateCommentOrReply(commentId, data);
@@ -210,30 +199,21 @@ class CollectionItemsContainer extends React.Component<Props, State> {
   public render(): React.ReactNode {
     const {
       auth: { currentUser },
-      collection: {
-        collection,
-        items,
-        filteredItems,
-        comments,
-        replies,
-        isFilterActive
-      },
+      collection: { collection, items, filteredItems, comments, replies, isFilterActive },
       CollectionActions,
       player: { currentTarget },
       player,
-      PlayerActions
+      PlayerActions,
     } = this.props;
     const { isFormVisible } = this.state;
     const playerItem =
       currentTarget && player[currentTarget].item
         ? {
             id: player[currentTarget].item!.id,
-            playing: player[currentTarget].status.playing
+            playing: player[currentTarget].status.playing,
           }
         : undefined;
-    const isAuthor = currentUser
-      ? currentUser.id === (collection && collection.createdBy.id)
-      : false;
+    const isAuthor = currentUser ? currentUser.id === (collection && collection.createdBy.id) : false;
 
     return (
       <>
@@ -244,7 +224,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
                 ? {
                     title: collection.title,
                     description: collection.description,
-                    tags: collection.tags
+                    tags: collection.tags,
                   }
                 : undefined
             }
@@ -259,26 +239,16 @@ class CollectionItemsContainer extends React.Component<Props, State> {
             isAuthor={isAuthor}
             collectionPlayButton={
               <CollectionPlayButton
-                isPlaying={
-                  currentTarget ? player[currentTarget].status.playing : false
-                }
+                isPlaying={currentTarget ? player[currentTarget].status.playing : false}
                 isSet={currentTarget ? true : false}
-                onPause={() =>
-                  currentTarget && PlayerActions.pause(currentTarget)
-                }
-                onPlay={() =>
-                  items && items.length > 0 && this.playItem(items[0])
-                }
-                onResume={() =>
-                  currentTarget && PlayerActions.play(currentTarget)
-                }
+                onPause={() => currentTarget && PlayerActions.pause(currentTarget)}
+                onPlay={() => items && items.length > 0 && this.playItem(items[0])}
+                onResume={() => currentTarget && PlayerActions.play(currentTarget)}
               />
             }
             itemAddForm={
               <ItemAddForm
-                disabled={
-                  items ? items.length >= MAX_COLLECTION_ITEMS_SIZE : true
-                }
+                disabled={items ? items.length >= MAX_COLLECTION_ITEMS_SIZE : true}
                 handleAddItem={this.handleAddItem}
               />
             }
@@ -311,9 +281,7 @@ class CollectionItemsContainer extends React.Component<Props, State> {
         )}
         <Divider style={{ background: 'transparent' }} />
         {collection && <CommentHeader comments={collection.comments} />}
-        {currentUser && (
-          <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />
-        )}
+        {currentUser && <CommentForm gutterBottom={16} onSubmit={this.handleCreateComment} />}
         {comments && (
           <RecursiveList
             depth={0}
@@ -335,17 +303,12 @@ const mapStateToProps = ({ auth, item, collection, player }: RootState) => ({
   auth,
   item,
   collection,
-  player
+  player,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   ItemActions: bindActionCreators(itemActions, dispatch),
   CollectionActions: bindActionCreators(collectionActions, dispatch),
-  PlayerActions: bindActionCreators(playerActions, dispatch)
+  PlayerActions: bindActionCreators(playerActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CollectionItemsContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CollectionItemsContainer));

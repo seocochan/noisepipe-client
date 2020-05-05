@@ -75,7 +75,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
       username,
       offsetId === -1 ? undefined : offsetId,
       DEFAULT_PAGE_SIZE,
-      true
+      true,
     );
   };
   private handleCreateBookmark = async (collectionId: number) => {
@@ -86,10 +86,7 @@ class BookmarksContainer extends React.Component<Props, {}> {
       throw error;
     }
   };
-  private handleRemoveBookmark = async (
-    collectionId: number,
-    index: number
-  ) => {
+  private handleRemoveBookmark = async (collectionId: number, index: number) => {
     const { UserLibraryActions } = this.props;
     try {
       await UserLibraryActions.removeBookmark(collectionId, index);
@@ -106,26 +103,18 @@ class BookmarksContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader
-          username={username}
-          count={bookmarks.totalElements}
-          name={'북마크'}
-        />
+        <ListHeader username={username} count={bookmarks.totalElements} name={'북마크'} />
         <GridCardList<ICollectionSummary>
           dataSource={bookmarks.content}
           renderCard={(collection: ICollectionSummary, index: number) => (
             <CollectionCard
               key={collection.id}
               collection={collection}
-              defaultBookmarked={
-                currentUser ? currentUser.username === username : false
-              }
+              defaultBookmarked={currentUser ? currentUser.username === username : false}
               disableBookmark={currentUser ? false : true}
               onCreateBookmark={this.handleCreateBookmark}
-              onRemoveBookmark={collectionId =>
-                this.handleRemoveBookmark(collectionId, index)
-              }
-              ref={card => {
+              onRemoveBookmark={(collectionId) => this.handleRemoveBookmark(collectionId, index)}
+              ref={(card) => {
                 this.cards[index] = card;
               }}
             />
@@ -140,16 +129,11 @@ class BookmarksContainer extends React.Component<Props, {}> {
 
 const mapStateToProps = ({ auth, userLibrary }: RootState) => ({
   currentUser: auth.currentUser,
-  bookmarks: userLibrary.bookmarks
+  bookmarks: userLibrary.bookmarks,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   CollectionActions: bindActionCreators(collectionActions, dispatch),
-  UserLibraryActions: bindActionCreators(userLibraryActions, dispatch)
+  UserLibraryActions: bindActionCreators(userLibraryActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(BookmarksContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BookmarksContainer));

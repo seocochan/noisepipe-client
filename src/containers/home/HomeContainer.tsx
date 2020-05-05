@@ -53,7 +53,7 @@ class HomeContainer extends React.Component<Props, {}> {
   public render(): React.ReactNode {
     const {
       currentUser,
-      home: { recentlyCreatedCollections, recentlyUpdatedCollections }
+      home: { recentlyCreatedCollections, recentlyUpdatedCollections },
     } = this.props;
 
     if (!recentlyCreatedCollections || !recentlyUpdatedCollections) {
@@ -62,10 +62,7 @@ class HomeContainer extends React.Component<Props, {}> {
     return (
       <>
         <div>
-          <Title
-            text="새 아이템이 추가된 컬렉션"
-            prefix={<Icon type="thunderbolt" />}
-          />
+          <Title text="새 아이템이 추가된 컬렉션" prefix={<Icon type="thunderbolt" />} />
           <GridCardList<ICollectionSummary>
             dataSource={recentlyUpdatedCollections}
             renderCard={(collection: ICollectionSummary) => (
@@ -82,10 +79,7 @@ class HomeContainer extends React.Component<Props, {}> {
         <Divider />
         <div>
           <>
-            <Title
-              text="최근 생성된 컬렉션"
-              prefix={<Icon type="clock-circle" />}
-            />
+            <Title text="최근 생성된 컬렉션" prefix={<Icon type="clock-circle" />} />
             <GridCardList<ICollectionSummary>
               dataSource={recentlyCreatedCollections}
               renderCard={(collection: ICollectionSummary) => (
@@ -110,15 +104,10 @@ class HomeContainer extends React.Component<Props, {}> {
 
 const mapStateToProps = ({ auth, home }: RootState) => ({
   currentUser: auth.currentUser,
-  home
+  home,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  HomeActions: bindActionCreators(homeActions, dispatch)
+  HomeActions: bindActionCreators(homeActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(HomeContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomeContainer));

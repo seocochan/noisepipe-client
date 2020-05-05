@@ -11,11 +11,7 @@ const MATCH_URL_YT = /((https?):\/\/)?(?:youtu\.be\/|www\.youtube\.com\/(?:embed
 const MATCH_URL_SC = /((https?):\/\/)?(soundcloud\.com|snd\.sc)\/.+$/;
 
 interface Props {
-  handleAddItem: (
-    title: string,
-    sourceUrl: string,
-    sourceProvider: Provider
-  ) => void;
+  handleAddItem: (title: string, sourceUrl: string, sourceProvider: Provider) => void;
   disabled: boolean;
 }
 interface State {
@@ -26,12 +22,12 @@ interface State {
 
 class ItemAddForm extends React.Component<Props, State> {
   public static defaultProps = {
-    disabled: false
+    disabled: false,
   };
   public readonly state: State = {
     value: '',
     validateStatus: undefined,
-    errorMsg: ''
+    errorMsg: '',
   };
 
   private validate = (value: string) => {
@@ -47,7 +43,7 @@ class ItemAddForm extends React.Component<Props, State> {
     const value = e.clipboardData.getData('Text');
     const result = value.match(new RegExp(`${MATCH_URL_YT.source}|${MATCH_URL_SC.source}`));
     if (!result) {
-      return
+      return;
     }
     e.preventDefault();
     this.setState({ value: result[0] });
@@ -63,7 +59,7 @@ class ItemAddForm extends React.Component<Props, State> {
     if (!validProvider) {
       return this.setState({
         validateStatus: 'error',
-        errorMsg: '올바른 URL을 입력해주세요'
+        errorMsg: '올바른 URL을 입력해주세요',
       });
     }
     this.setState({ validateStatus: 'validating', errorMsg: '' });
@@ -76,7 +72,7 @@ class ItemAddForm extends React.Component<Props, State> {
       console.log(error);
       this.setState({
         validateStatus: 'error',
-        errorMsg: '미디어 정보를 찾을 수 없습니다'
+        errorMsg: '미디어 정보를 찾을 수 없습니다',
       });
     }
   };
@@ -86,12 +82,7 @@ class ItemAddForm extends React.Component<Props, State> {
     const { value, validateStatus, errorMsg } = this.state;
     return (
       <Form layout="inline" onSubmit={this.handleSubmit}>
-        <Form.Item
-          validateStatus={validateStatus}
-          help={errorMsg}
-          hasFeedback={true}
-          style={{ marginRight: 8 }}
-        >
+        <Form.Item validateStatus={validateStatus} help={errorMsg} hasFeedback={true} style={{ marginRight: 8 }}>
           <Input
             disabled={disabled}
             prefix={<Icon type="link" />}
@@ -106,9 +97,7 @@ class ItemAddForm extends React.Component<Props, State> {
           <Button disabled={disabled} htmlType="submit" icon="plus" />
         </Form.Item>
         {disabled && (
-          <Tooltip
-            title={`최대 ${MAX_COLLECTION_ITEMS_SIZE}개까지의 아이템을 추가할 수 있어요`}
-          >
+          <Tooltip title={`최대 ${MAX_COLLECTION_ITEMS_SIZE}개까지의 아이템을 추가할 수 있어요`}>
             <Icon type="info-circle" style={{ color: '#f5222d' }} />
           </Tooltip>
         )}

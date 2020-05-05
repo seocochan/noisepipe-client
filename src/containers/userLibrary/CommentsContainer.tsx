@@ -55,17 +55,9 @@ class CommentsContainer extends React.Component<Props, {}> {
     const { UserLibraryActions, username } = this.props;
     const offsetId = this.getOffsetId();
 
-    await UserLibraryActions.loadComments(
-      username,
-      offsetId === -1 ? undefined : offsetId,
-      DEFAULT_PAGE_SIZE,
-      true
-    );
+    await UserLibraryActions.loadComments(username, offsetId === -1 ? undefined : offsetId, DEFAULT_PAGE_SIZE, true);
   };
-  private handleUpdateComment = async (
-    commentId: number,
-    data: ICommentRequest
-  ) => {
+  private handleUpdateComment = async (commentId: number, data: ICommentRequest) => {
     const { UserLibraryActions } = this.props;
     try {
       await UserLibraryActions.updateComment(commentId, data);
@@ -90,27 +82,19 @@ class CommentsContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader
-          username={username}
-          count={comments.totalElements}
-          name={'댓글'}
-        />
+        <ListHeader username={username} count={comments.totalElements} name={'댓글'} />
         <List
           dataSource={comments.content}
           renderItem={(comment: ICommentSummary) => (
             <UserCommentListItem
               key={comment.id}
               comment={comment}
-              showEditActions={
-                currentUser ? currentUser.username === username : false
-              }
+              showEditActions={currentUser ? currentUser.username === username : false}
               onUpdate={this.handleUpdateComment}
               onRemove={this.handleRemoveComment}
             />
           )}
-          loadMore={
-            !comments.last && <LoadMoreButton loadMore={this.loadMore} />
-          }
+          loadMore={!comments.last && <LoadMoreButton loadMore={this.loadMore} />}
         />
       </>
     );
@@ -119,15 +103,10 @@ class CommentsContainer extends React.Component<Props, {}> {
 
 const mapStateToProps = ({ auth, userLibrary }: RootState) => ({
   currentUser: auth.currentUser,
-  comments: userLibrary.comments
+  comments: userLibrary.comments,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  UserLibraryActions: bindActionCreators(userLibraryActions, dispatch)
+  UserLibraryActions: bindActionCreators(userLibraryActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CommentsContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CommentsContainer));

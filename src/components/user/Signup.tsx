@@ -13,7 +13,7 @@ import {
   MAX_PASSWORD_LENGTH,
   MAX_USERNAME_LENGTH,
   MIN_PASSWORD_LENGTH,
-  MIN_USERNAME_LENGTH
+  MIN_USERNAME_LENGTH,
 } from 'values';
 
 import styles from './Signup.module.less';
@@ -34,7 +34,7 @@ class Signup extends React.Component<Props, {}> {
     const {
       AuthActions,
       history,
-      form: { validateFields }
+      form: { validateFields },
     } = this.props;
     validateFields(['confirm'], { force: true });
     validateFields(async (err, { username, password }: FormData) => {
@@ -52,11 +52,7 @@ class Signup extends React.Component<Props, {}> {
     });
   };
   // FIXME: debounce
-  private validateUsernameAvailability = async (
-    _: any,
-    value: string,
-    callback: any
-  ) => {
+  private validateUsernameAvailability = async (_: any, value: string, callback: any) => {
     let available: boolean;
     try {
       available = false;
@@ -70,9 +66,7 @@ class Signup extends React.Component<Props, {}> {
   };
   private confirmPassword = (rule: any, value: string, callback: any) => {
     const { getFieldValue } = this.props.form;
-    return getFieldValue('password') === value
-      ? callback()
-      : callback('비밀번호를 확인해주세요');
+    return getFieldValue('password') === value ? callback() : callback('비밀번호를 확인해주세요');
   };
   private checkSubmitButtonAvailable = () => {
     const { getFieldsError, getFieldValue } = this.props.form;
@@ -82,11 +76,7 @@ class Signup extends React.Component<Props, {}> {
       confirm?: string;
     } = getFieldsError();
 
-    if (
-      !getFieldValue('username') ||
-      !getFieldValue('password') ||
-      !getFieldValue('confirm')
-    ) {
+    if (!getFieldValue('username') || !getFieldValue('password') || !getFieldValue('confirm')) {
       return false;
     }
     if (errors.username || errors.password || errors.confirm) {
@@ -97,7 +87,7 @@ class Signup extends React.Component<Props, {}> {
 
   public render(): React.ReactNode {
     const {
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
 
     return (
@@ -112,24 +102,17 @@ class Signup extends React.Component<Props, {}> {
                   {
                     message: `${MIN_USERNAME_LENGTH}자에서 ${MAX_USERNAME_LENGTH}자 사이로 입력`,
                     min: MIN_USERNAME_LENGTH,
-                    max: MAX_USERNAME_LENGTH
+                    max: MAX_USERNAME_LENGTH,
                   },
                   {
                     message: `영문, 숫자, '_' 입력`,
                     required: true,
                     whitespace: true,
-                    pattern: /^\w+$/
+                    pattern: /^\w+$/,
                   },
-                  { validator: this.validateUsernameAvailability }
-                ]
-              })(
-                <Input
-                  size="large"
-                  name="username"
-                  autoComplete="off"
-                  placeholder="아이디"
-                />
-              )}
+                  { validator: this.validateUsernameAvailability },
+                ],
+              })(<Input size="large" name="username" autoComplete="off" placeholder="아이디" />)}
             </Form.Item>
             <Form.Item label="비밀번호">
               {getFieldDecorator('password', {
@@ -137,26 +120,18 @@ class Signup extends React.Component<Props, {}> {
                   {
                     message: '비밀번호 입력',
                     required: true,
-                    whitespace: true
+                    whitespace: true,
                   },
                   {
                     message: `${MIN_PASSWORD_LENGTH}자 이상 입력`,
-                    min: MIN_PASSWORD_LENGTH
+                    min: MIN_PASSWORD_LENGTH,
                   },
                   {
                     message: `${MAX_PASSWORD_LENGTH}자 이하 입력`,
-                    max: MAX_PASSWORD_LENGTH
-                  }
-                ]
-              })(
-                <Input
-                  size="large"
-                  name="password"
-                  type="password"
-                  autoComplete="off"
-                  placeholder="비밀번호"
-                />
-              )}
+                    max: MAX_PASSWORD_LENGTH,
+                  },
+                ],
+              })(<Input size="large" name="password" type="password" autoComplete="off" placeholder="비밀번호" />)}
             </Form.Item>
             <Form.Item label="비밀번호 확인">
               {getFieldDecorator('confirm', {
@@ -164,19 +139,11 @@ class Signup extends React.Component<Props, {}> {
                   {
                     message: '비밀번호를 다시 입력하세요',
                     required: true,
-                    whitespace: true
+                    whitespace: true,
                   },
-                  { validator: this.confirmPassword }
-                ]
-              })(
-                <Input
-                  size="large"
-                  name="confirm"
-                  type="password"
-                  autoComplete="off"
-                  placeholder="비밀번호 확인"
-                />
-              )}
+                  { validator: this.confirmPassword },
+                ],
+              })(<Input size="large" name="confirm" type="password" autoComplete="off" placeholder="비밀번호 확인" />)}
             </Form.Item>
             <Form.Item>
               <Button
@@ -197,10 +164,7 @@ class Signup extends React.Component<Props, {}> {
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  AuthActions: bindActionCreators(authActions, dispatch)
+  AuthActions: bindActionCreators(authActions, dispatch),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Form.create()(Signup));
+export default connect(null, mapDispatchToProps)(Form.create()(Signup));

@@ -14,15 +14,10 @@ interface Props {
   handleRemove: (e: React.MouseEvent) => void;
 }
 
-const ItemPanelHeader: React.FC<Props> = ({
-  tab,
-  showEditables,
-  handleClose,
-  handleTabChange,
-  handleRemove
-}) => {
+function ItemPanelHeader({ tab, showEditables, handleClose, handleTabChange, handleRemove }: Props) {
   return (
     <div className={styles.header}>
+      {/* eslint-disable-next-line */}
       <a className={styles.iconButton} onClick={handleClose}>
         <Icon type="arrow-left" />
       </a>
@@ -36,6 +31,7 @@ const ItemPanelHeader: React.FC<Props> = ({
           </div>
           <div className={styles.innerMenu}>
             <Popconfirm title={'삭제할까요?'} onConfirm={handleRemove}>
+              {/* eslint-disable-next-line */}
               <a className={styles.iconButton}>
                 <Icon type="delete" />
               </a>
@@ -45,6 +41,6 @@ const ItemPanelHeader: React.FC<Props> = ({
       )}
     </div>
   );
-};
+}
 
 export default ItemPanelHeader;

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Comment, Icon, message, Popconfirm } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ICommentRequest, ICommentSummary } from 'payloads';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
 
@@ -21,7 +21,7 @@ interface State {
 
 class UserCommentListItem extends React.Component<Props, State> {
   public readonly state: State = {
-    showEditForm: false
+    showEditForm: false,
   };
 
   public componentDidUpdate(prevProps: Props) {
@@ -47,7 +47,7 @@ class UserCommentListItem extends React.Component<Props, State> {
     const {
       comment: { id, text, collectionId, collectionTitle, createdAt },
       showEditActions,
-      onUpdate
+      onUpdate,
     } = this.props;
     const { showEditForm } = this.state;
 
@@ -66,7 +66,7 @@ class UserCommentListItem extends React.Component<Props, State> {
                 text={text}
                 submitPlaceholder="수정"
                 showCancel={true}
-                onSubmit={data => onUpdate(id, data)}
+                onSubmit={(data) => onUpdate(id, data)}
                 onCancel={() => this.setState({ showEditForm: false })}
                 onSuccess={() => this.setState({ showEditForm: false })}
               />
@@ -78,22 +78,16 @@ class UserCommentListItem extends React.Component<Props, State> {
         actions={
           showEditActions
             ? [
-                <span
-                  key="edit"
-                  onClick={() => this.setState({ showEditForm: true })}
-                >
+                <span key="edit" onClick={() => this.setState({ showEditForm: true })}>
                   수정
                   <Icon className={styles.icon} type="edit" />
                 </span>,
                 <span key="delete">
-                  <Popconfirm
-                    title="댓글을 삭제할까요?"
-                    onConfirm={this.handleRemove}
-                  >
+                  <Popconfirm title="댓글을 삭제할까요?" onConfirm={this.handleRemove}>
                     삭제
                     <Icon className={styles.icon} type="delete" />
                   </Popconfirm>
-                </span>
+                </span>,
               ]
             : undefined
         }

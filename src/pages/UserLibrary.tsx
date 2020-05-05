@@ -11,14 +11,14 @@ interface Props extends RouteComponentProps<{ username: string }> {}
 const UserLibrary: React.FC<Props> = ({
   location: { pathname },
   match: {
-    params: { username }
+    params: { username },
   },
-  history
+  history,
 }) => {
   const routes = {
     collections: `/${username}/collections`,
     bookmarks: `/${username}/bookmarks`,
-    comments: `/${username}/comments`
+    comments: `/${username}/comments`,
   };
 
   if (!username.startsWith('@')) {
@@ -26,32 +26,15 @@ const UserLibrary: React.FC<Props> = ({
   }
   return (
     <div className={styles.container}>
-      <Tabs
-        activeKey={pathname}
-        size="large"
-        onChange={activeKey => history.push(activeKey)}
-        animated={false}
-      >
+      <Tabs activeKey={pathname} size="large" onChange={(activeKey) => history.push(activeKey)} animated={false}>
         <Tabs.TabPane tab="컬렉션" key={routes.collections}>
-          <CollectionsContainer
-            currentTab={pathname}
-            tabName={routes.collections}
-            username={username.slice(1)}
-          />
+          <CollectionsContainer currentTab={pathname} tabName={routes.collections} username={username.slice(1)} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="북마크" key={routes.bookmarks}>
-          <BookmarksContainer
-            currentTab={pathname}
-            tabName={routes.bookmarks}
-            username={username.slice(1)}
-          />
+          <BookmarksContainer currentTab={pathname} tabName={routes.bookmarks} username={username.slice(1)} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="댓글" key={routes.comments}>
-          <CommentsContainer
-            currentTab={pathname}
-            tabName={routes.comments}
-            username={username.slice(1)}
-          />
+          <CommentsContainer currentTab={pathname} tabName={routes.comments} username={username.slice(1)} />
         </Tabs.TabPane>
       </Tabs>
     </div>

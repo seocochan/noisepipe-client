@@ -36,9 +36,7 @@ class UserSettingContainer extends React.Component<Props, {}> {
           text={
             <>
               <span>계정 설정</span>
-              <span style={{ color: 'rgba(0, 0, 0, 0.65)', marginLeft: 8 }}>
-                @{currentUser.username}
-              </span>
+              <span style={{ color: 'rgba(0, 0, 0, 0.65)', marginLeft: 8 }}>@{currentUser.username}</span>
             </>
           }
           prefix={<Icon type="user" />}
@@ -54,13 +52,10 @@ class UserSettingContainer extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = ({ auth }: RootState) => ({
-  currentUser: auth.currentUser
+  currentUser: auth.currentUser,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  AuthActions: bindActionCreators(authActions, dispatch)
+  AuthActions: bindActionCreators(authActions, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserSettingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(UserSettingContainer);

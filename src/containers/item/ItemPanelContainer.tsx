@@ -11,6 +11,7 @@ import { ICueRequest, ICueResponse, IItemPutRequest } from 'payloads';
 import { bindActionCreators, Dispatch } from 'redux';
 import { RootAction, RootState } from 'store';
 import { AuthState } from 'store/modules/auth';
+import { actions as collectionActions, CollectionState } from 'store/modules/collection';
 import { actions as itemActions, ItemState } from 'store/modules/item';
 import { Tab } from 'types';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
@@ -18,6 +19,7 @@ import { DEFAULT_ERROR_MESSAGE } from 'values';
 interface Props {
   currentUser: AuthState['currentUser'];
   item: ItemState;
+  collection: CollectionState;
   ItemActions: typeof itemActions;
 }
 
@@ -25,10 +27,10 @@ class ItemPanelContainer extends React.Component<Props, {}> {
   public componentDidUpdate(prevProps: Props) {
     const {
       ItemActions,
-      item: { item }
+      item: { item },
     } = this.props;
     const {
-      item: { item: prevItem }
+      item: { item: prevItem },
     } = prevProps;
     if ((!prevItem && item) || (prevItem && item && prevItem.id !== item.id)) {
       ItemActions.loadCues(item.id);
@@ -55,7 +57,7 @@ class ItemPanelContainer extends React.Component<Props, {}> {
     e.preventDefault();
     const {
       ItemActions,
-      item: { item }
+      item: { item },
     } = this.props;
     if (!item) {
       return;
@@ -113,8 +115,9 @@ class ItemPanelContainer extends React.Component<Props, {}> {
       item: {
         itemPanel: { collapsed, tab },
         item,
-        cues
-      }
+        cues,
+      },
+      collection: { items },
     } = this.props;
 
     if (item == null) {
@@ -127,9 +130,7 @@ class ItemPanelContainer extends React.Component<Props, {}> {
         itemPanelHeader={
           <ItemPanelHeader
             tab={tab}
-            showEditables={
-              currentUser ? currentUser.id === item.createdBy : false
-            }
+            showEditables={currentUser ? currentUser.id === item.createdBy : false}
             handleClose={this.handleClose}
             handleTabChange={this.handleTabChange}
             handleRemove={this.handleRemove}
@@ -144,16 +145,12 @@ class ItemPanelContainer extends React.Component<Props, {}> {
                 <CueSection>
                   <CueListHeader
                     count={cues.length}
-                    showEditables={
-                      currentUser ? currentUser.id === item.createdBy : false
-                    }
-                    renderCueForm={props => (
+                    showEditables={currentUser ? currentUser.id === item.createdBy : false}
+                    renderCueForm={(props) => (
                       <CueForm
                         submitPlaceholder="추가"
                         showCancel={true}
-                        onSubmit={async data =>
-                          this.handleCreateCue(item.id, data)
-                        }
+                        onSubmit={async (data) => this.handleCreateCue(item.id, data)}
                         onLoadSeconds={this.getCurrentSeconds}
                         {...props}
                       />
@@ -165,18 +162,12 @@ class ItemPanelContainer extends React.Component<Props, {}> {
                       <CueListItem
                         key={cue.id}
                         cue={cue}
-                        showEditables={
-                          currentUser
-                            ? currentUser.id === item.createdBy
-                            : false
-                        }
-                        renderCueForm={props => (
+                        showEditables={currentUser ? currentUser.id === item.createdBy : false}
+                        renderCueForm={(props) => (
                           <CueForm
                             submitPlaceholder="수정"
                             showCancel={true}
-                            onSubmit={async data =>
-                              this.handleUpdateCue(cue.id, data)
-                            }
+                            onSubmit={async (data) => this.handleUpdateCue(cue.id, data)}
                             cue={cue}
                             {...props}
                           />
@@ -191,21 +182,20 @@ class ItemPanelContainer extends React.Component<Props, {}> {
             }
           />
         }
-        itemEditor={<ItemEditor item={item} handleSubmit={this.handleSubmit} />}
+        itemEditor={<ItemEditor item={item} items={items || []} handleSubmit={this.handleSubmit} />}
       />
     );
   }
 }
 
-const mapStateToProps = ({ auth, item }: RootState) => ({
+const mapStateToProps = ({ auth, item, collection }: RootState) => ({
   currentUser: auth.currentUser,
-  item
+  item,
+  collection,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  ItemActions: bindActionCreators(itemActions, dispatch)
+  ItemActions: bindActionCreators(itemActions, dispatch),
+  CollectionActions: bindActionCreators(collectionActions, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ItemPanelContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ItemPanelContainer);

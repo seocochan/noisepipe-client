@@ -10,10 +10,8 @@ import { DEFAULT_PAGE_SIZE } from 'values';
 const INITIALIZE = 'userLibrary/INITIALIZE';
 const LOAD_COLLECTIONS_SUCCESS = 'userLibrary/LOAD_COLLECTIONS_SUCCESS';
 const LOAD_MORE_COLLECTIONS = 'userLibrary/LOAD_MORE_COLLECTIONS';
-const LOAD_BOOKMARKED_COLLECTIONS_SUCCESS =
-  'userLibrary/LOAD_BOOKMARKED_COLLECTIONS_SUCCESS';
-const LOAD_MORE_BOOKMARKED_COLLECTIONS =
-  'userLibrary/LOAD_MORE_BOOKMARKED_COLLECTIONS';
+const LOAD_BOOKMARKED_COLLECTIONS_SUCCESS = 'userLibrary/LOAD_BOOKMARKED_COLLECTIONS_SUCCESS';
+const LOAD_MORE_BOOKMARKED_COLLECTIONS = 'userLibrary/LOAD_MORE_BOOKMARKED_COLLECTIONS';
 const REMOVE_BOOKMARK_SUCCESS = 'userLibrary/REMOVE_BOOKMARK_SUCCESS';
 const LOAD_COMMENTS_SUCCESS = 'userLibrary/LOAD_COMMENTS_SUCCESS';
 const LOAD_MORE_COMMENTS = 'userLibrary/LOAD_MORE_COMMENTS';
@@ -27,13 +25,11 @@ export const actions = {
     username: string,
     offsetId?: number,
     size = DEFAULT_PAGE_SIZE,
-    loadMore = false
-  ): ThunkResult<Promise<void>> => async dispatch => {
+    loadMore = false,
+  ): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CollectionAPI.loadCollections(username, size, offsetId);
-      loadMore
-        ? dispatch(actions.loadMoreCollections(res.data))
-        : dispatch(actions.loadCollectionsSuccess(res.data));
+      loadMore ? dispatch(actions.loadMoreCollections(res.data)) : dispatch(actions.loadCollectionsSuccess(res.data));
     } catch (error) {
       if (loadMore) {
         // if error occurs while load more, init pagination
@@ -46,19 +42,14 @@ export const actions = {
     createAction(LOAD_COLLECTIONS_SUCCESS, { collections }),
   loadMoreCollections: (collections: IPagedResponse<ICollectionSummary>) =>
     createAction(LOAD_MORE_COLLECTIONS, { collections }),
-  createBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async () => {
+  createBookmark: (collectionId: number): ThunkResult<Promise<void>> => async () => {
     try {
       await CollectionAPI.createBookmark(collectionId);
     } catch (error) {
       throw error;
     }
   },
-  removeBookmark: (
-    collectionId: number,
-    index?: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  removeBookmark: (collectionId: number, index?: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CollectionAPI.removeBookmark(collectionId);
       if (index !== undefined) {
@@ -68,20 +59,15 @@ export const actions = {
       throw error;
     }
   },
-  removeBookmarkSuccess: (index: number) =>
-    createAction(REMOVE_BOOKMARK_SUCCESS, { index }),
+  removeBookmarkSuccess: (index: number) => createAction(REMOVE_BOOKMARK_SUCCESS, { index }),
   loadBookmarkedCollections: (
     username: string,
     offsetId?: number,
     size = DEFAULT_PAGE_SIZE,
-    loadMore = false
-  ): ThunkResult<Promise<void>> => async dispatch => {
+    loadMore = false,
+  ): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
-      const res = await CollectionAPI.getCollectionsBookmarkedByUser(
-        username,
-        size,
-        offsetId
-      );
+      const res = await CollectionAPI.getCollectionsBookmarkedByUser(username, size, offsetId);
       loadMore
         ? dispatch(actions.loadMoreBookmarkedCollections(res.data))
         : dispatch(actions.loadBookmarkedCollectionsSuccess(res.data));
@@ -93,23 +79,19 @@ export const actions = {
       throw error;
     }
   },
-  loadBookmarkedCollectionsSuccess: (
-    collections: IPagedResponse<ICollectionSummary>
-  ) => createAction(LOAD_BOOKMARKED_COLLECTIONS_SUCCESS, { collections }),
-  loadMoreBookmarkedCollections: (
-    collections: IPagedResponse<ICollectionSummary>
-  ) => createAction(LOAD_MORE_BOOKMARKED_COLLECTIONS, { collections }),
+  loadBookmarkedCollectionsSuccess: (collections: IPagedResponse<ICollectionSummary>) =>
+    createAction(LOAD_BOOKMARKED_COLLECTIONS_SUCCESS, { collections }),
+  loadMoreBookmarkedCollections: (collections: IPagedResponse<ICollectionSummary>) =>
+    createAction(LOAD_MORE_BOOKMARKED_COLLECTIONS, { collections }),
   loadComments: (
     username: string,
     offsetId?: number,
     size = DEFAULT_PAGE_SIZE,
-    loadMore = false
-  ): ThunkResult<Promise<void>> => async dispatch => {
+    loadMore = false,
+  ): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CommentAPI.getCommentsByUser(username, size, offsetId);
-      loadMore
-        ? dispatch(actions.loadMoreComments(res.data))
-        : dispatch(actions.loadCommentsSuccess(res.data));
+      loadMore ? dispatch(actions.loadMoreComments(res.data)) : dispatch(actions.loadCommentsSuccess(res.data));
     } catch (error) {
       if (loadMore) {
         // if error occurs while load more, init pagination
@@ -118,14 +100,9 @@ export const actions = {
       throw error;
     }
   },
-  loadCommentsSuccess: (comments: IPagedResponse<ICommentSummary>) =>
-    createAction(LOAD_COMMENTS_SUCCESS, { comments }),
-  loadMoreComments: (comments: IPagedResponse<ICommentSummary>) =>
-    createAction(LOAD_MORE_COMMENTS, { comments }),
-  updateComment: (
-    commentId: number,
-    data: ICommentRequest
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  loadCommentsSuccess: (comments: IPagedResponse<ICommentSummary>) => createAction(LOAD_COMMENTS_SUCCESS, { comments }),
+  loadMoreComments: (comments: IPagedResponse<ICommentSummary>) => createAction(LOAD_MORE_COMMENTS, { comments }),
+  updateComment: (commentId: number, data: ICommentRequest): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CommentAPI.updateCommentById(commentId, data);
       await dispatch(actions.updateCommentsSuccess(res.data));
@@ -133,11 +110,8 @@ export const actions = {
       throw error;
     }
   },
-  updateCommentsSuccess: (comment: ICommentResponse) =>
-    createAction(UPDATE_COMMENT_SUCCESS, { comment }),
-  removeComment: (
-    commentId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateCommentsSuccess: (comment: ICommentResponse) => createAction(UPDATE_COMMENT_SUCCESS, { comment }),
+  removeComment: (commentId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CommentAPI.removeCommentById(commentId);
       await dispatch(actions.removeCommentsSuccess(commentId));
@@ -145,8 +119,7 @@ export const actions = {
       throw error;
     }
   },
-  removeCommentsSuccess: (commentId: number) =>
-    createAction(REMOVE_COMMENT_SUCCESS, { commentId })
+  removeCommentsSuccess: (commentId: number) => createAction(REMOVE_COMMENT_SUCCESS, { commentId }),
 };
 export type UserLibraryAction = ActionType<typeof actions>;
 
@@ -159,7 +132,7 @@ export interface UserLibraryState {
 const initialState: UserLibraryState = {
   collections: null,
   bookmarks: null,
-  comments: null
+  comments: null,
 };
 
 // reducer
@@ -226,9 +199,7 @@ export default produce<UserLibraryState, UserLibraryAction>((draft, action) => {
       if (!draft.comments) {
         return;
       }
-      const index = draft.comments.content.findIndex(
-        comment => comment.id === updatedComment.id
-      );
+      const index = draft.comments.content.findIndex((comment) => comment.id === updatedComment.id);
       if (index === -1) {
         return;
       }
@@ -240,9 +211,7 @@ export default produce<UserLibraryState, UserLibraryAction>((draft, action) => {
       if (!draft.comments) {
         return;
       }
-      const index = draft.comments.content.findIndex(
-        comment => comment.id === commentId
-      );
+      const index = draft.comments.content.findIndex((comment) => comment.id === commentId);
       if (index === -1) {
         return;
       }

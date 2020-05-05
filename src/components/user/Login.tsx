@@ -56,16 +56,11 @@ class Login extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  AuthActions: bindActionCreators(authActions, dispatch)
+  AuthActions: bindActionCreators(authActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Login)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

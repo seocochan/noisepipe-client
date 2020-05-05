@@ -5,7 +5,7 @@ export const createComment = (collectionId: number, data: ICommentRequest) => {
   return request<ICommentResponse>({
     url: `/collections/${collectionId}/comments`,
     method: 'post',
-    data
+    data,
   });
 };
 
@@ -13,40 +13,34 @@ export const updateCommentById = (commentId: number, data: ICommentRequest) => {
   return request<ICommentResponse>({
     url: `/comments/${commentId}`,
     method: 'put',
-    data
+    data,
   });
 };
 
 export const removeCommentById = (commentId: number) => {
   return request<ICommentResponse>({
     url: `/comments/${commentId}`,
-    method: 'delete'
+    method: 'delete',
   });
 };
 
 export const getCommentsByCollection = (collectionId: number) => {
   return request<ICommentResponse[]>({
     url: `/collections/${collectionId}/comments`,
-    method: 'get'
+    method: 'get',
   });
 };
 
 export const getCommentReplies = (collectionId: number, commentId: number) => {
   return request<ICommentResponse[]>({
     url: `/collections/${collectionId}/comments/${commentId}/replies`,
-    method: 'get'
+    method: 'get',
   });
 };
 
-export const getCommentsByUser = (
-  username: string,
-  size: number,
-  offsetId?: number
-) => {
+export const getCommentsByUser = (username: string, size: number, offsetId?: number) => {
   return request<IPagedResponse<ICommentSummary>>({
-    url: `/users/${username}/comments?${
-      offsetId ? `offsetId=${offsetId}&` : ''
-    }size=${size}`,
-    method: 'get'
+    url: `/users/${username}/comments?${offsetId ? `offsetId=${offsetId}&` : ''}size=${size}`,
+    method: 'get',
   });
 };

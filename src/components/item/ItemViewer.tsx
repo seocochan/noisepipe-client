@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player';
 
 import { Divider, Icon } from 'antd';
 import { SoundCloudIcon } from 'icons';
-import * as moment from 'moment';
+import moment from 'moment';
 import { IItemResponse } from 'payloads';
 import { Provider } from 'types';
 
@@ -11,7 +11,7 @@ import styles from './ItemViewer.module.less';
 
 const iconStyles = {
   color: '#333',
-  marginRight: 8
+  marginRight: 8,
 };
 
 interface Props {
@@ -51,11 +51,11 @@ const ItemViewer: React.FC<Props> = ({ item, playerRef, cueSection }) => {
           ref={playerRef}
           config={{
             youtube: {
-              playerVars: { controls: 1 }
+              playerVars: { controls: 1 },
             },
             soundcloud: {
-              options: { single_active: false }
-            }
+              options: { single_active: false },
+            },
           }}
           width="100%"
           height="100%"

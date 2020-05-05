@@ -10,9 +10,7 @@ interface Props extends RouteComponentProps<{ collectionId: string }> {}
 const Collection: React.FC<Props> = ({ match }) => {
   return (
     <div className={styles.container}>
-      <CollectionItemsContainer
-        collectionId={parseInt(match.params.collectionId, 10)}
-      />
+      <CollectionItemsContainer collectionId={parseInt(match.params.collectionId, 10)} />
     </div>
   );
 };

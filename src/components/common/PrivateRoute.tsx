@@ -11,15 +11,11 @@ interface Props extends RouteProps {
   auth: AuthState;
 }
 
-const PrivateRoute: React.FC<Props> = ({
-  component: Component,
-  auth,
-  ...rest
-}) => {
+const PrivateRoute: React.FC<Props> = ({ component: Component, auth, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props => {
+      render={(props) => {
         if (auth.isLoading) {
           return null;
         }
@@ -30,7 +26,7 @@ const PrivateRoute: React.FC<Props> = ({
           <Redirect
             to={{
               pathname: '/login',
-              state: { from: props.location }
+              state: { from: props.location },
             }}
           />
         );
@@ -40,7 +36,7 @@ const PrivateRoute: React.FC<Props> = ({
 };
 
 const mapStateToProps = (state: RootState) => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps)(PrivateRoute);

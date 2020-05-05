@@ -12,7 +12,7 @@ interface State {
 
 class LoadMoreButton extends React.Component<Props, State> {
   public readonly state: State = {
-    loading: false
+    loading: false,
   };
 
   private handleLoadMore = async () => {

@@ -39,9 +39,7 @@ class AppHeader extends React.Component<Props, {}> {
     if (!currentUser) {
       return pathname;
     }
-    const regex = new RegExp(
-      `/@${currentUser.username}/(collections|bookmarks|comments)`
-    );
+    const regex = new RegExp(`/@${currentUser.username}/(collections|bookmarks|comments)`);
     return regex.test(pathname) ? '/me/*' : pathname;
   };
 
@@ -82,7 +80,7 @@ class AppHeader extends React.Component<Props, {}> {
             <Link to="/setting">설정</Link>
           </Menu.Item>
           <Menu.Item key="logout">로그아웃</Menu.Item>
-        </Menu.SubMenu>
+        </Menu.SubMenu>,
       ];
     } else {
       menuItems = [
@@ -103,7 +101,7 @@ class AppHeader extends React.Component<Props, {}> {
         </Menu.Item>,
         <Menu.Item key="/signup">
           <Link to="/signup">회원가입</Link>
-        </Menu.Item>
+        </Menu.Item>,
       ];
     }
 
@@ -130,16 +128,11 @@ class AppHeader extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = (state: RootState) => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  AuthActions: bindActionCreators(authActions, dispatch)
+  AuthActions: bindActionCreators(authActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(AppHeader)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppHeader));

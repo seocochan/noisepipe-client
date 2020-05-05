@@ -18,15 +18,7 @@ interface Props {
 
 class CollectionItems extends React.Component<Props, {}> {
   public render(): React.ReactNode {
-    const {
-      items,
-      playerItem,
-      showDragHandle,
-      onClickItem,
-      playItem,
-      resumeItem,
-      pauseItem
-    } = this.props;
+    const { items, playerItem, showDragHandle, onClickItem, playItem, resumeItem, pauseItem } = this.props;
 
     if (items == null) {
       return <LoadingIndicator />;
@@ -42,11 +34,7 @@ class CollectionItems extends React.Component<Props, {}> {
             itemIndex={index}
             showDragHandle={showDragHandle}
             isSet={playerItem && playerItem.id === item.id ? true : false}
-            isPlaying={
-              playerItem && playerItem.id === item.id && playerItem.playing
-                ? true
-                : false
-            }
+            isPlaying={playerItem && playerItem.id === item.id && playerItem.playing ? true : false}
             onClickItem={onClickItem}
             playItem={playItem}
             resumeItem={resumeItem}

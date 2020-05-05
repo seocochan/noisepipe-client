@@ -12,7 +12,7 @@ interface State {
 
 class DummyPlayer extends React.Component<Props, State> {
   public readonly state: State = {
-    loading: true
+    loading: true,
   };
 
   public render(): React.ReactNode {
@@ -24,8 +24,8 @@ class DummyPlayer extends React.Component<Props, State> {
         url={process.env.REACT_APP_DEFAULT_SC_MEDIA_URL}
         config={{
           soundcloud: {
-            options: { single_active: false, hide_related: true }
-          }
+            options: { single_active: false, hide_related: true },
+          },
         }}
         onReady={() => this.setState({ loading: false })}
         height={0} // hide

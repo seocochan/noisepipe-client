@@ -25,12 +25,12 @@ class CommentForm extends React.Component<Props, State> {
   public static defaultProps = {
     showCancel: false,
     gutterBottom: 0,
-    submitPlaceholder: '작성'
+    submitPlaceholder: '작성',
   };
   public readonly state: State = {
     value: this.props.text || '',
     validateStatus: undefined,
-    errorMsg: ''
+    errorMsg: '',
   };
 
   private validate = (value: string) => {
@@ -44,7 +44,7 @@ class CommentForm extends React.Component<Props, State> {
       this.setState({
         value,
         validateStatus: 'error',
-        errorMsg: `${MAX_COMMENT_TEXT_LENGTH}자 이하로 작성해주세요`
+        errorMsg: `${MAX_COMMENT_TEXT_LENGTH}자 이하로 작성해주세요`,
       });
     }
   };
@@ -56,7 +56,7 @@ class CommentForm extends React.Component<Props, State> {
     if (!text) {
       this.setState({
         validateStatus: 'error',
-        errorMsg: '내용을 입력해주세요'
+        errorMsg: '내용을 입력해주세요',
       });
       return;
     }
@@ -95,11 +95,7 @@ class CommentForm extends React.Component<Props, State> {
         style={{ overflow: 'hidden', marginBottom: gutterBottom }}
         onReset={this.handleReset}
       >
-        <Form.Item
-          validateStatus={validateStatus}
-          help={errorMsg}
-          hasFeedback={true}
-        >
+        <Form.Item validateStatus={validateStatus} help={errorMsg} hasFeedback={true}>
           <Input.TextArea
             placeholder="댓글을 입력해주세요"
             value={value}
@@ -111,11 +107,7 @@ class CommentForm extends React.Component<Props, State> {
           <Button
             htmlType="submit"
             type="primary"
-            disabled={
-              validateStatus === 'error' || validateStatus === 'validating'
-                ? true
-                : false
-            }
+            disabled={validateStatus === 'error' || validateStatus === 'validating' ? true : false}
           >
             {submitPlaceholder}
           </Button>

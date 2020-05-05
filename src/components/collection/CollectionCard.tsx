@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Card, Dropdown, Icon, Menu, message, Tooltip } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ICollectionSummary } from 'payloads';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
 
@@ -21,14 +21,12 @@ interface State {
 
 class CollectionCard extends React.Component<Props, State> {
   public readonly state: State = {
-    isBookmarked: this.props.defaultBookmarked
-      ? this.props.defaultBookmarked
-      : false
+    isBookmarked: this.props.defaultBookmarked ? this.props.defaultBookmarked : false,
   };
   public getBookmarkState = () => {
     return {
       id: this.props.collection.id,
-      isBookmarked: this.state.isBookmarked
+      isBookmarked: this.state.isBookmarked,
     };
   };
 
@@ -54,20 +52,15 @@ class CollectionCard extends React.Component<Props, State> {
   };
   private handleClickShare = (title: string, id: number) => {
     window.open(
-      `https://twitter.com/intent/tweet?text=${title}&url=${
-        process.env.REACT_APP_BASE_URL
-      }/collections/${id}`,
+      `https://twitter.com/intent/tweet?text=${title}&url=${process.env.REACT_APP_BASE_URL}/collections/${id}`,
       '_blank',
-      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no'
+      'width=550, height=420, toolbar=no, menubar=no, scrollbars=no, resizable=no',
     );
   };
   private shareMenus = (title: string, id: number) => {
     return (
       <Menu>
-        <Menu.Item
-          key="twitter"
-          onClick={() => this.handleClickShare(title, id)}
-        >
+        <Menu.Item key="twitter" onClick={() => this.handleClickShare(title, id)}>
           <Icon type="twitter" />
           트위터에 공유
         </Menu.Item>
@@ -78,7 +71,7 @@ class CollectionCard extends React.Component<Props, State> {
   public render() {
     const {
       disableBookmark,
-      collection: { createdAt, createdBy, id, items, tags, title }
+      collection: { createdAt, createdBy, id, items, tags, title },
     } = this.props;
     const { isBookmarked } = this.state;
 
@@ -94,20 +87,12 @@ class CollectionCard extends React.Component<Props, State> {
               key="bookmark-add"
               type="book"
               theme={isBookmarked ? 'twoTone' : 'outlined'}
-              onClick={() =>
-                isBookmarked
-                  ? this.handleRemoveBookmark(id)
-                  : this.handleCreateBookmark(id)
-              }
+              onClick={() => (isBookmarked ? this.handleRemoveBookmark(id) : this.handleCreateBookmark(id))}
             />
           ),
-          <Dropdown
-            key="share"
-            overlay={this.shareMenus(title, id)}
-            trigger={['click']}
-          >
+          <Dropdown key="share" overlay={this.shareMenus(title, id)} trigger={['click']}>
             <Icon type="share-alt" />
-          </Dropdown>
+          </Dropdown>,
         ]}
       >
         <Card.Meta

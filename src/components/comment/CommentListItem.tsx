@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Button, Comment, Dropdown, Icon, Menu, message, Popconfirm } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ICommentRequest, ICommentResponse } from 'payloads';
 import { AuthState } from 'store/modules/auth';
 import { DEFAULT_ERROR_MESSAGE } from 'values';
@@ -29,7 +29,7 @@ class CommentListItem extends React.Component<Props, State> {
   public readonly state: State = {
     showReplies: false,
     showEditForm: false,
-    showReplyForm: false
+    showReplyForm: false,
   };
 
   public componentDidUpdate(prevProps: Props) {
@@ -38,7 +38,7 @@ class CommentListItem extends React.Component<Props, State> {
       this.setState({
         showReplies: false,
         showEditForm: false,
-        showReplyForm: false
+        showReplyForm: false,
       });
     }
   }
@@ -58,10 +58,7 @@ class CommentListItem extends React.Component<Props, State> {
   private editActions = () => {
     return (
       <Menu>
-        <Menu.Item
-          key="edit"
-          onClick={() => this.setState({ showEditForm: true })}
-        >
+        <Menu.Item key="edit" onClick={() => this.setState({ showEditForm: true })}>
           수정
         </Menu.Item>
         <Menu.Item key="remove">
@@ -81,7 +78,7 @@ class CommentListItem extends React.Component<Props, State> {
       showReplyActions,
       onCreate,
       onUpdate,
-      children
+      children,
     } = this.props;
     const { showReplies, showReplyForm, showEditForm } = this.state;
 
@@ -116,7 +113,7 @@ class CommentListItem extends React.Component<Props, State> {
                 replyTo={replyTo}
                 submitPlaceholder="수정"
                 showCancel={true}
-                onSubmit={data => onUpdate(id, data)}
+                onSubmit={(data) => onUpdate(id, data)}
                 onCancel={() => this.setState({ showEditForm: false })}
                 onSuccess={() => this.setState({ showEditForm: false })}
               />
@@ -128,30 +125,16 @@ class CommentListItem extends React.Component<Props, State> {
         actions={
           showReplyActions
             ? [
-                <span
-                  key="reply-view"
-                  onClick={() => this.setState({ showReplies: !showReplies })}
-                >
+                <span key="reply-view" onClick={() => this.setState({ showReplies: !showReplies })}>
                   {`답글 ${replies}개`}
-                  <Icon
-                    className={styles.icon}
-                    type={showReplies ? 'up' : 'down'}
-                  />
+                  <Icon className={styles.icon} type={showReplies ? 'up' : 'down'} />
                 </span>,
                 currentUser && (
-                  <span
-                    key="add"
-                    onClick={() =>
-                      this.setState({ showReplyForm: !showReplyForm })
-                    }
-                  >
+                  <span key="add" onClick={() => this.setState({ showReplyForm: !showReplyForm })}>
                     답글 달기
-                    <Icon
-                      className={styles.icon}
-                      type={showReplyForm ? 'rollback' : 'enter'}
-                    />
+                    <Icon className={styles.icon} type={showReplyForm ? 'rollback' : 'enter'} />
                   </span>
-                )
+                ),
               ]
             : undefined
         }
@@ -163,9 +146,7 @@ class CommentListItem extends React.Component<Props, State> {
               showCancel={true}
               onSubmit={onCreate}
               onCancel={() => this.setState({ showReplyForm: false })}
-              onSuccess={() =>
-                this.setState({ showReplyForm: false, showReplies: true })
-              }
+              onSuccess={() => this.setState({ showReplyForm: false, showReplies: true })}
             />
           </div>
         )}

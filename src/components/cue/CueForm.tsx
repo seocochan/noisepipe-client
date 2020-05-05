@@ -18,22 +18,20 @@ interface Props extends FormComponentProps {
 
 class CueForm extends React.Component<Props, {}> {
   public static defaultProps = {
-    showCancel: false
+    showCancel: false,
   };
 
   public componentDidMount() {
     const {
       cue,
       onLoadSeconds,
-      form: { setFieldsValue }
+      form: { setFieldsValue },
     } = this.props;
 
     // manually set initialValue of 'seconds' field,
     // to avoid unwanted update when onChange occurs
     setFieldsValue({
-      ['seconds']: secondsToString(
-        (cue && cue.seconds) || (onLoadSeconds && onLoadSeconds()) || 0
-      )
+      seconds: secondsToString((cue && cue.seconds) || (onLoadSeconds && onLoadSeconds()) || 0),
     });
   }
 
@@ -42,7 +40,7 @@ class CueForm extends React.Component<Props, {}> {
     const {
       onSubmit,
       onAfterSubmit,
-      form: { validateFields, resetFields }
+      form: { validateFields, resetFields },
     } = this.props;
 
     validateFields(async (err, values: { text: string; seconds: string }) => {
@@ -52,7 +50,7 @@ class CueForm extends React.Component<Props, {}> {
       try {
         await onSubmit({
           text: values.text,
-          seconds: stringToSeconds(values.seconds)
+          seconds: stringToSeconds(values.seconds),
         });
       } catch (error) {
         message.error(DEFAULT_ERROR_MESSAGE);
@@ -70,7 +68,7 @@ class CueForm extends React.Component<Props, {}> {
       showCancel = false,
       cue,
       onCancel,
-      form: { getFieldDecorator }
+      form: { getFieldDecorator },
     } = this.props;
 
     return (
@@ -80,20 +78,15 @@ class CueForm extends React.Component<Props, {}> {
             rules: [
               {
                 message: `'m:ss' 형태로 입력하세요`,
-                pattern: /^\d*:[0-5]\d$/
-              }
-            ]
+                pattern: /^\d*:[0-5]\d$/,
+              },
+            ],
           })(
             <Input
-              prefix={
-                <Icon
-                  type="clock-circle"
-                  style={{ color: 'rgba(0,0,0,.25)' }}
-                />
-              }
+              prefix={<Icon type="clock-circle" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="m:ss"
               style={{ width: 80 }}
-            />
+            />,
           )}
         </Form.Item>
         <Form.Item>
@@ -102,30 +95,21 @@ class CueForm extends React.Component<Props, {}> {
             rules: [
               {
                 message: '내용을 입력하세요',
-                whitespace: true
+                whitespace: true,
               },
               {
                 max: MAX_CUE_TEXT_LENGTH,
-                message: `${MAX_CUE_TEXT_LENGTH}자 이하로 작성해주세요`
-              }
-            ]
-          })(
-            <Input.TextArea
-              placeholder="내용"
-              autosize={{ minRows: 1, maxRows: 3 }}
-            />
-          )}
+                message: `${MAX_CUE_TEXT_LENGTH}자 이하로 작성해주세요`,
+              },
+            ],
+          })(<Input.TextArea placeholder="내용" autosize={{ minRows: 1, maxRows: 3 }} />)}
         </Form.Item>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button htmlType="submit" type="primary">
             {submitPlaceholder}
           </Button>
           {showCancel && (
-            <Button
-              htmlType="button"
-              onClick={onCancel}
-              style={{ marginLeft: 8 }}
-            >
+            <Button htmlType="button" onClick={onCancel} style={{ marginLeft: 8 }}>
               취소
             </Button>
           )}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Card, Icon } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { IUserProfile } from 'payloads';
 
 import styles from './UserCard.module.less';

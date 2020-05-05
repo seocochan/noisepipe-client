@@ -16,7 +16,7 @@ interface State {
 
 class CueListHeader extends React.Component<Props, State> {
   public readonly state: State = {
-    showForm: false
+    showForm: false,
   };
 
   public render(): React.ReactNode {
@@ -40,7 +40,7 @@ class CueListHeader extends React.Component<Props, State> {
           {showForm &&
             renderCueForm({
               onAfterSubmit: () => this.setState({ showForm: false }),
-              onCancel: () => this.setState({ showForm: false })
+              onCancel: () => this.setState({ showForm: false }),
             })}
         </div>
       </div>

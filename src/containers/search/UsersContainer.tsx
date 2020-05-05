@@ -61,17 +61,10 @@ class UsersContainer extends React.Component<Props, {}> {
     }
     return (
       <>
-        <ListHeader
-          q={q}
-          count={users.totalElements}
-          unit={'명'}
-          name={'사용자'}
-        />
+        <ListHeader q={q} count={users.totalElements} unit={'명'} name={'사용자'} />
         <GridCardList<IUserProfile>
           dataSource={users.content}
-          renderCard={(user: IUserProfile) => (
-            <UserCard key={user.id} user={user} />
-          )}
+          renderCard={(user: IUserProfile) => <UserCard key={user.id} user={user} />}
           isLast={users.last}
           loadMoreButton={<LoadMoreButton loadMore={this.loadMore} />}
         />
@@ -81,15 +74,10 @@ class UsersContainer extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = ({ search }: RootState) => ({
-  users: search.users
+  users: search.users,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  SearchActions: bindActionCreators(searchActions, dispatch)
+  SearchActions: bindActionCreators(searchActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(UsersContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UsersContainer));

@@ -10,21 +10,11 @@ interface Props {
   onResume: () => void;
 }
 
-const CollectionPlayButton: React.FC<Props> = ({
-  isPlaying,
-  isSet,
-  onPause,
-  onPlay,
-  onResume
-}) => {
+const CollectionPlayButton: React.FC<Props> = ({ isPlaying, isSet, onPause, onPlay, onResume }) => {
   const button = isPlaying ? (
     <Button icon="pause" shape="circle" onClick={() => onPause()} />
   ) : (
-    <Button
-      icon="caret-right"
-      shape="circle"
-      onClick={() => (isSet ? onResume() : onPlay())}
-    />
+    <Button icon="caret-right" shape="circle" onClick={() => (isSet ? onResume() : onPlay())} />
   );
   return button;
 };

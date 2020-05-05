@@ -1,10 +1,10 @@
 export enum Tab {
   Viewer = 'VIEWER',
-  Editor = 'EDITOR'
+  Editor = 'EDITOR',
 }
 export enum Provider {
   Youtube = 'YOUTUBE',
-  Soundcloud = 'SOUNDCLOUD'
+  Soundcloud = 'SOUNDCLOUD',
 }
 
 export type CueFormProps = {

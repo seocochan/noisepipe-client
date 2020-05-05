@@ -13,12 +13,10 @@ interface IRequestOptions {
 }
 
 const req = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL
+  baseURL: process.env.REACT_APP_API_BASE_URL,
 });
 
-async function request<T = any>(
-  options: IRequestOptions
-): Promise<AxiosResponse<T>> {
+async function request<T = any>(options: IRequestOptions): Promise<AxiosResponse<T>> {
   let headers: IRequestHeaders = { 'Content-Type': 'application/json' };
 
   const token = localStorage.getItem(ACCESS_TOKEN);

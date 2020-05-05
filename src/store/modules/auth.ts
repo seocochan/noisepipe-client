@@ -22,11 +22,9 @@ export const actions = {
     }
   },
   getCurrentUserPending: () => createAction(GET_CURRENT_USER_PENDING),
-  getCurrentUserSuccess: (user: IUserSummary) =>
-    createAction(GET_CURRENT_USER_SUCCESS, user),
-  getCurrentUserFailure: (error: AxiosError) =>
-    createAction(GET_CURRENT_USER_FAILURE, error),
-  getCurrnetUser: (): ThunkResult<Promise<void>> => async dispatch => {
+  getCurrentUserSuccess: (user: IUserSummary) => createAction(GET_CURRENT_USER_SUCCESS, user),
+  getCurrentUserFailure: (error: AxiosError) => createAction(GET_CURRENT_USER_FAILURE, error),
+  getCurrnetUser: (): ThunkResult<Promise<void>> => async (dispatch) => {
     dispatch(actions.getCurrentUserPending());
     try {
       const res = await UserAPI.getCurrentUser();
@@ -37,15 +35,13 @@ export const actions = {
     }
   },
   logout: () => createAction(LOGOUT),
-  updatePassword: (
-    data: IPasswordUpdateRequest
-  ): ThunkResult<Promise<void>> => async () => {
+  updatePassword: (data: IPasswordUpdateRequest): ThunkResult<Promise<void>> => async () => {
     try {
       await AuthAPI.updatePassword(data);
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
 export type AuthAction = ActionType<typeof actions>;
 
@@ -56,7 +52,7 @@ export interface AuthState {
 }
 const initialState: AuthState = {
   currentUser: null,
-  isLoading: true
+  isLoading: true,
 };
 
 // reducer

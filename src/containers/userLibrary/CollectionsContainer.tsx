@@ -29,7 +29,7 @@ interface State {
 
 class CollectionsContainer extends React.Component<Props, State> {
   public readonly state: State = {
-    isFormVisible: false
+    isFormVisible: false,
   };
 
   public async componentDidMount() {
@@ -59,36 +59,21 @@ class CollectionsContainer extends React.Component<Props, State> {
 
   private getOffsetId = () => {
     const { collections } = this.props;
-    return !collections
-      ? -1
-      : collections.content[collections.content.length - 1].id;
+    return !collections ? -1 : collections.content[collections.content.length - 1].id;
   };
   private loadMore = async () => {
     const { UserLibraryActions, username } = this.props;
     const offsetId = this.getOffsetId();
 
-    await UserLibraryActions.loadCollections(
-      username,
-      offsetId === -1 ? undefined : offsetId,
-      DEFAULT_PAGE_SIZE,
-      true
-    );
+    await UserLibraryActions.loadCollections(username, offsetId === -1 ? undefined : offsetId, DEFAULT_PAGE_SIZE, true);
   };
   private handleSubmit = async (collection: ICollectionRequest) => {
-    const {
-      currentUser,
-      CollectionActions,
-      UserLibraryActions,
-      username
-    } = this.props;
+    const { currentUser, CollectionActions, UserLibraryActions, username } = this.props;
     if (!currentUser) {
       return;
     }
     try {
-      await CollectionActions.createCollection(
-        currentUser.username,
-        collection
-      );
+      await CollectionActions.createCollection(currentUser.username, collection);
       await UserLibraryActions.loadCollections(username);
     } catch (error) {
       message.error(DEFAULT_ERROR_MESSAGE);
@@ -158,16 +143,11 @@ class CollectionsContainer extends React.Component<Props, State> {
 
 const mapStateToProps = ({ auth, userLibrary }: RootState) => ({
   currentUser: auth.currentUser,
-  collections: userLibrary.collections
+  collections: userLibrary.collections,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
   CollectionActions: bindActionCreators(collectionActions, dispatch),
-  UserLibraryActions: bindActionCreators(userLibraryActions, dispatch)
+  UserLibraryActions: bindActionCreators(userLibraryActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CollectionsContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CollectionsContainer));

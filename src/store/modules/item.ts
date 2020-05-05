@@ -26,10 +26,7 @@ export const actions = {
   hidePanel: () => createAction(HIDE_PANEL),
   changeTab: (tab: Tab) => createAction(CHANGE_TAB, { tab }),
   setItem: (item: IItemResponse | null) => createAction(SET_ITEM, { item }),
-  updateItem: (
-    itemId: number,
-    data: IItemPutRequest
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateItem: (itemId: number, data: IItemPutRequest): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await ItemAPI.updateItem(itemId, data);
       dispatch(actions.updateItemSuccess(res.data));
@@ -38,11 +35,8 @@ export const actions = {
       throw error;
     }
   },
-  updateItemSuccess: (item: IItemResponse) =>
-    createAction(UPDATE_ITEM_SUCCESS, { item }),
-  removeItem: (
-    itemId: number
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  updateItemSuccess: (item: IItemResponse) => createAction(UPDATE_ITEM_SUCCESS, { item }),
+  removeItem: (itemId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await ItemAPI.removeItem(itemId);
       dispatch(actions.initialize());
@@ -51,7 +45,7 @@ export const actions = {
       throw error;
     }
   },
-  loadCues: (itemId: number): ThunkResult<Promise<void>> => async dispatch => {
+  loadCues: (itemId: number): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CueAPI.getCuesByItem(itemId);
       dispatch(actions.loadCuesSuccess(res.data));
@@ -59,12 +53,8 @@ export const actions = {
       throw error;
     }
   },
-  loadCuesSuccess: (cues: ICueResponse[]) =>
-    createAction(LOAD_CUES_SUCCESS, { cues }),
-  createCue: (
-    itemId: number,
-    data: ICueRequest
-  ): ThunkResult<Promise<void>> => async dispatch => {
+  loadCuesSuccess: (cues: ICueResponse[]) => createAction(LOAD_CUES_SUCCESS, { cues }),
+  createCue: (itemId: number, data: ICueRequest): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       await CueAPI.createCue(itemId, data); // ignore res.data
       await dispatch(actions.loadCues(itemId)); // re-load cues
@@ -72,10 +62,7 @@ export const actions = {
       throw error;
     }
   },
-  updateCue: (
-    cueId: number,
-    data: ICueRequest
-  ): ThunkResult<Promise<void>> => async (dispatch, getState) => {
+  updateCue: (cueId: number, data: ICueRequest): ThunkResult<Promise<void>> => async (dispatch, getState) => {
     try {
       const item = getState().item.item as IItemResponse;
       await CueAPI.updateCueById(cueId, data); // ignore res.data
@@ -84,10 +71,7 @@ export const actions = {
       throw error;
     }
   },
-  removeCue: (cueId: number): ThunkResult<Promise<void>> => async (
-    dispatch,
-    getState
-  ) => {
+  removeCue: (cueId: number): ThunkResult<Promise<void>> => async (dispatch, getState) => {
     try {
       const item = getState().item.item as IItemResponse;
       await CueAPI.removeCueById(cueId);
@@ -95,7 +79,7 @@ export const actions = {
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
 export type ItemAction = ActionType<typeof actions>;
 
@@ -108,7 +92,7 @@ export interface ItemState {
 const initialState: ItemState = {
   itemPanel: { collapsed: true, tab: Tab.Viewer },
   item: null,
-  cues: null
+  cues: null,
 };
 
 // reducer
@@ -120,6 +104,7 @@ export default produce<ItemState, ItemAction>((draft, action) => {
     case CLEAR: {
       draft.item = null;
       draft.cues = null;
+      return;
     }
     case SHOW_PANEL: {
       draft.itemPanel.collapsed = false;

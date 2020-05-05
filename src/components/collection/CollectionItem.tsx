@@ -16,7 +16,7 @@ const DragHandle = SortableHandle(() => (
 const iconStyles = {
   fontSize: 21,
   color: '#333',
-  marginRight: 4
+  marginRight: 4,
 };
 
 interface Props {
@@ -43,37 +43,19 @@ class CollectionItem extends React.Component<Props, {}> {
       playItem,
       resumeItem,
       pauseItem,
-      onClickItem
+      onClickItem,
     } = this.props;
 
     return (
       <div className={styles.itemContainer}>
         {isPlaying ? (
-          <Button
-            type="primary"
-            icon="pause"
-            shape="circle"
-            onClick={() => pauseItem(item)}
-          />
+          <Button type="primary" icon="pause" shape="circle" onClick={() => pauseItem(item)} />
         ) : isSet ? (
-          <Button
-            type="primary"
-            icon="caret-right"
-            shape="circle"
-            onClick={() => resumeItem(item)}
-          />
+          <Button type="primary" icon="caret-right" shape="circle" onClick={() => resumeItem(item)} />
         ) : (
-          <Button
-            icon="caret-right"
-            shape="circle"
-            onClick={() => playItem(item)}
-          />
+          <Button icon="caret-right" shape="circle" onClick={() => playItem(item)} />
         )}
-        <div
-          className={styles.itemContent}
-          id={itemIndex.toString()}
-          onClick={() => onClickItem(id)}
-        >
+        <div className={styles.itemContent} id={itemIndex.toString()} onClick={() => onClickItem(id)}>
           <div className={styles.title}>
             {sourceProvider === Provider.Youtube ? (
               <Icon type="youtube" theme="filled" style={iconStyles} />

@@ -28,17 +28,7 @@ class RecursiveList extends React.Component<Props, {}> {
   }
 
   public render(): React.ReactNode {
-    const {
-      comments,
-      replies,
-      parentCommentId,
-      currentUser,
-      depth,
-      onLoad,
-      onCreate,
-      onUpdate,
-      onRemove
-    } = this.props;
+    const { comments, replies, parentCommentId, currentUser, depth, onLoad, onCreate, onUpdate, onRemove } = this.props;
 
     return (
       <List

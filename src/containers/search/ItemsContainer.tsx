@@ -64,9 +64,7 @@ class ItemsContainer extends React.Component<Props, {}> {
         <ListHeader q={q} count={items.totalElements} name={'아이템'} />
         <GridCardList<IItemSummary>
           dataSource={items.content}
-          renderCard={(item: IItemSummary) => (
-            <ItemCard key={item.id} item={item} />
-          )}
+          renderCard={(item: IItemSummary) => <ItemCard key={item.id} item={item} />}
           isLast={items.last}
           loadMoreButton={<LoadMoreButton loadMore={this.loadMore} />}
         />
@@ -76,15 +74,10 @@ class ItemsContainer extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = ({ search }: RootState) => ({
-  items: search.items
+  items: search.items,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  SearchActions: bindActionCreators(searchActions, dispatch)
+  SearchActions: bindActionCreators(searchActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ItemsContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ItemsContainer));

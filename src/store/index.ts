@@ -18,13 +18,10 @@ const rootReducer = combineReducers({
   item: itemReducer,
   player: playerReducer,
   search: searchReducer,
-  userLibrary: userLibraryReducer
+  userLibrary: userLibraryReducer,
 });
 const composeEnhancers = composeWithDevTools({});
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(thunkMiddleware))
-);
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware)));
 
 export type RootState = StateType<typeof rootReducer>;
 export type RootAction =

@@ -17,17 +17,17 @@ interface State {
 class SearchInput extends React.Component<Props, State> {
   public static defaultProps = {
     autoFocus: false,
-    large: false
+    large: false,
   };
   public readonly state: State = {
-    value: ''
+    value: '',
   };
 
   public componentDidMount() {
     const { pathname, search } = this.props.location;
     if (pathname.startsWith('/search')) {
       this.setState({
-        value: qs.parse(search, { ignoreQueryPrefix: true }).q
+        value: qs.parse(search, { ignoreQueryPrefix: true }).q,
       });
     }
   }
@@ -37,7 +37,7 @@ class SearchInput extends React.Component<Props, State> {
     if (key !== prevProps.location.key) {
       if (pathname.startsWith('/search')) {
         this.setState({
-          value: qs.parse(search, { ignoreQueryPrefix: true }).q
+          value: qs.parse(search, { ignoreQueryPrefix: true }).q,
         });
       } else {
         this.setState({ value: '' });
@@ -50,7 +50,7 @@ class SearchInput extends React.Component<Props, State> {
   private handleSearch = () => {
     const {
       history: { push },
-      location: { pathname }
+      location: { pathname },
     } = this.props;
     const { value } = this.state;
 
@@ -76,9 +76,9 @@ class SearchInput extends React.Component<Props, State> {
         className={className}
         placeholder="검색"
         value={value}
-        onChange={e => this.setState({ value: e.currentTarget.value })}
+        onChange={(e) => this.setState({ value: e.currentTarget.value })}
         onSearch={this.handleSearch}
-        ref={search => (this.ref = search)}
+        ref={(search) => (this.ref = search)}
         autoFocus={autoFocus}
         size={large ? 'large' : 'default'}
       />

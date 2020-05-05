@@ -52,12 +52,7 @@ class CollectionsContainer extends React.Component<Props, {}> {
   private loadMore = async () => {
     const { SearchActions, collections, q } = this.props;
 
-    await SearchActions.loadCollections(
-      q,
-      collections!.page + 1,
-      DEFAULT_PAGE_SIZE,
-      true
-    );
+    await SearchActions.loadCollections(q, collections!.page + 1, DEFAULT_PAGE_SIZE, true);
   };
   private handleCreateBookmark = async (collectionId: number) => {
     const { SearchActions } = this.props;
@@ -106,15 +101,10 @@ class CollectionsContainer extends React.Component<Props, {}> {
 
 const mapStateToProps = ({ auth, search }: RootState) => ({
   currentUser: auth.currentUser,
-  collections: search.collections
+  collections: search.collections,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  SearchActions: bindActionCreators(searchActions, dispatch)
+  SearchActions: bindActionCreators(searchActions, dispatch),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CollectionsContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CollectionsContainer));

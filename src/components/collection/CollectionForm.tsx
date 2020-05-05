@@ -17,7 +17,7 @@ const CollectionForm: React.FC<Props> = ({
   collection,
   handleSubmit: submit,
   onAfterReset,
-  form: { getFieldDecorator, validateFields, resetFields }
+  form: { getFieldDecorator, validateFields, resetFields },
 }) => {
   const handleSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault();
@@ -47,20 +47,20 @@ const CollectionForm: React.FC<Props> = ({
               {
                 message: '제목을 입력하세요',
                 required: true,
-                whitespace: true
+                whitespace: true,
               },
               {
                 max: MAX_COLLECTION_TITLE_LENGTH,
-                message: `${MAX_COLLECTION_TITLE_LENGTH}자 이하로 작성해주세요`
-              }
-            ]
+                message: `${MAX_COLLECTION_TITLE_LENGTH}자 이하로 작성해주세요`,
+              },
+            ],
           })(
             <Input
               prefix={<Icon type="form" style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder="제목"
               size="large"
               autoFocus={true}
-            />
+            />,
           )}
         </Form.Item>
         <Form.Item>
@@ -69,13 +69,13 @@ const CollectionForm: React.FC<Props> = ({
             rules: [
               {
                 message: '설명을 입력하세요',
-                whitespace: true
+                whitespace: true,
               },
               {
                 max: MAX_COLLECTION_DESCRIPTION_LENGTH,
-                message: `${MAX_COLLECTION_DESCRIPTION_LENGTH}자 이하로 작성해주세요`
-              }
-            ]
+                message: `${MAX_COLLECTION_DESCRIPTION_LENGTH}자 이하로 작성해주세요`,
+              },
+            ],
           })(<Input.TextArea placeholder="설명" autosize={{ minRows: 4 }} />)}
         </Form.Item>
         <Form.Item>
@@ -85,16 +85,16 @@ const CollectionForm: React.FC<Props> = ({
               {
                 message: `${MAX_COLLECTION_TAGS_SIZE}개 이하의 태그를 추가해주세요`,
                 type: 'array',
-                max: MAX_COLLECTION_TAGS_SIZE
-              }
-            ]
+                max: MAX_COLLECTION_TAGS_SIZE,
+              },
+            ],
           })(
             <Select
               mode="tags"
               placeholder="태그를 추가하세요"
               maxTagCount={MAX_COLLECTION_TAGS_SIZE}
               tokenSeparators={[',']}
-            />
+            />,
           )}
         </Form.Item>
         <div className={styles.buttonContainer}>

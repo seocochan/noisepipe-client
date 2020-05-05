@@ -16,12 +16,12 @@ interface Props {
 class PlayersContainer extends React.Component<Props, {}> {
   public render(): React.ReactNode {
     const {
-      player: { currentTarget, loading }
+      player: { currentTarget, loading },
     } = this.props;
 
     return (
       <>
-        {Object.keys(Provider).map(key => (
+        {Object.keys(Provider).map((key) => (
           <PlayerContainer
             key={Provider[key]}
             visible={!loading && currentTarget === Provider[key]}
@@ -34,13 +34,10 @@ class PlayersContainer extends React.Component<Props, {}> {
 }
 
 const mapStateToProps = ({ player }: RootState) => ({
-  player
+  player,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  PlayerActions: bindActionCreators(playerActions, dispatch)
+  PlayerActions: bindActionCreators(playerActions, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PlayersContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PlayersContainer);

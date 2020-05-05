@@ -14,7 +14,7 @@ interface State {
 
 class ItemFilterInput extends React.Component<Props, State> {
   public readonly state: State = {
-    value: ''
+    value: '',
   };
 
   private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

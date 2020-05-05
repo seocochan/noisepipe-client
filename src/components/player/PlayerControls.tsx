@@ -17,7 +17,7 @@ import SeekBar from './SeekBar';
 const iconStyles = {
   fontSize: 21,
   color: '#333',
-  marginRight: 4
+  marginRight: 4,
 };
 
 interface Props {
@@ -64,23 +64,14 @@ class PlayerControls extends React.Component<Props, {}> {
       <Layout.Footer>
         <SeekBar
           disabled={disabled}
-          duration={
-            currentTarget && Math.trunc(player[currentTarget].status.duration)
-          }
-          playedSeconds={
-            currentTarget && player[currentTarget].status.playedSeconds
-          }
+          duration={currentTarget && Math.trunc(player[currentTarget].status.duration)}
+          playedSeconds={currentTarget && player[currentTarget].status.playedSeconds}
           seekTo={this.seekTo}
         />
         <div className={styles.container}>
           <div className={styles.controls}>
             <ButtonGroup>
-              <Button
-                disabled={disabled}
-                icon="step-backward"
-                size="large"
-                onClick={this.handleBackward}
-              />
+              <Button disabled={disabled} icon="step-backward" size="large" onClick={this.handleBackward} />
               {currentTarget && player[currentTarget].status.playing ? (
                 <Button
                   disabled={disabled}
@@ -93,18 +84,14 @@ class PlayerControls extends React.Component<Props, {}> {
                   disabled={disabled}
                   icon="caret-right"
                   size="large"
-                  onClick={() =>
-                    currentTarget && PlayerActions.play(currentTarget)
-                  }
+                  onClick={() => currentTarget && PlayerActions.play(currentTarget)}
                 />
               )}
               <Button
                 disabled={disabled}
                 icon="step-forward"
                 size="large"
-                onClick={() =>
-                  currentTarget && PlayerActions.playNextOrPrev(currentTarget)
-                }
+                onClick={() => currentTarget && PlayerActions.playNextOrPrev(currentTarget)}
               />
             </ButtonGroup>
           </div>
@@ -117,13 +104,13 @@ class PlayerControls extends React.Component<Props, {}> {
                   rel="noopener noreferrer"
                   style={{ lineHeight: 0 }}
                 >
-                  {player[currentTarget].item!.sourceProvider ===
-                  Provider.Youtube ? (
+                  {player[currentTarget].item!.sourceProvider === Provider.Youtube ? (
                     <Icon type="youtube" theme="filled" style={iconStyles} />
                   ) : (
                     <SoundCloudIcon style={iconStyles} />
                   )}
                 </a>
+                {/* eslint-disable-next-line */}
                 <a
                   onClick={() => {
                     PlayerActions.setDrawerVisible(!drawer.visible);
@@ -155,32 +142,21 @@ class PlayerControls extends React.Component<Props, {}> {
                   />
                 )}
               </MediaQuery>
-              <Button
-                disabled={!currentTarget}
-                icon="close"
-                size="large"
-                onClick={() => PlayerActions.close()}
-              />
+              <Button disabled={!currentTarget} icon="close" size="large" onClick={() => PlayerActions.close()} />
             </ButtonGroup>
           </div>
         </div>
-        <PlayerDrawer
-          visible={player.drawer.visible}
-          handleDrawerClose={() => PlayerActions.setDrawerVisible(false)}
-        />
+        <PlayerDrawer visible={player.drawer.visible} handleDrawerClose={() => PlayerActions.setDrawerVisible(false)} />
       </Layout.Footer>
     );
   }
 }
 
 const mapStateToProps = ({ player }: RootState) => ({
-  player
+  player,
 });
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>) => ({
-  PlayerActions: bindActionCreators(playerActions, dispatch)
+  PlayerActions: bindActionCreators(playerActions, dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PlayerControls);
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerControls);

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Card, Icon } from 'antd';
-import * as moment from 'moment';
+import moment from 'moment';
 import { IItemSummary } from 'payloads';
 
 import styles from './ItemCard.module.less';
@@ -11,9 +11,7 @@ interface Props {
   item: IItemSummary;
 }
 
-const ItemCard: React.FC<Props> = ({
-  item: { createdBy, title, collectionId, collectionTitle, createdAt, tags }
-}) => {
+const ItemCard: React.FC<Props> = ({ item: { createdBy, title, collectionId, collectionTitle, createdAt, tags } }) => {
   return (
     <Card>
       <Card.Meta
@@ -23,10 +21,7 @@ const ItemCard: React.FC<Props> = ({
               <Link to={`/@${createdBy.username}`}>{createdBy.username}</Link>
             </span>
             <h3>
-              <Link
-                className={styles.title}
-                to={`/collections/${collectionId}`}
-              >
+              <Link className={styles.title} to={`/collections/${collectionId}`}>
                 {title}
               </Link>
             </h3>

@@ -12,7 +12,7 @@ export const getCurrentUser = () => {
 export const checkUsernameAvailability = (username: string) => {
   return request<IUserIdentityAvailability>({
     url: `/users/checkUsernameAvailability?username=${username}`,
-    method: 'get'
+    method: 'get',
   });
 };
 
@@ -23,6 +23,6 @@ export const getUserProfile = (username: string) => {
 export const searchUsers = (q: string, page: number, size: number) => {
   return request<IPagedResponse<IUserProfile>>({
     url: `/users?q=${q}&page=${page}&size=${size}`,
-    method: 'get'
+    method: 'get',
   });
 };

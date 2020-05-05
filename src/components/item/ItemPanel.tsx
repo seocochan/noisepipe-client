@@ -13,13 +13,7 @@ interface Props {
   itemEditor: React.ReactChild;
 }
 
-const ItemPanel: React.FC<Props> = ({
-  collapsed,
-  tab,
-  itemPanelHeader,
-  itemViewer,
-  itemEditor
-}) => {
+const ItemPanel: React.FC<Props> = ({ collapsed, tab, itemPanelHeader, itemViewer, itemEditor }) => {
   return (
     <Layout.Sider
       className={styles.sider}
@@ -35,12 +29,8 @@ const ItemPanel: React.FC<Props> = ({
     >
       {itemPanelHeader}
       <div className={styles.container}>
-        <div style={{ display: tab === Tab.Viewer ? 'block' : 'none' }}>
-          {itemViewer}
-        </div>
-        <div style={{ display: tab === Tab.Editor ? 'block' : 'none' }}>
-          {itemEditor}
-        </div>
+        <div style={{ display: tab === Tab.Viewer ? 'block' : 'none' }}>{itemViewer}</div>
+        <div style={{ display: tab === Tab.Editor ? 'block' : 'none' }}>{itemEditor}</div>
       </div>
     </Layout.Sider>
   );

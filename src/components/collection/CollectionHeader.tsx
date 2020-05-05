@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { Badge, Button, Dropdown, Icon, Menu, Popconfirm } from 'antd';
 import { LoadingIndicator } from 'components/common';
-import * as moment from 'moment';
+import moment from 'moment';
 import { ICollectionResponse } from 'payloads';
 
 import styles from './CollectionHeader.module.less';
@@ -33,7 +33,7 @@ const CollectionHeader: React.FC<Props> = ({
   onClickRemove,
   onClickShare,
   onCreateBookmark,
-  onRemoveBookmark
+  onRemoveBookmark,
 }) => {
   if (!collection) {
     return <LoadingIndicator />;
@@ -41,10 +41,7 @@ const CollectionHeader: React.FC<Props> = ({
 
   const shareMenus = (
     <Menu>
-      <Menu.Item
-        key="twitter"
-        onClick={() => onClickShare(collection.title, collection.id)}
-      >
+      <Menu.Item key="twitter" onClick={() => onClickShare(collection.title, collection.id)}>
         <Icon type="twitter" />
         트위터에 공유
       </Menu.Item>
@@ -56,26 +53,14 @@ const CollectionHeader: React.FC<Props> = ({
         수정
       </Menu.Item>
       <Menu.Item key="remove">
-        <Popconfirm
-          title="컬렉션과 모든 아이템이 삭제됩니다. 삭제할까요?"
-          onConfirm={onClickRemove}
-        >
+        <Popconfirm title="컬렉션과 모든 아이템이 삭제됩니다. 삭제할까요?" onConfirm={onClickRemove}>
           삭제
         </Popconfirm>
       </Menu.Item>
     </Menu>
   );
 
-  const {
-    id,
-    title,
-    description,
-    tags,
-    isBookmarked,
-    bookmarks,
-    createdBy,
-    createdAt
-  } = collection;
+  const { id, title, description, tags, isBookmarked, bookmarks, createdBy, createdAt } = collection;
   return (
     <div className={styles.header}>
       <div className={styles.topContainer}>
@@ -90,7 +75,7 @@ const CollectionHeader: React.FC<Props> = ({
           style={{
             marginRight: 16,
             backgroundColor: '#1890ff',
-            zIndex: 1
+            zIndex: 1,
           }}
         >
           <Button
@@ -98,9 +83,7 @@ const CollectionHeader: React.FC<Props> = ({
             icon="book"
             shape="circle"
             type={isBookmarked ? 'primary' : 'default'}
-            onClick={() =>
-              isBookmarked ? onRemoveBookmark(id) : onCreateBookmark(id)
-            }
+            onClick={() => (isBookmarked ? onRemoveBookmark(id) : onCreateBookmark(id))}
             disabled={isAuthenticated ? false : true}
           />
         </Badge>
@@ -108,11 +91,7 @@ const CollectionHeader: React.FC<Props> = ({
           <Button icon="share-alt" shape="circle" />
         </Dropdown>
         {isAuthor && (
-          <Dropdown
-            className={styles.buttonRight}
-            overlay={moreMenus}
-            trigger={['click']}
-          >
+          <Dropdown className={styles.buttonRight} overlay={moreMenus} trigger={['click']}>
             <Button icon="ellipsis" shape="circle" />
           </Dropdown>
         )}

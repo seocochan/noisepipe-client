@@ -6,17 +6,13 @@ import * as CollectionAPI from 'utils/api/collection';
 
 // action types
 const INITIALIZE = 'home/initialize';
-const LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS =
-  'home/LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS';
-const LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS =
-  'home/LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS';
+const LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS = 'home/LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS';
+const LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS = 'home/LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS';
 
 // action creators
 export const actions = {
   initialize: () => createAction(INITIALIZE),
-  loadRecentlyCreatedCollections: (): ThunkResult<
-    Promise<void>
-  > => async dispatch => {
+  loadRecentlyCreatedCollections: (): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CollectionAPI.getRecentlyCreatedCollections();
       dispatch(actions.loadRecentlyCreatedCollectionsSuccess(res.data));
@@ -26,9 +22,7 @@ export const actions = {
   },
   loadRecentlyCreatedCollectionsSuccess: (collections: ICollectionSummary[]) =>
     createAction(LOAD_RECENTLY_CREATED_COLLECTIONS_SUCCESS, { collections }),
-  loadRecentlyUpdatedCollections: (): ThunkResult<
-    Promise<void>
-  > => async dispatch => {
+  loadRecentlyUpdatedCollections: (): ThunkResult<Promise<void>> => async (dispatch) => {
     try {
       const res = await CollectionAPI.getRecentlyUpdatedCollections();
       dispatch(actions.loadRecentlyUpdatedCollectionsSuccess(res.data));
@@ -38,24 +32,20 @@ export const actions = {
   },
   loadRecentlyUpdatedCollectionsSuccess: (collections: ICollectionSummary[]) =>
     createAction(LOAD_RECENTLY_UPDATED_COLLECTIONS_SUCCESS, { collections }),
-  createBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async () => {
+  createBookmark: (collectionId: number): ThunkResult<Promise<void>> => async () => {
     try {
       await CollectionAPI.createBookmark(collectionId);
     } catch (error) {
       throw error;
     }
   },
-  removeBookmark: (
-    collectionId: number
-  ): ThunkResult<Promise<void>> => async () => {
+  removeBookmark: (collectionId: number): ThunkResult<Promise<void>> => async () => {
     try {
       await CollectionAPI.removeBookmark(collectionId);
     } catch (error) {
       throw error;
     }
-  }
+  },
 };
 export type HomeAction = ActionType<typeof actions>;
 
@@ -66,7 +56,7 @@ export interface HomeState {
 }
 const initialState: HomeState = {
   recentlyCreatedCollections: null,
-  recentlyUpdatedCollections: null
+  recentlyUpdatedCollections: null,
 };
 
 // reducer

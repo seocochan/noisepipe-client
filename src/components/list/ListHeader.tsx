@@ -23,7 +23,7 @@ const ListHeader: React.FC<Props> = ({
   name,
   hasAddButton = false,
   isFormVisible = false,
-  handleClick
+  handleClick,
 }) => {
   return (
     <div className={styles.container}>

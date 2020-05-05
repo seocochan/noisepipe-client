@@ -11,7 +11,7 @@ interface Props<T = any> {
 
 class GridCardList<T> extends React.Component<Props<T>, {}> {
   public static defaultProps = {
-    isLast: true
+    isLast: true,
   };
 
   public render() {
@@ -22,9 +22,7 @@ class GridCardList<T> extends React.Component<Props<T>, {}> {
         <List
           grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3, xxl: 3 }}
           dataSource={dataSource}
-          renderItem={(item: T, index: number) => (
-            <List.Item key={index}>{renderCard(item, index)}</List.Item>
-          )}
+          renderItem={(item: T, index: number) => <List.Item key={index}>{renderCard(item, index)}</List.Item>}
         />
         {!isLast && loadMoreButton}
       </div>

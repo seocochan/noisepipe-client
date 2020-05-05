@@ -21,7 +21,7 @@ interface State {
 
 class CueListItem extends React.Component<Props, State> {
   public readonly state: State = {
-    showEditForm: false
+    showEditForm: false,
   };
 
   private handleClick = (e: React.MouseEvent) => {
@@ -43,10 +43,7 @@ class CueListItem extends React.Component<Props, State> {
   private editActions = () => {
     return (
       <Menu>
-        <Menu.Item
-          key="edit"
-          onClick={() => this.setState({ showEditForm: true })}
-        >
+        <Menu.Item key="edit" onClick={() => this.setState({ showEditForm: true })}>
           수정
         </Menu.Item>
         <Menu.Item key="remove">
@@ -67,23 +64,19 @@ class CueListItem extends React.Component<Props, State> {
         {showEditForm ? (
           renderCueForm({
             onAfterSubmit: () => this.setState({ showEditForm: false }),
-            onCancel: () => this.setState({ showEditForm: false })
+            onCancel: () => this.setState({ showEditForm: false }),
           })
         ) : (
           <List.Item.Meta
             title={
               <div className={styles.titleContainer}>
+                {/* eslint-disable-next-line */}
                 <a className={styles.title} onClick={this.handleClick}>
                   <span>{secondsToString(cue.seconds)}</span>
                 </a>
                 {showEditables && (
                   <Dropdown trigger={['click']} overlay={this.editActions()}>
-                    <Button
-                      shape="circle"
-                      icon="ellipsis"
-                      size="small"
-                      style={{ background: 'transparent' }}
-                    />
+                    <Button shape="circle" icon="ellipsis" size="small" style={{ background: 'transparent' }} />
                   </Dropdown>
                 )}
               </div>
